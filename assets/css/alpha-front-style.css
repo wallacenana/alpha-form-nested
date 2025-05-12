@@ -1,0 +1,21 @@
+.alpha-form-field {
+    width: 100%;
+    opacity: 0;
+    visibility: hidden;
+    transition: all 0.5s ease;
+    z-index: 0;
+    height: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    transform: translatey(40px);
+}
+
+.alpha-form-field.active {
+    opacity: 1;
+    visibility: visible;
+    transform: translatey(0);
+    z-index: 1;
+    display: flex;
+    height: auto
+}

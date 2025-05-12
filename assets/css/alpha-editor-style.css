@@ -1,0 +1,27 @@
+.alpha-f-n-item-title {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px;
+    border-radius: 4px;
+}
+
+.alpha-f-n-item-content {
+    display: none;
+    transition: all 0.2s;
+}
+
+.alpha-f-n-item[open] .alpha-f-n-item-content {
+    display: block;
+    transition: all 0.2s;
+}
+
+.alpha-f-n-item .e-closed,
+.alpha-f-n-item[open] .e-opened {
+    display: block;
+}
+
+.alpha-f-n-item[open] .e-closed,
+.alpha-f-n-item .e-opened {
+    display: none;
+}
