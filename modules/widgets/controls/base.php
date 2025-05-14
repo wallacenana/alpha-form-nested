@@ -1,18 +1,15 @@
 <?php
 
-namespace AlphaForm\Module\Widget;
+namespace AlphaForm\Module\Widget\Controls;
 
 use Elementor\Controls_Manager;
 use Elementor\Group_Control_Background;
 use Elementor\Group_Control_Border;
-use Elementor\Group_Control_Text_Shadow;
 use Elementor\Group_Control_Typography;
-use Elementor\Icons_Manager;
 use Elementor\Modules\NestedElements\Base\Widget_Nested_Base;
 use Elementor\Modules\NestedElements\Controls\Control_Nested_Repeater;
 use Elementor\Plugin;
 use Elementor\Repeater;
-use Elementor\Group_Control_Text_Stroke;
 
 if (! defined('ABSPATH')) {
     exit; // Exit if accessed directly.
@@ -49,7 +46,7 @@ class Alpha_Form_Minimal extends Widget_Nested_Base
 
     public function get_keywords()
     {
-        return ['nested', 'tabs', 'form', 'toggle', 'alpha', 'formulario'];
+        return ['nested', 'form', 'toggle', 'alpha', 'formulario'];
     }
 
     public function get_style_depends(): array
@@ -65,16 +62,6 @@ class Alpha_Form_Minimal extends Widget_Nested_Base
     public function get_categories()
     {
         return ['alpha-form'];
-    }
-    
-    public function show_in_panel(): bool
-    {
-        return Plugin::$instance->experiments->is_feature_active('nested-elements', true);
-    }
-
-    public function has_widget_inner_wrapper(): bool
-    {
-        return ! Plugin::$instance->experiments->is_feature_active('e_optimized_markup');
     }
 
     protected function item_content_container(int $index)
@@ -132,6 +119,16 @@ class Alpha_Form_Minimal extends Widget_Nested_Base
         $this->start_controls_section('section_items', [
             'label' => esc_html__('Estrutura do Formulário', 'alpha-form'),
         ]);
+        $this->add_control(
+            'form_name',
+            [
+                'label' => __('Nome do Formulário', 'alpha-form'),
+                'type' => Controls_Manager::TEXT,
+                'placeholder' => 'Alpha Form',
+                'default' => 'Alpha Form',
+                'render_type' => 'none',
+            ]
+        );
 
         $repeater = new Repeater();
 
@@ -146,6 +143,10 @@ class Alpha_Form_Minimal extends Widget_Nested_Base
                 'dynamic' => [
                     'active' => true,
                 ],
+                'ai' => [
+                    'active' => false,
+                ],
+                'render_type' => 'none',
             ]
         );
 
@@ -195,41 +196,6 @@ class Alpha_Form_Minimal extends Widget_Nested_Base
                 'label' => esc_html__('Itens do editor', 'alpha-form'),
             ]
         );
-        $this->add_responsive_control(
-            'form_item_title_position_horizontal',
-            [
-                'label' => esc_html__('Item Position', 'alpha-form'),
-                'type' => Controls_Manager::CHOOSE,
-                'separator' => 'before',
-                'options' => [
-                    'start' => [
-                        'title' => esc_html__('Start', 'alpha-form'),
-                        'icon' => 'eicon-flex eicon-align-start-h',
-                    ],
-                    'center' => [
-                        'title' => esc_html__('Center', 'alpha-form'),
-                        'icon' => 'eicon-h-align-center',
-                    ],
-                    'end' => [
-                        'title' => esc_html__('End', 'alpha-form'),
-                        'icon' => 'eicon-flex eicon-align-end-h',
-                    ],
-                    'stretch' => [
-                        'title' => esc_html__('Stretch', 'alpha-form'),
-                        'icon' => 'eicon-h-align-stretch',
-                    ],
-                ],
-                'selectors_dictionary' => [
-                    'start' => '--n-form-title-justify-content: initial; --n-form-title-flex-grow: initial;',
-                    'center' => '--n-form-title-justify-content: center; --n-form-title-flex-grow: initial;',
-                    'end' => '--n-form-title-justify-content: flex-end; --n-form-title-flex-grow: initial;',
-                    'stretch' => '--n-form-title-justify-content: space-between; --n-form-title-flex-grow: 1;',
-                ],
-                'selectors' => [
-                    '{{WRAPPER}}' => '{{VALUE}}',
-                ],
-            ]
-        );
 
         $this->add_control(
             'heading_form_item_title_icon',
@@ -240,30 +206,6 @@ class Alpha_Form_Minimal extends Widget_Nested_Base
             ]
         );
 
-        $this->add_responsive_control(
-            'form_item_title_icon_position',
-            [
-                'label' => esc_html__('Position', 'alpha-form'),
-                'type' => Controls_Manager::CHOOSE,
-                'options' => [
-                    'start' => [
-                        'title' => esc_html__('Start', 'alpha-form'),
-                        'icon' => 'eicon-h-align-left',
-                    ],
-                    'end' => [
-                        'title' => esc_html__('End', 'alpha-form'),
-                        'icon' => 'eicon-h-align-right',
-                    ],
-                ],
-                'selectors_dictionary' => [
-                    'start' => '--n-form-title-icon-order: -1;',
-                    'end' => '--n-form-title-icon-order: initial;',
-                ],
-                'selectors' => [
-                    '{{WRAPPER}}' => '{{VALUE}}',
-                ],
-            ]
-        );
 
         $this->add_control(
             'form_item_title_icon',
@@ -314,15 +256,15 @@ class Alpha_Form_Minimal extends Widget_Nested_Base
                     'p' => 'p',
                 ],
                 'selectors_dictionary' => [
-                    'h1' => '--n-form-title-font-size: 2.5rem;',
-                    'h2' => '--n-form-title-font-size: 2rem;',
-                    'h3' => '--n-form-title-font-size: 1,75rem;',
-                    'h4' => '--n-form-title-font-size: 1.5rem;',
-                    'h5' => '--n-form-title-font-size: 1rem;',
-                    'h6' => '--n-form-title-font-size: 1rem; ',
-                    'div' => '--n-form-title-font-size: 1rem;',
-                    'span' => '--n-form-title-font-size: 1rem; ',
-                    'p' => '--n-form-title-font-size: 1rem;',
+                    'h1' => 'alpha-f-n-title-font-size: 2.5rem;',
+                    'h2' => 'alpha-f-n-title-font-size: 2rem;',
+                    'h3' => 'alpha-f-n-title-font-size: 1,75rem;',
+                    'h4' => 'alpha-f-n-title-font-size: 1.5rem;',
+                    'h5' => 'alpha-f-n-title-font-size: 1rem;',
+                    'h6' => 'alpha-f-n-title-font-size: 1rem; ',
+                    'div' => 'alpha-f-n-title-font-size: 1rem;',
+                    'span' => 'alpha-f-n-title-font-size: 1rem; ',
+                    'p' => 'alpha-f-n-title-font-size: 1rem;',
                 ],
                 'selectors' => [
                     '{{WRAPPER}}' => '{{VALUE}}',
@@ -334,53 +276,53 @@ class Alpha_Form_Minimal extends Widget_Nested_Base
             ]
         );
 
-        $this->add_control(
-            'heading_form_item_title_icondd',
+        $this->end_controls_section();
+
+        //sessão de controllers
+        $this->start_controls_section(
+            'section_form_view',
             [
-                'type' => Controls_Manager::HEADING,
-                'label' => esc_html__('Interactions', 'alpha-form'),
-                'separator' => 'before',
+                'label' => __('Vizualizações nos formulários', 'alpha-form-premium'),
+                'tab' => Controls_Manager::TAB_CONTENT,
             ]
         );
+
+        // Localização do usuário
         $this->add_control(
-            'default_state',
+            'enable_geolocation',
             [
-                'label' => esc_html__('Default State', 'alpha-form'),
-                'type' => Controls_Manager::SELECT,
-                'options' => [
-                    'expanded' => esc_html__('First expanded', 'alpha-form'),
-                    'all_collapsed' => esc_html__('All collapsed', 'alpha-form'),
-                ],
-                'default' => 'expanded',
-                'frontend_available' => true,
+                'label' => __('Ativar geolocalização', 'alpha-form-premium'),
+                'type' => \Elementor\Controls_Manager::SWITCHER,
+                'label_on' => __('Sim', 'alpha-form-premium'),
+                'label_off' => __('Não', 'alpha-form-premium'),
+                'return_value' => 'yes',
+                'default' => 'no',
+            ]
+        );
+
+        // Ocultar tela de envio
+        $this->add_control(
+            'show_submit_screen',
+            [
+                'label' => __('Mostrar tela de envio', 'alpha-form-premium'),
+                'description' => __('Se desabilitado não envia para o último campo. Ideal para páginas de captura com alta conversão.'),
+                'type' => \Elementor\Controls_Manager::SWITCHER,
+                'label_on' => __('Sim', 'alpha-form-premium'),
+                'label_off' => __('Não', 'alpha-form-premium'),
+                'return_value' => 'yes',
+                'default' => 'no',
             ]
         );
 
         $this->add_control(
-            'max_items_expended',
+            'show_required_mark',
             [
-                'label' => esc_html__('Max Items Expanded', 'alpha-form'),
-                'type' => Controls_Manager::SELECT,
-                'options' => [
-                    'one' => esc_html__('One', 'alpha-form'),
-                    'multiple' => esc_html__('Multiple', 'alpha-form'),
-                ],
-                'default' => 'one',
-                'frontend_available' => true,
-            ]
-        );
-
-        $this->add_control(
-            'n_form_animation_duration',
-            [
-                'label' => esc_html__('Animation Duration', 'alpha-form'),
-                'type' => Controls_Manager::SLIDER,
-                'size_units' => ['s', 'ms'],
-                'default' => [
-                    'unit' => 'ms',
-                    'size' => 400,
-                ],
-                'frontend_available' => true,
+                'label' => __('Marcar obrigatórios', 'alpha-form'),
+                'type' => Controls_Manager::SWITCHER,
+                'label_on' => __('Sim', 'alpha-form'),
+                'label_off' => __('Não', 'alpha-form'),
+                'return_value' => 'yes',
+                'default' => 'yes',
             ]
         );
 
@@ -401,7 +343,7 @@ class Alpha_Form_Minimal extends Widget_Nested_Base
         $this->start_controls_section(
             'section_form_style',
             [
-                'label' => esc_html__('form', 'alpha-form'),
+                'label' => esc_html__('Acordeão editor', 'alpha-form'),
                 'tab' => Controls_Manager::TAB_STYLE,
             ]
         );
@@ -409,7 +351,7 @@ class Alpha_Form_Minimal extends Widget_Nested_Base
         $this->add_responsive_control(
             'form_item_title_space_between',
             [
-                'label' => esc_html__('Space between Items', 'alpha-form'),
+                'label' => esc_html__('Espaço entre itens', 'alpha-form'),
                 'type' => Controls_Manager::SLIDER,
                 'size_units' => ['px', 'em', 'rem', 'custom'],
                 'range' => [
@@ -427,33 +369,7 @@ class Alpha_Form_Minimal extends Widget_Nested_Base
                     'size' => 0,
                 ],
                 'selectors' => [
-                    '{{WRAPPER}}' => '--n-form-item-title-space-between: {{SIZE}}{{UNIT}}',
-                ],
-            ]
-        );
-
-        $this->add_responsive_control(
-            'form_item_title_distance_from_content',
-            [
-                'label' => esc_html__('Distance from content', 'alpha-form'),
-                'type' => Controls_Manager::SLIDER,
-                'size_units' => ['px', 'em', 'rem', 'custom'],
-                'range' => [
-                    'px' => [
-                        'max' => 200,
-                    ],
-                    'em' => [
-                        'max' => 20,
-                    ],
-                    'rem' => [
-                        'max' => 20,
-                    ],
-                ],
-                'default' => [
-                    'size' => 0,
-                ],
-                'selectors' => [
-                    '{{WRAPPER}}' => '--n-form-item-title-distance-from-content: {{SIZE}}{{UNIT}}',
+                    '{{WRAPPER}} .alpha-f-n' => 'gap: {{SIZE}}{{UNIT}}',
                 ],
             ]
         );
@@ -466,31 +382,6 @@ class Alpha_Form_Minimal extends Widget_Nested_Base
 
         $this->end_controls_tabs();
 
-        $this->add_responsive_control(
-            'form_border_radius',
-            [
-                'label' => esc_html__('Border Radius', 'alpha-form'),
-                'type' => Controls_Manager::DIMENSIONS,
-                'size_units' => ['px', '%', 'em', 'rem', 'vw', 'custom'],
-                'selectors' => [
-                    '{{WRAPPER}}' => '--n-form-border-radius: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};',
-                ],
-                'separator' => 'before',
-            ]
-        );
-
-        $this->add_responsive_control(
-            'form_padding',
-            [
-                'label' => esc_html__('Padding', 'alpha-form'),
-                'type' => Controls_Manager::DIMENSIONS,
-                'size_units' => ['px', '%', 'em', 'rem', 'custom'],
-                'selectors' => [
-                    '{{WRAPPER}} ' => '--n-form-padding: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};',
-                ],
-            ]
-        );
-
         $this->end_controls_section();
     }
 
@@ -501,7 +392,7 @@ class Alpha_Form_Minimal extends Widget_Nested_Base
         $this->start_controls_section(
             'section_content_style',
             [
-                'label' => esc_html__('Content', 'alpha-form'),
+                'label' => esc_html__('Conteúdo', 'alpha-form'),
                 'tab' => Controls_Manager::TAB_STYLE,
             ]
         );
@@ -593,137 +484,7 @@ class Alpha_Form_Minimal extends Widget_Nested_Base
             ]
         );
 
-        $this->start_controls_tabs('header_title_color_style');
-
-        foreach (['normal', 'hover', 'active'] as $state) {
-            $this->add_header_style($state, 'title');
-        }
-
-        $this->end_controls_tabs();
-
-        $this->add_control(
-            'heading_icon_style_title',
-            [
-                'type' => Controls_Manager::HEADING,
-                'label' => esc_html__('Icon', 'alpha-form'),
-                'separator' => 'before',
-            ]
-        );
-
-        $this->add_responsive_control(
-            'icon_size',
-            [
-                'label' => esc_html__('Size', 'alpha-form'),
-                'type' => Controls_Manager::SLIDER,
-                'range' => [
-                    'em' => [
-                        'max' => 10,
-                    ],
-                    'rem' => [
-                        'max' => 10,
-                    ],
-                ],
-                'default' => [
-                    'unit' => 'px',
-                    'size' => 15,
-                ],
-                'size_units' => ['px', '%', 'em', 'rem', 'vw', 'custom'],
-                'selectors' => [
-                    '{{WRAPPER}}' => '--n-form-icon-size: {{SIZE}}{{UNIT}}',
-                ],
-            ]
-        );
-
-        $this->add_responsive_control(
-            'icon_spacing',
-            [
-                'label' => esc_html__('Spacing', 'alpha-form'),
-                'type' => Controls_Manager::SLIDER,
-                'range' => [
-                    'px' => [
-                        'max' => 400,
-                    ],
-                    'vw' => [
-                        'max' => 50,
-                        'step' => 0.1,
-                    ],
-                ],
-                'size_units' => ['px', '%', 'em', 'rem', 'vw', 'custom'],
-                'selectors' => [
-                    '{{WRAPPER}}' => '--n-form-icon-gap: {{SIZE}}{{UNIT}}',
-                ],
-                'condition' => [
-                    'form_item_title_position_horizontal!' => 'stretch',
-                ],
-            ]
-        );
-
-        $this->start_controls_tabs('header_icon_color_style');
-
-        foreach (['normal', 'hover', 'active'] as $state) {
-            $this->add_header_style($state, 'icon');
-        }
-
-        $this->end_controls_tabs();
         $this->end_controls_section();
-    }
-
-    private function add_header_style($state, $context)
-    {
-        $variable = '--n-form-' . $context . '-' . $state . '-color';
-
-        switch ($state) {
-            case 'hover':
-                $translated_tab_text = esc_html__('Hover', 'alpha-form');
-                $translated_tab_css_selector = ":where( {{WRAPPER}}{$this->widget_container_selector} > .alpha-f-n > .alpha-f-n-item:not([open]) > .alpha-f-n-item-title:hover > .alpha-f-n-item-title-header ) > .alpha-f-n-item-title-text";
-                break;
-            case 'active':
-                $translated_tab_text = esc_html__('Active', 'alpha-form');
-                $translated_tab_css_selector = ":where( {{WRAPPER}}{$this->widget_container_selector} > .alpha-f-n > .alpha-f-n-item[open] > .alpha-f-n-item-title > .alpha-f-n-item-title-header ) > .alpha-f-n-item-title-text";
-                break;
-            default:
-                $translated_tab_text = esc_html__('Normal', 'alpha-form');
-                $translated_tab_css_selector = ":where( {{WRAPPER}}{$this->widget_container_selector} > .alpha-f-n > .alpha-f-n-item:not([open]) > .alpha-f-n-item-title:not(hover) > .alpha-f-n-item-title-header ) > .alpha-f-n-item-title-text";
-                break;
-        }
-
-        $this->start_controls_tab(
-            'header_' . $state . '_' . $context,
-            [
-                'label' => $translated_tab_text,
-            ]
-        );
-
-        $this->add_control(
-            $state . '_' . $context . '_color',
-            [
-                'label' => esc_html__('Color', 'alpha-form'),
-                'type' => Controls_Manager::COLOR,
-                'selectors' => [
-                    '{{WRAPPER}}' => $variable . ': {{VALUE}};',
-                ],
-            ]
-        );
-
-        if ('title' === $context) {
-            $this->add_group_control(
-                Group_Control_Text_Shadow::get_type(),
-                [
-                    'name' => $context . '_' . $state . '_text_shadow',
-                    'selector' => '{{WRAPPER}} ' . $translated_tab_css_selector,
-                ]
-            );
-
-            $this->add_group_control(
-                Group_Control_Text_Stroke::get_type(),
-                [
-                    'name' => $context . '_' . $state . '_stroke',
-                    'selector' => '{{WRAPPER}} ' . $translated_tab_css_selector,
-                ]
-            );
-        }
-
-        $this->end_controls_tab();
     }
 
     /**
@@ -784,13 +545,17 @@ class Alpha_Form_Minimal extends Widget_Nested_Base
     {
         $settings = $this->get_settings_for_display();
         $items = $settings['items'];
+        $show_required_mark = 'data-show-required=' . $settings["show_required_mark"] . '' ?? '';
+        $form_name = $settings['form_name'] ?? 'Alpha Form';
         $id_int = substr($this->get_id_int(), 0, 3);
         $items_title_html = '';
         $this->add_render_attribute('alpha-form', 'class', 'alpha-f-n');
         $this->add_render_attribute('alpha-form', 'aria-label', 'Alpha Form. Open links with Enter or Space, close with Escape, and navigate with Arrow Keys');
-        $default_state = $settings['default_state'];
+        $default_state = $settings['default_state'] ?? 'expanded';
+        $form_id = $this->get_id();
 
-        echo '<form class="alpha-form">';
+
+        echo '<form class="alpha-form" data-alpha-widget-id="' . esc_attr($form_id) . '" data-form-name="' . esc_attr($form_name) . '" ' . esc_attr($show_required_mark) . '>';
         foreach ($items as $index => $item) {
             $form_count = $index + 1;
             $item_setting_key = $this->get_repeater_setting_key('item_title', 'items', $index);
@@ -799,7 +564,7 @@ class Alpha_Form_Minimal extends Widget_Nested_Base
             $item_id = empty($item['element_css_id']) ? 'alpha-f-n-item-' . $id_int . $index : $item['element_css_id'];
             $is_open = 'expanded' === $default_state && 0 === $index ? 'open' : '';
             $aria_expanded = 'expanded' === $default_state && 0 === $index;
-            $step_class  = 'alpha-form-step' . ($i === 0 ? ' active' : '');
+            $step_class  = 'alpha-form-step' . ($index === 0 ? ' active' : '');
 
             $this->add_render_attribute($item_setting_key, [
                 'id' => $item_id,
@@ -838,28 +603,10 @@ class Alpha_Form_Minimal extends Widget_Nested_Base
             ?>
         </div>
     <?php
-        echo '<span data-alpha="prev">Voltar</span>
-            <span data-alpha="next">Avançar</span>
-            </form>';
+        echo '</form>';
     }
 
-    public function print_child($index, $item_id = null)
-    {
-        $children = $this->get_children();
 
-        if (! empty($children[$index])) {
-            // Add data-tab-index attribute to the content area.
-            $add_attribute_to_container = function ($should_render, $container) use ($item_id) {
-                $this->add_attributes_to_container($container, $item_id);
-
-                return $should_render;
-            };
-
-            add_filter('elementor/frontend/container/should_render', $add_attribute_to_container, 10, 3);
-            $children[$index]->print_element();
-            remove_filter('elementor/frontend/container/should_render', $add_attribute_to_container);
-        }
-    }
 
     protected function add_attributes_to_container($container, $item_id)
     {
@@ -912,7 +659,7 @@ class Alpha_Form_Minimal extends Widget_Nested_Base
     protected function content_template()
     {
         ?>
-            <div class="alpha-f-n" aria-label="Alpha Form. Open links with Enter or Space, close with Escape, and navigate with Arrow Keys">
+            <div class="alpha-f-n" data-alpha-widget-id="{{ view.getID() }}" data-form-name="{{{ settings['form_name'] }}}">
                 <# if ( settings['items'] ) {
                     const elementUid=view.getIDInt().toString().substring( 0, 3 ),
                     titleHTMLTag=elementor.helpers.validateHTMLTag( settings.title_tag ),

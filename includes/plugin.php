@@ -19,22 +19,22 @@ function alpha_form_uninstall()
 
 // Editor (painel lateral do Elementor)
 add_action('elementor/preview/enqueue_styles', function () {
-	wp_enqueue_style(
-		'alpha-form-editor-style',
-		ALPHA_FORM_URL . 'assets/css/alpha-editor-style.css',
-		[],
-		'1.0.1'
-	);
+    wp_enqueue_style(
+        'alpha-form-editor-style',
+        ALPHA_FORM_URL . 'assets/css/alpha-editor-style.css',
+        [],
+        '1.0.1'
+    );
 });
 
 // Preview do editor e frontend
 add_action('elementor/frontend/after_enqueue_styles', function () {
-	wp_enqueue_style(
-		'alpha-form-style',
-		ALPHA_FORM_URL . 'assets/css/alpha-style.css',
-		[],
-		'1.0.0'
-	);
+    wp_enqueue_style(
+        'alpha-form-style',
+        ALPHA_FORM_URL . 'assets/css/alpha-style.css',
+        [],
+        '1.0.0'
+    );
 });
 
 
@@ -47,8 +47,7 @@ add_action('elementor/editor/after_enqueue_scripts', function () {
         '1.0.0',
         true
     );
-});
-add_action('elementor/editor/before_enqueue_scripts', function () {
+
     wp_enqueue_script(
         'alpha-accordion',
         ALPHA_FORM_URL . 'assets/js/alpha-accordion.js',
@@ -76,13 +75,11 @@ add_action('wp_enqueue_scripts', function () {
 });
 
 add_action('elementor/elements/categories_registered', function ($elements_manager) {
-    if (! $elements_manager->get_category('alpha-form')) {
-        $elements_manager->add_category(
-            'alpha-form',
-            [
-                'title' => 'Alpha Form',
-                'icon'  => 'eicon-form-horizontal',
-            ]
-        );
-    }
+    $elements_manager->add_category(
+        'alpha-form',
+        [
+            'title' => 'Alpha Form',
+            'icon'  => 'eicon-form-horizontal',
+        ]
+    );
 });

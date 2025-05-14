@@ -19,3 +19,55 @@
     display: flex;
     height: auto
 }
+
+.alpha-form-next {
+    display: flex;
+    align-items: center;
+}
+
+.alpha-form-button-inner svg {
+    transition: all 0.2s;
+}
+
+.alpha-form-button-inner {
+    display: flex;
+    align-items: center;
+}
+
+.elementor-widget-alpha-progress {
+    width: 100%;
+    display: block;
+}
+
+.alpha-form-progress-wrapper {
+    display: flex;
+    flex-direction: column-reverse;
+}
+
+.alpha-f-n {
+    display: flex;
+    flex-direction: column;
+}
+
+.widget-alpha-form-n input {
+    display: block;
+    width: 100%;
+    outline: none;
+}
+
+.widget-alpha-form-n input:focus {
+    outline: none;
+}
+
+.alpha-inputs {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+}
+
+.alpha-form-titulo,
+.alpha-form-description,
+.alpha-form-description p {
+    margin: 0 !important;
+
+}

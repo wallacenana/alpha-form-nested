@@ -25,3 +25,12 @@
 .alpha-f-n-item .e-opened {
     display: none;
 }
+
+.alpha-f-n-item-title,
+.alpha-f-n-item-content {
+    border: 1px solid #555555;
+}
+
+.alpha-f-n-item-content {
+    border-top: none;
+}

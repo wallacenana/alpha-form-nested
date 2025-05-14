@@ -35,26 +35,29 @@ add_action('plugins_loaded', function () {
 	// Inclui e registra o widget
 	add_action('elementor/widgets/register', function ($widgets_manager) {
 		//Base do form
-		require_once ALPHA_FORM_PATH . 'modules/widgets/widget-base-form.php';
-		$widgets_manager->register(new \AlphaForm\Module\Widget\Alpha_Form_Minimal());
+		require_once ALPHA_FORM_PATH . 'modules/widgets/controls/base.php';
+		$widgets_manager->register(new \AlphaForm\Module\Widget\Controls\Alpha_Form_Minimal());
 
 		// Botão Next
-		require_once ALPHA_FORM_PATH . 'modules/widgets/widget-alpha-next.php';
-		$widgets_manager->register(new \AlphaForm\Modules\Widgets\Alpha_Next());
+		require_once ALPHA_FORM_PATH . 'modules/widgets/controls/btn-next.php';
+		$widgets_manager->register(new \AlphaForm\Module\Widget\Controls\Alpha_Next());
 
 		// Botão Prev
-		require_once ALPHA_FORM_PATH . 'modules/widgets/widget-alpha-prev.php';
-		$widgets_manager->register(new \AlphaForm\Modules\Widgets\Alpha_Prev());
+		require_once ALPHA_FORM_PATH . 'modules/widgets/controls/btn-prev.php';
+		$widgets_manager->register(new \AlphaForm\Module\Widget\Controls\Alpha_Prev());
 
 		// Formulário
-		require_once ALPHA_FORM_PATH . 'modules/widgets/widget-alpha-form.php';
-		$widgets_manager->register(new \AlphaForm\Modules\Widgets\Alpha_Form());
+		require_once ALPHA_FORM_PATH . 'modules/widgets/controls/inputs.php';
+		$widgets_manager->register(new \AlphaForm\Module\Widget\Controls\Alpha_Inputs());
 
 		// Barra de progresso
-		require_once ALPHA_FORM_PATH . 'modules/widgets/widget-alpha-progress.php';
-		$widgets_manager->register(new \AlphaForm\Modules\Widgets\Alpha_Progress());
+		require_once ALPHA_FORM_PATH . 'modules/widgets/controls/progress.php';
+		$widgets_manager->register(new \AlphaForm\Module\Widget\Controls\Alpha_Progress());
+
+		// Elements
+		require_once ALPHA_FORM_PATH . 'modules/widgets/controls/elements.php';
+		$widgets_manager->register(new \AlphaForm\Module\Widget\Controls\Alpha_Elements());
 	});
 });
-
 // Includes principais
 require_once ALPHA_FORM_PATH . 'includes/plugin.php';

@@ -5,6 +5,36 @@ document.addEventListener('DOMContentLoaded', () => {
 	initAlphaNavigation();
 });
 
+function markRequiredFields() {
+	const forms = document.querySelectorAll('.widget-alpha-form-n');
+
+	forms.forEach(widget => {
+		const form = widget.querySelector('form[data-show-required="yes"]');
+		if (!form) return;
+
+		const titles = form.querySelectorAll('.alpha-form-titulo');
+
+		titles.forEach(title => {
+			const container = title.closest('.alpha-form-field') || title.closest('.alpha-inputs');
+			if (!container) return;
+
+			const requiredInput = container.querySelector('input[required], select[required], textarea[required]');
+			if (!requiredInput) return;
+
+			if (title.classList.contains('alpha-required-injected')) return;
+
+			const mark = document.createElement('span');
+			mark.textContent = ' *';
+			mark.style.color = '#ff0000';
+			mark.style.marginLeft = '4px';
+			mark.classList.add('alpha-required-mark');
+
+			title.appendChild(mark);
+			title.classList.add('alpha-required-injected');
+		});
+	});
+}
+
 function initAlphaForm() {
 	const fields = Array.from(document.querySelectorAll('.alpha-form-field'));
 	if (!fields.length) return;
@@ -40,8 +70,8 @@ function isValid(field) {
 	return true;
 }
 
-function getNextField(current) {
-	const fields = Array.from(document.querySelectorAll('.alpha-form-field'));
+function getNextField(current, form) {
+	const fields = Array.from(form.querySelectorAll('.alpha-form-field'));
 	const index = fields.indexOf(current);
 	for (let i = index + 1; i < fields.length; i++) {
 		const input = fields[i].querySelector('input, select, textarea');
@@ -50,8 +80,8 @@ function getNextField(current) {
 	return null;
 }
 
-function getPrevField(current) {
-	const fields = Array.from(document.querySelectorAll('.alpha-form-field'));
+function getPrevField(current, form) {
+	const fields = Array.from(form.querySelectorAll('.alpha-form-field'));
 	const index = fields.indexOf(current);
 	for (let i = index - 1; i >= 0; i--) {
 		const input = fields[i].querySelector('input, select, textarea');
@@ -60,11 +90,28 @@ function getPrevField(current) {
 	return null;
 }
 
-function goToNextField() {
-	const current = document.querySelector('.alpha-form-field.active');
-	if (!current || !isValid(current)) return;
+function goToNextField(formId) {
+	const form = document.querySelector(`.widget-alpha-form-n[data-id="${formId}"]`);
+	if (!form) return;
 
-	const next = getNextField(current);
+	const current = form.querySelector('.alpha-form-field.active');
+	if (!current) return;
+
+	// Validação
+	if (!isValid(current)) {
+		const errorMessage = current.querySelector('.alpha-error-message');
+		if (errorMessage) {
+			errorMessage.style.display = 'block';
+		}
+		return;
+	} else {
+		const errorMessage = current.querySelector('.alpha-error-message');
+		if (errorMessage) {
+			errorMessage.style.display = 'none';
+		}
+	}
+
+	const next = getNextField(current, form);
 	if (next) {
 		current.classList.remove('active');
 		next.classList.add('active');
@@ -73,11 +120,15 @@ function goToNextField() {
 	}
 }
 
-function goToPrevField() {
-	const current = document.querySelector('.alpha-form-field.active');
+
+function goToPrevField(formId) {
+	const form = document.querySelector(`.widget-alpha-form-n[data-id="${formId}"]`);
+	if (!form) return;
+
+	const current = form.querySelector('.alpha-form-field.active');
 	if (!current) return;
 
-	const prev = getPrevField(current);
+	const prev = getPrevField(current, form);
 	if (prev) {
 		current.classList.remove('active');
 		prev.classList.add('active');
@@ -92,7 +143,23 @@ function initAlphaNavigation() {
 		if (!btn) return;
 
 		const action = btn.dataset.alpha;
-		if (action === 'next') goToNextField();
-		if (action === 'prev') goToPrevField();
+		let formId = btn.dataset.aFTarget || btn.dataset.a_f_target;
+
+		// 🧠 Caso não tenha target explícito, tenta descobrir via DOM
+		if (!formId) {
+			const wrapper = btn.closest('.widget-alpha-form-n[data-id]');
+			if (wrapper) {
+				formId = wrapper.getAttribute('data-id');
+			}
+		}
+
+		if (!formId) return;
+
+		if (action === 'next') goToNextField(formId);
+		if (action === 'prev') goToPrevField(formId);
 	});
 }
+
+
+// Chama a função no carregamento
+window.addEventListener('DOMContentLoaded', markRequiredFields);
