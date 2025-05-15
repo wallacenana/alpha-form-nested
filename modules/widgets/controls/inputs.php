@@ -73,7 +73,8 @@ class Alpha_Inputs extends Widget_Base
 					'time'      => 'Hora',
 					'hidden'    => 'Oculto',
 					'acceptance' => 'Aceitação',
-					'intro'     => 'Texto simples',
+					'stext'     => 'Texto simples',
+					'cel'       => 'Celular (BR)',
 					'cpf'       => 'CPF',
 					'cnpj'      => 'CNPJ',
 					'cep'       => 'CEP',
@@ -130,7 +131,7 @@ class Alpha_Inputs extends Widget_Base
 				'type' => Controls_Manager::TEXT,
 				'default' => '',
 				'condition' => [
-					'field_type!' => ['select', 'radio', 'checkbox', 'date', 'time', 'intro', 'hidden'],
+					'field_type!' => ['select', 'radio', 'checkbox', 'date', 'time', 'stext', 'hidden', 'acceptance'],
 				],
 			]
 		);
@@ -158,7 +159,7 @@ class Alpha_Inputs extends Widget_Base
 				'default' => 'Próximo',
 				'placeholder' => 'ex: Continuar',
 				'condition' => [
-					'field_type' => ['text', 'email', 'textarea', 'tel', 'url', 'number', 'password', 'date', 'time', 'intro', 'checkbox', 'cpf', 'cnpj', 'cep', 'currency'],
+					'field_type' => ['text', 'email', 'textarea', 'tel', 'url', 'number', 'password', 'date', 'time', 'stext', 'checkbox', 'cpf', 'cnpj', 'cep', 'currency', 'select', 'cel'],
 				],
 			]
 		);
@@ -168,7 +169,11 @@ class Alpha_Inputs extends Widget_Base
 				'label' => __('Texto auxiliar', 'alpha-form'),
 				'type' => Controls_Manager::TEXT,
 				'default' => 'Preencha este campo',
-				'placeholder' => 'ex: Continuar'
+				'placeholder' => 'ex: Continuar',
+				'condition' => [
+					'field_type!' => 'hidden',
+					'stext'
+				],
 			]
 		);
 
@@ -198,6 +203,9 @@ class Alpha_Inputs extends Widget_Base
 					'hand-point-right',
 					'arrow-alt-circle-right',
 				],
+				'condition' => [
+					'field_type!' => 'acceptance',
+				],
 			],
 		]);
 
@@ -218,6 +226,9 @@ class Alpha_Inputs extends Widget_Base
 			'toggle' => false,
 			'condition' => [
 				'icon[value]!' => '',
+			],
+			'condition' => [
+				'field_type!' => 'acceptance',
 			],
 		]);
 
@@ -394,19 +405,19 @@ class Alpha_Inputs extends Widget_Base
 		$this->add_responsive_control(
 			'label_text_alinhamento',
 			[
-				'label' => esc_html__('Alinhamento', 'alpha-form-premium'),
+				'label' => esc_html__('Alinhamento', 'alpha-form'),
 				'type' => Controls_Manager::CHOOSE,
 				'options' => [
 					'left' => [
-						'title' => esc_html__('Left', 'alpha-form-premium'),
+						'title' => esc_html__('Left', 'alpha-form'),
 						'icon' => 'eicon-text-align-left',
 					],
 					'center' => [
-						'title' => esc_html__('Center', 'alpha-form-premium'),
+						'title' => esc_html__('Center', 'alpha-form'),
 						'icon' => 'eicon-text-align-center',
 					],
 					'right' => [
-						'title' => esc_html__('Right', 'alpha-form-premium'),
+						'title' => esc_html__('Right', 'alpha-form'),
 						'icon' => 'eicon-text-align-right',
 					],
 				],
@@ -452,19 +463,19 @@ class Alpha_Inputs extends Widget_Base
 		$this->add_responsive_control(
 			'descricao_text_alinhamento',
 			[
-				'label' => esc_html__('Alinhamento', 'alpha-form-premium'),
+				'label' => esc_html__('Alinhamento', 'alpha-form'),
 				'type' => Controls_Manager::CHOOSE,
 				'options' => [
 					'left' => [
-						'title' => esc_html__('Left', 'alpha-form-premium'),
+						'title' => esc_html__('Left', 'alpha-form'),
 						'icon' => 'eicon-text-align-left',
 					],
 					'center' => [
-						'title' => esc_html__('Center', 'alpha-form-premium'),
+						'title' => esc_html__('Center', 'alpha-form'),
 						'icon' => 'eicon-text-align-center',
 					],
 					'right' => [
-						'title' => esc_html__('Right', 'alpha-form-premium'),
+						'title' => esc_html__('Right', 'alpha-form'),
 						'icon' => 'eicon-text-align-right',
 					],
 				],
@@ -549,6 +560,31 @@ class Alpha_Inputs extends Widget_Base
 			]
 		);
 
+		$this->add_responsive_control(
+			'input_padding',
+			[
+				'label' => __('Espaçamento Interno', 'alpha-form'),
+				'type' => Controls_Manager::DIMENSIONS,
+				'size_units' => ['px', '%', 'em', 'custom'],
+				'selectors' => [
+					'{{WRAPPER}} .alpha-input-field' => 'padding: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};',
+				],
+				'fields_options' => [
+					'top' => [
+						'default' => 4,
+					],
+					'right' => [
+						'default' => 15,
+					],
+					'bottom' => [
+						'default' => 4,
+					],
+					'left' => [
+						'default' => 15,
+					],
+				],
+			]
+		);
 		$this->end_controls_tab();
 
 		// Aba Focus
@@ -683,6 +719,31 @@ class Alpha_Inputs extends Widget_Base
 			]
 		);
 
+		$this->add_responsive_control(
+			'btn_padding',
+			[
+				'label' => __('Espaçamento Interno', 'alpha-form'),
+				'type' => Controls_Manager::DIMENSIONS,
+				'size_units' => ['px', '%', 'em', 'custom'],
+				'selectors' => [
+					'{{WRAPPER}} .alpha-form-next.form' => 'padding: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};',
+				],
+				'fields_options' => [
+					'top' => [
+						'default' => 4,
+					],
+					'right' => [
+						'default' => 15,
+					],
+					'bottom' => [
+						'default' => 4,
+					],
+					'left' => [
+						'default' => 15,
+					],
+				],
+			]
+		);
 		$this->end_controls_tab();
 
 		// Aba Hover
@@ -736,6 +797,8 @@ class Alpha_Inputs extends Widget_Base
 			]
 		);
 		$this->end_controls_tab();
+		$this->end_controls_tabs();
+
 		$this->add_control('icon_size', [
 			'label' => esc_html__('Tamanho do Ícone', 'alpha-form'),
 			'type' => Controls_Manager::SLIDER,
@@ -965,6 +1028,629 @@ class Alpha_Inputs extends Widget_Base
 		);
 
 		$this->end_controls_section();
+
+		// texto key hint
+		$this->start_controls_section(
+			'style_option_section',
+			[
+				'label' => __('Opções', 'alpha-form'),
+				'tab' => Controls_Manager::TAB_STYLE,
+			]
+		);
+
+		$this->add_control('options_position', [
+			'label' => esc_html__('Posição', 'alpha-form'),
+			'type' => Controls_Manager::CHOOSE,
+			'options' => [
+				'row' => [
+					'title' => esc_html__('Horizontal', 'alpha-form'),
+					'icon' => 'eicon-arrow-right',
+				],
+				'column' => [
+					'title' => esc_html__('Vertical', 'alpha-form'),
+					'icon' => 'eicon-arrow-down',
+				],
+			],
+			'default' => 'column',
+			'toggle' => false,
+			'selectors' => [
+				'{{WRAPPER}} .alpha-inputs-options' => 'width: 100%; display: flex; flex-wrap: wrap; flex-direction: {{VALUE}};',
+				'{{WRAPPER}} .alpha-inputs-options > *' => 'flex: 1 1 auto;',
+			],
+		]);
+
+		$this->add_responsive_control('options_gap', [
+			'label' => esc_html__('Espaçamento entre opções', 'alpha-form'),
+			'type' => Controls_Manager::SLIDER,
+			'size_units' => ['px', 'em'],
+			'default' => [
+				'size' => 10,
+				'unit' => 'px',
+			],
+			'selectors' => [
+				'{{WRAPPER}} .alpha-inputs-options' => 'gap: {{SIZE}}{{UNIT}};',
+			],
+		]);
+
+
+		$this->add_group_control(
+			Group_Control_Typography::get_type(),
+			[
+				'name' => 'option_typography',
+				'selector' => '{{WRAPPER}} .alpha-option',
+				'global' => [
+					'default' => Global_Typography::TYPOGRAPHY_PRIMARY,
+				],
+				'fields_options' => [
+					'font_size' => [
+						'default' => [
+							'unit' => 'px',
+							'size' => 16,
+							'weight' => 400,
+						],
+					],
+				],
+			]
+		);
+
+		// Aba ativo
+		$this->start_controls_tabs('tabs_option_styles');
+		// Aba Normal
+		$this->start_controls_tab(
+			'tab_option_normal',
+			[
+				'label' => __('Normal', 'alpha-form'),
+			]
+		);
+
+		$this->add_control(
+			'label_option_color',
+			[
+				'label' => __('Cor do Texto', 'alpha-form'),
+				'type' => Controls_Manager::COLOR,
+				'selectors' => [
+					'{{WRAPPER}} .alpha-option' => 'margin: 0; color: {{VALUE}};',
+				],
+				'global' => [
+					'default' => Global_Colors::COLOR_TEXT,
+				],
+			]
+		);
+
+		$this->add_control(
+			'option_text_bg',
+			[
+				'label' => __('Background', 'alpha-form'),
+				'type' => Controls_Manager::COLOR,
+				'selectors' => [
+					'{{WRAPPER}} .alpha-option' => 'background: {{VALUE}};',
+				],
+				'global' => [
+					'default' => Global_Colors::COLOR_ACCENT,
+				],
+			]
+		);
+
+		$this->add_group_control(
+			Group_Control_Border::get_type(),
+			[
+				'name' => 'option_border',
+				'selector' => '{{WRAPPER}} .alpha-option',
+				'fields_options' => [
+					'border' => [
+						'default' => 'solid',
+					],
+					'width' => [
+						'default' => [
+							'top' => 1,
+							'right' => 1,
+							'bottom' => 1,
+							'left' => 1,
+							'unit' => 'px',
+						],
+					],
+					'color' => [
+						'global' => [
+							'default' => Global_Colors::COLOR_PRIMARY,
+						],
+					],
+				],
+			]
+		);
+
+		$this->add_responsive_control(
+			'option_border_radius',
+			[
+				'label' => __('Arredondamento', 'alpha-form'),
+				'type' => Controls_Manager::DIMENSIONS,
+				'size_units' => ['px', '%', 'em', 'custom'],
+				'selectors' => [
+					'{{WRAPPER}} .alpha-option' => 'border-radius: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};',
+				],
+			]
+		);
+		$this->end_controls_tab();
+
+		$this->start_controls_tab(
+			'tab_option_hover',
+			[
+				'label' => __('Hover', 'alpha-form'),
+			]
+		);
+
+		$this->add_control(
+			'label_option_color_hover',
+			[
+				'label' => __('Cor do Texto', 'alpha-form'),
+				'type' => Controls_Manager::COLOR,
+				'selectors' => [
+					'{{WRAPPER}} .alpha-option:hover' => 'margin: 0; color: {{VALUE}};',
+				],
+			]
+		);
+
+		$this->add_control(
+			'option_text_bg_hover',
+			[
+				'label' => __('Background', 'alpha-form'),
+				'type' => Controls_Manager::COLOR,
+				'selectors' => [
+					'{{WRAPPER}} .alpha-option:hover' => 'background: {{VALUE}};',
+				],
+			]
+		);
+
+		$this->add_group_control(
+			Group_Control_Border::get_type(),
+			[
+				'name' => 'option_border_hover',
+				'selector' => '{{WRAPPER}} .alpha-option:hover',
+				'fields_options' => [
+					'border' => [
+						'default' => 'solid',
+					],
+					'width' => [
+						'default' => [
+							'top' => 1,
+							'right' => 1,
+							'bottom' => 1,
+							'left' => 1,
+							'unit' => 'px',
+						],
+					],
+				],
+			]
+		);
+
+		$this->end_controls_tab();
+		$this->end_controls_tabs();
+
+		$this->add_responsive_control(
+			'option_padding',
+			[
+				'label' => __('Espaçamento Interno', 'alpha-form'),
+				'type' => Controls_Manager::DIMENSIONS,
+				'size_units' => ['px', '%', 'em', 'custom'],
+				'selectors' => [
+					'{{WRAPPER}} .alpha-option' => 'padding: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};',
+				],
+				'fields_options' => [
+					'top' => [
+						'default' => 4,
+					],
+					'right' => [
+						'default' => 15,
+					],
+					'bottom' => [
+						'default' => 4,
+					],
+					'left' => [
+						'default' => 15,
+					],
+				],
+			]
+		);
+
+		// key hint
+
+		$this->add_control(
+			'heading_form_item_title_hey_hint',
+			[
+				'type' => Controls_Manager::HEADING,
+				'label' => esc_html__('Key hint', 'alpha-form'),
+				'separator' => 'before',
+			]
+		);
+
+		$this->add_group_control(
+			Group_Control_Typography::get_type(),
+			[
+				'name' => 'key_hint_typography',
+				'selector' => '{{WRAPPER}} label.alpha-letter-active::before',
+				'global' => [
+					'default' => Global_Typography::TYPOGRAPHY_PRIMARY,
+				],
+				'fields_options' => [
+					'font_size' => [
+						'default' => [
+							'unit' => 'px',
+							'size' => 13,
+							'weight' => 400,
+						],
+					],
+				],
+			]
+		);
+
+		$this->add_control(
+			'label_key_hint_color',
+			[
+				'label' => __('Cor do Texto', 'alpha-form'),
+				'type' => Controls_Manager::COLOR,
+				'selectors' => [
+					'{{WRAPPER}} label.alpha-letter-active::before' => 'margin: 0; color: {{VALUE}};',
+				],
+				'default' => '#ff0042',
+			]
+		);
+
+		$this->add_control(
+			'key_hint_bg',
+			[
+				'label' => __('Background', 'alpha-form'),
+				'type' => Controls_Manager::COLOR,
+				'selectors' => [
+					'{{WRAPPER}} label.alpha-letter-active::before' => 'background: {{VALUE}};',
+				],
+				'default' => '#ff004220',
+			]
+		);
+
+		$this->add_responsive_control(
+			'key_hint_padding',
+			[
+				'label' => __('Espaçamento Interno', 'alpha-form'),
+				'type' => Controls_Manager::DIMENSIONS,
+				'size_units' => ['px', '%', 'em', 'custom'],
+				'selectors' => [
+					'{{WRAPPER}} label.alpha-letter-active::before' => 'padding: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};',
+				],
+				'fields_options' => [
+					'top' => [
+						'default' => 4,
+					],
+					'right' => [
+						'default' => 15,
+					],
+					'bottom' => [
+						'default' => 4,
+					],
+					'left' => [
+						'default' => 15,
+					],
+				],
+			]
+		);
+
+		$this->add_group_control(
+			Group_Control_Border::get_type(),
+			[
+				'name' => 'key_hint_border',
+				'selector' => '{{WRAPPER}} label.alpha-letter-active::before',
+				'fields_options' => [
+					'border' => [
+						'default' => 'solid',
+					],
+					'width' => [
+						'default' => [
+							'top' => 1,
+							'right' => 1,
+							'bottom' => 1,
+							'left' => 1,
+							'unit' => 'px',
+						],
+					],
+					'color' => [
+						'default' => '#ff0042',
+					],
+				],
+			]
+		);
+
+		$this->add_responsive_control(
+			'key_hint_border_radius',
+			[
+				'label' => __('Arredondamento', 'alpha-form'),
+				'type' => Controls_Manager::DIMENSIONS,
+				'size_units' => ['px', '%', 'em', 'custom'],
+				'selectors' => [
+					'{{WRAPPER}} label.alpha-letter-active::before' => 'border-radius: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};',
+				],
+			]
+		);
+
+		$this->end_controls_section();
+
+
+
+
+		//campos do select
+		$this->start_controls_section(
+			'style_select_section',
+			[
+				'label' => __('Select', 'alpha-form'),
+				'tab' => Controls_Manager::TAB_STYLE,
+			]
+		);
+
+		$this->add_group_control(
+			Group_Control_Typography::get_type(),
+			[
+				'name' => 'select_typography',
+				'selector' => '{{WRAPPER}} .alpha-select',
+				'global' => [
+					'default' => Global_Typography::TYPOGRAPHY_PRIMARY,
+				],
+				'fields_options' => [
+					'font_size' => [
+						'default' => [
+							'unit' => 'px',
+							'size' => 16,
+							'weight' => 400,
+						],
+					],
+				],
+			]
+		);
+
+		// Aba ativo
+		$this->start_controls_tabs('tabs_select_styles');
+		// Aba Normal
+		$this->start_controls_tab(
+			'tab_select_normal',
+			[
+				'label' => __('Normal', 'alpha-form'),
+			]
+		);
+
+		$this->add_control(
+			'label_select_color',
+			[
+				'label' => __('Cor do Texto', 'alpha-form'),
+				'type' => Controls_Manager::COLOR,
+				'selectors' => [
+					'{{WRAPPER}} .alpha-select' => 'margin: 0; color: {{VALUE}};',
+				],
+				'global' => [
+					'default' => Global_Colors::COLOR_TEXT,
+				],
+			]
+		);
+
+		$this->add_control(
+			'select_text_bg',
+			[
+				'label' => __('Background', 'alpha-form'),
+				'type' => Controls_Manager::COLOR,
+				'selectors' => [
+					'{{WRAPPER}} .alpha-select' => 'background: {{VALUE}};',
+				],
+				'global' => [
+					'default' => Global_Colors::COLOR_ACCENT,
+				],
+			]
+		);
+
+		$this->add_group_control(
+			Group_Control_Border::get_type(),
+			[
+				'name' => 'select_border',
+				'selector' => '{{WRAPPER}} .alpha-select',
+				'fields_options' => [
+					'border' => [
+						'default' => 'solid',
+					],
+					'width' => [
+						'default' => [
+							'top' => 1,
+							'right' => 1,
+							'bottom' => 1,
+							'left' => 1,
+							'unit' => 'px',
+						],
+					],
+					'color' => [
+						'global' => [
+							'default' => Global_Colors::COLOR_PRIMARY,
+						],
+					],
+				],
+			]
+		);
+
+		$this->add_responsive_control(
+			'select_border_radius',
+			[
+				'label' => __('Arredondamento', 'alpha-form'),
+				'type' => Controls_Manager::DIMENSIONS,
+				'size_units' => ['px', '%', 'em', 'custom'],
+				'selectors' => [
+					'{{WRAPPER}} .alpha-select' => 'border-radius: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};',
+				],
+			]
+		);
+		$this->end_controls_tab();
+
+		$this->start_controls_tab(
+			'tab_select_hover',
+			[
+				'label' => __('Hover', 'alpha-form'),
+			]
+		);
+
+		$this->add_control(
+			'label_select_color_hover',
+			[
+				'label' => __('Cor do Texto', 'alpha-form'),
+				'type' => Controls_Manager::COLOR,
+				'selectors' => [
+					'{{WRAPPER}} .alpha-select:hover' => 'margin: 0; color: {{VALUE}};',
+				],
+			]
+		);
+
+		$this->add_control(
+			'select_text_bg_hover',
+			[
+				'label' => __('Background', 'alpha-form'),
+				'type' => Controls_Manager::COLOR,
+				'selectors' => [
+					'{{WRAPPER}} .alpha-select:hover' => 'background: {{VALUE}};',
+				],
+			]
+		);
+
+		$this->add_group_control(
+			Group_Control_Border::get_type(),
+			[
+				'name' => 'select_border_hover',
+				'selector' => '{{WRAPPER}} .alpha-select:hover',
+				'fields_options' => [
+					'border' => [
+						'default' => 'solid',
+					],
+					'width' => [
+						'default' => [
+							'top' => 1,
+							'right' => 1,
+							'bottom' => 1,
+							'left' => 1,
+							'unit' => 'px',
+						],
+					],
+				],
+			]
+		);
+
+		$this->end_controls_tab();
+		$this->end_controls_tabs();
+
+		$this->add_responsive_control(
+			'select_padding',
+			[
+				'label' => __('Espaçamento Interno', 'alpha-form'),
+				'type' => Controls_Manager::DIMENSIONS,
+				'size_units' => ['px', '%', 'em', 'custom'],
+				'selectors' => [
+					'{{WRAPPER}} .alpha-select' => 'padding: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};',
+				],
+				'fields_options' => [
+					'top' => [
+						'default' => 4,
+					],
+					'right' => [
+						'default' => 15,
+					],
+					'bottom' => [
+						'default' => 4,
+					],
+					'left' => [
+						'default' => 15,
+					],
+				],
+			]
+		);
+
+		$this->end_controls_section();
+
+		// aceptance input
+
+		$this->start_controls_section(
+			'style_acceptance_section',
+			[
+				'label' => __('Aceitação', 'alpha-form'),
+				'tab' => Controls_Manager::TAB_STYLE,
+			]
+		);
+		$this->add_group_control(
+			Group_Control_Typography::get_type(),
+			[
+				'name' => 'acceptance_typography',
+				'selector' => '{{WRAPPER}} label.acceptance',
+				'global' => [
+					'default' => Global_Typography::TYPOGRAPHY_TEXT,
+				],
+			]
+		);
+		$this->add_control(
+			'acceptance_text_color',
+			[
+				'label' => __('Cor do Texto', 'alpha-form'),
+				'type' => Controls_Manager::COLOR,
+				'selectors' => [
+					'{{WRAPPER}} label.acceptance' => 'color: {{VALUE}};',
+				],
+				'global' => [
+					'default' => Global_Colors::COLOR_TEXT,
+				],
+
+			]
+		);
+
+		$this->add_responsive_control(
+			'acceptance_checkbox_size',
+			[
+				'label' => __('Tamanho do Checkbox', 'alpha-form'),
+				'type' => Controls_Manager::SLIDER,
+				'size_units' => ['px'],
+				'range' => [
+					'px' => [
+						'min' => 10,
+						'max' => 50,
+					],
+				],
+				'default' => [
+					'size' => 18,
+					'unit' => 'px',
+				],
+				'selectors' => [
+					'{{WRAPPER}} input.acceptance' => 'width: {{SIZE}}{{UNIT}}; height: {{SIZE}}{{UNIT}};',
+				],
+			]
+		);
+
+		$this->add_control(
+			'acceptance_checkbox_color',
+			[
+				'label' => __('Cor do Checkbox', 'alpha-form'),
+				'type' => Controls_Manager::COLOR,
+				'selectors' => [
+					'{{WRAPPER}} input.acceptance' => 'accent-color: {{VALUE}};',
+				],
+			]
+		);
+
+		$this->add_responsive_control(
+			'acceptance_gap',
+			[
+				'label' => __('Espaçamento entre Checkbox e Texto', 'alpha-form'),
+				'type' => Controls_Manager::SLIDER,
+				'size_units' => ['px'],
+				'default' => [
+					'size' => 10,
+					'unit' => 'px',
+				],
+				'selectors' => [
+					'{{WRAPPER}} label.acceptance' => 'display:flex; align-itms:center; gap: {{SIZE}}{{UNIT}};',
+				],
+				'condition' => [
+					'field_type' => 'acceptance',
+				],
+			]
+		);
+
+
+		$this->end_controls_section();
 	}
 
 	public function render()
@@ -980,10 +1666,10 @@ class Alpha_Inputs extends Widget_Base
 		$description = $settings['field_descricao'] ?? '';
 		$placeholder = $settings['field_placeholder'] ?? '';
 		$next_button_text = $settings['next_button_text'] ?? '';
-		$key_hint = $settings['key-hint'] ?? '';
+		$show_hint = $settings['key-hint'] ?? 'no';
 		$required = !empty($settings['required']) ? 'required' : '';
-		$special_masks = ['cpf', 'cnpj', 'cep', 'currency', 'credit_card'];
-		$mask = in_array($type, $special_masks) ? ' data-mask="' . esc_attr($type) . '"' : '';
+		$special_masks = ['cpf', 'cnpj', 'cep', 'currency', 'cel'];
+		$mask = in_array($type, $special_masks) ? ' data-mask=' . esc_attr($type) . '' : '';
 		$class = 'alpha-input-field';
 		// $show_required = $settings['show_required_mark'] === 'yes';
 		// $requiredMark = $show_required && esc_html($required) ? '<span class="alpha-mask-required">*</span>' : '';
@@ -1051,54 +1737,72 @@ class Alpha_Inputs extends Widget_Base
 				echo '<textarea class="' . esc_attr($class) . '" name="' . esc_attr($name) . '" id="' . esc_attr($name) . '" placeholder="' . esc_attr($placeholder) . '" ' . esc_attr($required) . '>' . esc_textarea($value) . '</textarea>';
 				break;
 
-			case 'checkbox':
 			case 'radio':
-				$input_type = esc_attr($type);
-				$options = explode("\n", $settings['field_options'] ?? '');
-				if (!empty($options)) {
-					echo '<div class="alpha-form-options">';
-					foreach ($options as $opt) {
-						$opt = trim($opt);
-						if (!$opt) continue;
+			case 'checkbox':
+			case 'select':
+				$options = explode("\n", $settings['field_options']);
+				$input_type = $type; // radio ou checkbox
+				if ($type === 'select') {
+					echo '<div class="alpha-inputs-options">';
+					echo '<select name="' . esc_attr($name) . '" ' . $required . ' class="alpha-select">';
+					foreach ($options as $option_line) {
+						$parts = explode('|', $option_line);
+						$label = trim($parts[0] ?? '');
+						$value = trim($parts[1] ?? sanitize_title($label));
+						$next = trim($parts[2] ?? '');
 
-						$parts = explode('|', $opt);
-						$option_label = isset($parts[0]) ? trim($parts[0]) : '';
-						$option_value = isset($parts[1]) ? trim($parts[1]) : sanitize_title($option_label);
+						$attrs = 'value="' . esc_attr($value) . '"';
+						if ($next) {
+							$attrs .= ' data-next="' . esc_attr($next) . '"';
+						}
 
-						echo '<label><input type="' . $input_type . '" name="' . esc_attr($name) . ($type === 'checkbox' ? '[]' : '') . '" value="' . esc_attr($option_value) . '" ' . esc_attr($required) . '> ' . esc_html($option_label) . '</label>';
+						echo '<option ' . $attrs . '>' . esc_html($label) . '</option>';
 					}
-					echo '</div>';
+					echo '</select>';
+					echo "</div>";
+				} else {
+					foreach ($options as $index => $option_line) {
+						$parts = explode('|', $option_line);
+						$label = trim($parts[0] ?? '');
+						$value = trim($parts[1] ?? sanitize_title($label));
+						$next = trim($parts[2] ?? '');
+
+						$input_id = esc_attr($name . '_' . $index);
+						$attrs = 'type="' . esc_attr($input_type) . '" name="' . esc_attr($name) . '" id="' . $input_id . '" value="' . esc_attr($value) . '" ' . $required . '';
+						if ($next) {
+							$attrs .= ' data-next="' . esc_attr($next) . '"';
+						}
+						$label_attrs = '';
+						$letter = chr(65 + $index);
+						if ($show_hint) {
+							$label_attrs .= ' data-letter=' . $letter . '';
+							$label_attrs .= ' data-icon=✓';
+						}
+						echo '<div class="alpha-inputs-options">';
+						echo '<label for="' . $input_id . '"' . esc_attr($label_attrs) . '" class="alpha-option">';
+						echo '<input ' . $attrs . '> ' . esc_html($label);
+						echo '</label>';
+						echo "</div>";
+					}
 				}
+
 				break;
+
 
 			case 'hidden':
 				echo '<input type="hidden" name="' . esc_attr($name) . '" value="' . esc_attr($value) . '" />';
 				break;
 
-			case 'select':
-				$options = explode("\n", $settings['field_options'] ?? '');
-				echo '<select name="' . esc_attr($name) . '" id="' . esc_attr($name) . '" ' . esc_attr($required) . '>';
-				foreach ($options as $opt) {
-					$opt = trim($opt);
-					if (!$opt) continue;
-					$parts = explode('|', $opt);
-					$option_label = isset($parts[0]) ? trim($parts[0]) : '';
-					$option_value = isset($parts[1]) ? trim($parts[1]) : sanitize_title($option_label);
-					echo '<option value="' . esc_attr($option_value) . '">' . esc_html($option_label) . '</option>';
-				}
-				echo '</select>';
-				break;
 
 			case 'acceptance':
-				echo '<label><input type="checkbox" name="' . esc_attr($name) . '" ' . esc_attr($required) . '> ' . esc_html($settings['acceptance_text']) . '</label>';
+				echo '<label class="acceptance"><input type="checkbox" class="acceptance" name="' . esc_attr($name) . '" ' . esc_attr($required) . '> ' . esc_html($settings['acceptance_text']) . '</label>';
 				break;
 
-			case 'intro':
-				echo '<div class="alpha-form-intro">' . wp_kses_post($description) . '</div>';
+			case 'stext':
 				break;
 
 			default:
-				echo '<input  class="' . esc_attr($class) . '" type="' . esc_attr($type) . '" name="' . esc_attr($name) . '" id="' . esc_attr($name) . '" ' . esc_attr($placeholder) . ' ' .  esc_attr($value) . ' ' . esc_attr($pattern) . ' ' . esc_attr($required) . esc_attr($mask) . ' autofocus />';
+				echo '<input  class="' . esc_attr($class) . '" type="' . esc_attr($type) . '" name="' . esc_attr($name) . '" id="' . esc_attr($name) . '" placeholder="' . esc_attr($placeholder) . '" value="' .  esc_attr($value) . '" pattern="' . esc_attr($pattern) . '" ' . esc_attr($required) . esc_attr($mask) . ' autofocus />';
 				break;
 		}
 
@@ -1108,40 +1812,52 @@ class Alpha_Inputs extends Widget_Base
 		}
 		if (\Elementor\Plugin::$instance->editor->is_edit_mode()) {
 			echo '<script>
-        (function () {
-            const styleId = "alpha-form-error-preview";
+					(function () {
+						const styleId = "alpha-form-error-preview";
 
-            function toggleErrorPreviewStyle() {
-                const bodyClassList = document.body.classList;
-                const alreadyInjected = document.getElementById(styleId);
+						function toggleErrorPreviewStyle() {
+							const bodyClassList = document.body.classList;
+							const alreadyInjected = document.getElementById(styleId);
 
-                if (bodyClassList.contains("elementor-editor-preview")) {
-                    if (alreadyInjected) alreadyInjected.remove();
-                } else {
-                    if (!alreadyInjected) {
-                        const style = document.createElement("style");
-                        style.id = styleId;
-                        style.innerHTML = `
-                            .alpha-error-message {
-                                display: block !important;
-                            }
-                        `;
-                        document.head.appendChild(style);
-                    }
-                }
-            }
+							if (bodyClassList.contains("elementor-editor-preview")) {
+								if (alreadyInjected) alreadyInjected.remove();
+							} else {
+								if (!alreadyInjected) {
+									const style = document.createElement("style");
+									style.id = styleId;
+									style.innerHTML = `
+										.alpha-error-message {
+											display: block !important;
+										}
+									`;
+									document.head.appendChild(style);
+								}
+							}
+						}
 
-            toggleErrorPreviewStyle();
+						toggleErrorPreviewStyle();
 
-            new MutationObserver(toggleErrorPreviewStyle)
-                .observe(document.body, { attributes: true, attributeFilter: ["class"] });
-        })();
-    </script>';
+						new MutationObserver(toggleErrorPreviewStyle)
+							.observe(document.body, { attributes: true, attributeFilter: ["class"] });
+					})();
+				</script>';
+			echo '<script>
+					document.querySelectorAll("label[data-letter]").forEach(label => {
+						if (!label.classList.contains("alpha-letter-active")) {
+							const letter = label.getAttribute("data-letter");
+							if (letter) {
+								label.classList.add("alpha-letter-active");
+								label.setAttribute("data-letter-display", letter);
+							}
+						}
+					});
+				</script>';
 		}
 
 		// Botão
 		echo '<div class="alpha-aux">';
-		if (!in_array($type, ['hidden', 'intro', 'radio'], true) && $next_button_text) {
+		error_log($type);
+		if (!in_array($type, ['hidden', 'radio'], true) && $next_button_text) {
 			echo '<button ' . $this->get_render_attribute_string('button') . '>';
 
 			// Abre o wrapper do conteúdo do botão

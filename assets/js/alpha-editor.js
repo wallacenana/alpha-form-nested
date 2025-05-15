@@ -68,8 +68,22 @@ jQuery(window).on('elementor:init', function () {
 			timeout: 2000
 		});
 	});
+
 });
 
+function applyAlphaLetters() {
+	document.querySelectorAll('label[data-letter]').forEach(label => {
+		
+		// Evita duplicação
+		if (label.classList.contains('alpha-letter-active')) return;
+
+		const letter = label.getAttribute('data-letter');
+		if (letter) {
+			label.classList.add('alpha-letter-active');
+			label.setAttribute('data-letter-display', letter);
+		}
+	});
+}
 
 elementor.hooks.addAction('panel/open_editor/widget', function (panel, model) {
 	if (!['alpha-field'].includes(model.get('widgetType'))) return;

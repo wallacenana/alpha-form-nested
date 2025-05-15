@@ -49,7 +49,7 @@
     flex-direction: column;
 }
 
-.widget-alpha-form-n input {
+.widget-alpha-form-n input:not(.acceptance) {
     display: block;
     width: 100%;
     outline: none;

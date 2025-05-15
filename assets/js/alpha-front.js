@@ -3,7 +3,149 @@ console.log("Alpha Forms iniciado");
 document.addEventListener('DOMContentLoaded', () => {
 	initAlphaForm();
 	initAlphaNavigation();
+	initAlphaRadioNavigation();
+	applyAlphaLetters();
+	applyAlphaInputMasks()
 });
+function applyAlphaInputMasks() {
+	document.querySelectorAll('input[data-mask]').forEach(input => {
+		const mask = input.dataset.mask;
+
+		// Remove qualquer máscara anterior
+		input.removeEventListener('input', input._maskHandler);
+
+		let handler;
+
+		switch (mask) {
+			case 'cpf':
+				handler = e => {
+					e.target.value = e.target.value
+						.replace(/\D/g, '')
+						.slice(0, 11) // CPF = 11 dígitos
+						.replace(/(\d{3})(\d)/, '$1.$2')
+						.replace(/(\d{3})(\d)/, '$1.$2')
+						.replace(/(\d{3})(\d{1,2})$/, '$1-$2');
+				};
+				break;
+
+			case 'cnpj':
+				handler = e => {
+					e.target.value = e.target.value
+						.replace(/\D/g, '')
+						.slice(0, 14) // CNPJ = 14 dígitos
+						.replace(/^(\d{2})(\d)/, '$1.$2')
+						.replace(/^(\d{2})\.(\d{3})(\d)/, '$1.$2.$3')
+						.replace(/\.(\d{3})(\d)/, '.$1/$2')
+						.replace(/(\d{4})(\d)/, '$1-$2');
+				};
+				break;
+
+			case 'cep':
+				handler = e => {
+					e.target.value = e.target.value
+						.replace(/\D/g, '')
+						.slice(0, 8) // CEP = 8 dígitos
+						.replace(/^(\d{5})(\d)/, '$1-$2');
+				};
+				break;
+
+			case 'currency':
+				handler = e => {
+					let val = e.target.value.replace(/\D/g, '').slice(0, 15); // limite opcional
+					val = (parseInt(val || 0) / 100).toFixed(2) + '';
+					val = val.replace('.', ',');
+					val = val.replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1.');
+					e.target.value = 'R$ ' + val;
+				};
+				break;
+
+			case 'cel':
+				handler = e => {
+					e.target.value = e.target.value
+						.replace(/\D/g, '')
+						.slice(0, 11) // Celular: (XX) XXXXX-XXXX
+						.replace(/(\d{2})(\d)/, '($1) $2')
+						.replace(/(\d{5})(\d)/, '$1-$2')
+						.replace(/(-\d{4})\d+?$/, '$1');
+				};
+				break;
+		}
+
+		if (handler) {
+			input._maskHandler = handler;
+			input.addEventListener('input', handler);
+		}
+	});
+}
+
+function applyAlphaLetters() {
+	document.querySelectorAll('label[data-letter]').forEach(label => {
+		// Evita duplicação
+		if (label.classList.contains('alpha-letter-active')) return;
+
+		const letter = label.getAttribute('data-letter');
+		if (letter) {
+			label.classList.add('alpha-letter-active');
+			label.setAttribute('data-letter-display', letter);
+		}
+	});
+}
+
+function initAlphaNavigation() {
+	document.addEventListener('click', e => {
+		const btn = e.target.closest('[data-alpha]');
+		if (!btn) return;
+
+		const action = btn.dataset.alpha;
+		let formId = btn.dataset.aFTarget || btn.dataset.a_f_target;
+
+		if (!formId) {
+			const wrapper = btn.closest('.widget-alpha-form-n[data-id]');
+			if (wrapper) {
+				formId = wrapper.getAttribute('data-id');
+			}
+		}
+
+		if (!formId) return;
+
+		const form = document.querySelector(`.widget-alpha-form-n[data-id="${formId}"]`);
+		if (!form) return;
+
+		const current = form.querySelector('.alpha-form-field.active');
+		if (!current) return;
+
+		if (action === 'next') {
+			if (!isValid(current)) {
+				toggleErrorMessage(current, true);
+				return;
+			}
+
+			toggleErrorMessage(current, false);
+			goToNextField(formId);
+		}
+
+		if (action === 'prev') {
+			goToPrevField(formId);
+		}
+	});
+}
+
+
+
+function initAlphaRadioNavigation() {
+	document.addEventListener('change', e => {
+		const input = e.target;
+		if (input.type !== 'radio') return;
+
+		const wrapper = input.closest('.widget-alpha-form-n[data-id]');
+		if (!wrapper) return;
+
+		const formId = wrapper.getAttribute('data-id');
+		const nextOffset = input.dataset.next ? parseInt(input.dataset.next) : 1;
+
+		setTimeout(() => goToNextField(formId, nextOffset), 50);
+	});
+}
 
 function markRequiredFields() {
 	const forms = document.querySelectorAll('.widget-alpha-form-n');
@@ -18,7 +160,7 @@ function markRequiredFields() {
 			const container = title.closest('.alpha-form-field') || title.closest('.alpha-inputs');
 			if (!container) return;
 
-			const requiredInput = container.querySelector('input[required], select[required], textarea[required]');
+			const requiredInput = container.querySelector('input[required], select[required], textarea[required], radio[required], checkbox[required]');
 			if (!requiredInput) return;
 
 			if (title.classList.contains('alpha-required-injected')) return;
@@ -56,18 +198,32 @@ function isValid(field) {
 	if (!input) return true;
 	if (input.type === 'hidden') return true;
 
-	if (input.hasAttribute('required')) {
-		if (input.type === 'email') {
-			const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-			return emailRegex.test(input.value);
-		}
-		if (input.hasAttribute('pattern')) {
-			const pattern = new RegExp(input.getAttribute('pattern'));
-			return pattern.test(input.value);
-		}
-		return !!input.value.trim();
+	if (!input.hasAttribute('required')) return true;
+
+	const type = input.type;
+
+	if (type === 'email') {
+		const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+		return emailRegex.test(input.value);
 	}
-	return true;
+
+	if (input.hasAttribute('pattern')) {
+		const pattern = new RegExp(input.getAttribute('pattern'));
+		return pattern.test(input.value);
+	}
+
+	if (type === 'radio') {
+		const name = input.name;
+		const group = field.querySelectorAll(`input[type="radio"][name="${name}"]`);
+		return Array.from(group).some(r => r.checked);
+	}
+
+	if (type === 'checkbox') {
+		const group = field.querySelectorAll('input[type="checkbox"]');
+		return Array.from(group).some(c => c.checked);
+	}
+
+	return !!input.value.trim();
 }
 
 function getNextField(current, form) {
@@ -90,32 +246,37 @@ function getPrevField(current, form) {
 	return null;
 }
 
-function goToNextField(formId) {
+function toggleErrorMessage(field, show = true) {
+	const errorMessage = field.querySelector('.alpha-error-message');
+	if (errorMessage) {
+		errorMessage.style.display = show ? 'block' : 'none';
+	}
+}
+
+function goToNextField(formId, next = 1, absolute = false) {
 	const form = document.querySelector(`.widget-alpha-form-n[data-id="${formId}"]`);
 	if (!form) return;
 
+	const fields = Array.from(form.querySelectorAll('.alpha-form-field'));
 	const current = form.querySelector('.alpha-form-field.active');
-	if (!current) return;
+	if (!current || !fields.length) return;
 
-	// Validação
 	if (!isValid(current)) {
-		const errorMessage = current.querySelector('.alpha-error-message');
-		if (errorMessage) {
-			errorMessage.style.display = 'block';
-		}
+		toggleErrorMessage(current, true);
 		return;
 	} else {
-		const errorMessage = current.querySelector('.alpha-error-message');
-		if (errorMessage) {
-			errorMessage.style.display = 'none';
-		}
+		toggleErrorMessage(current, false);
 	}
 
-	const next = getNextField(current, form);
-	if (next) {
+	const index = fields.indexOf(current);
+	const targetIndex = absolute ? (parseInt(next) - 1) : (index + parseInt(next));
+
+	const nextField = fields[targetIndex];
+
+	if (nextField) {
 		current.classList.remove('active');
-		next.classList.add('active');
-		const input = next.querySelector('input:not([type="hidden"]), select, textarea');
+		nextField.classList.add('active');
+		const input = nextField.querySelector('input:not([type="hidden"]), select, textarea');
 		if (input) input.focus();
 	}
 }
@@ -137,26 +298,23 @@ function goToPrevField(formId) {
 	}
 }
 
-function initAlphaNavigation() {
-	document.addEventListener('click', e => {
-		const btn = e.target.closest('[data-alpha]');
-		if (!btn) return;
+function initAlphaRadioNavigation() {
+	document.addEventListener('change', e => {
+		const input = e.target;
+		if (input.type !== 'radio') return;
 
-		const action = btn.dataset.alpha;
-		let formId = btn.dataset.aFTarget || btn.dataset.a_f_target;
+		const wrapper = input.closest('.widget-alpha-form-n[data-id]');
+		if (!wrapper) return;
 
-		// 🧠 Caso não tenha target explícito, tenta descobrir via DOM
-		if (!formId) {
-			const wrapper = btn.closest('.widget-alpha-form-n[data-id]');
-			if (wrapper) {
-				formId = wrapper.getAttribute('data-id');
-			}
+		const formId = wrapper.getAttribute('data-id');
+		const nextAttr = input.dataset.next;
+
+		if (nextAttr) {
+			// Trata como índice absoluto (campo 3 → índice 2)
+			setTimeout(() => goToNextField(formId, nextAttr, true), 50);
+		} else {
+			setTimeout(() => goToNextField(formId), 50); // Padrão: próximo item
 		}
-
-		if (!formId) return;
-
-		if (action === 'next') goToNextField(formId);
-		if (action === 'prev') goToPrevField(formId);
 	});
 }
 

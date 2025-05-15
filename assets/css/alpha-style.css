@@ -17,3 +17,92 @@
     flex-direction: column;
     align-items: flex-start;
 }
+
+label.alpha-letter-active::before {
+    content: attr(data-letter-display);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 24px;
+    height: 24px;
+    border-radius: 4px;
+    font-size: 14px;
+    margin-right: 8px;
+}
+
+/* Container base */
+.alpha-inputs-options .alpha-option {
+    display: flex;
+    align-items: center;
+    padding: 8px 8px;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    position: relative;
+    font-size: 16px;
+    gap: 15px;
+}
+
+/* Hover + focus */
+/* Input escondido */
+.alpha-inputs-options input[type="radio"],
+.alpha-inputs-options input[type="checkbox"] {
+    display: none;
+}
+
+/* Bolinha do radio */
+.alpha-inputs-options input[type="radio"]+.alpha-option::before {
+    content: "";
+    width: 18px;
+    height: 18px;
+    border: 2px solid #999;
+    border-radius: 50%;
+    display: inline-block;
+    flex-shrink: 0;
+    transition: border-color 0.2s ease;
+}
+
+/* Check do checkbox */
+.alpha-inputs-options input[type="checkbox"]+.alpha-option::before {
+    content: "";
+    width: 18px;
+    height: 18px;
+    border: 2px solid #999;
+    border-radius: 4px;
+    display: inline-block;
+    flex-shrink: 0;
+    transition: border-color 0.2s ease;
+}
+
+/* Checked checkbox */
+.alpha-inputs-options input[type="checkbox"]:checked+.alpha-option::before {
+    content: "✔";
+    text-align: center;
+    line-height: 16px;
+}
+
+/* Select estilizado */
+.alpha-inputs-options select {
+    width: 100%;
+    padding: 14px 18px;
+    font-size: 16px;
+    border-radius: 12px;
+    transition: border-color 0.2s ease;
+}
+
+.alpha-inputs-options select:focus {
+    outline: none;
+}
+
+input[type="radio"]:checked + label::before {
+  content: "✓";
+  text-align: center;
+  font-size: 14px;
+  line-height: 18px;
+}
+
+.alpha-error-message{
+    padding: 5px 10px;
+    font-size: 13px;
+    font-weight: 400;
+}
