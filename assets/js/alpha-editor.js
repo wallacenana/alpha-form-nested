@@ -32,7 +32,7 @@ jQuery(window).on('elementor:init', function () {
 		const view = panel?.getCurrentPageView();
 
 		if (!model || !view) return;
-		if (!['alpha-next', 'alpha-prev'].includes(model.get('widgetType'))) return;
+		if (!['alpha-next', 'alpha-prev', 'alpha-progress'].includes(model.get('widgetType'))) return;
 
 		const iframe = elementor.$preview?.[0];
 		const previewDocument = iframe?.contentDocument || iframe?.contentWindow?.document;
@@ -73,7 +73,7 @@ jQuery(window).on('elementor:init', function () {
 
 function applyAlphaLetters() {
 	document.querySelectorAll('label[data-letter]').forEach(label => {
-		
+
 		// Evita duplicação
 		if (label.classList.contains('alpha-letter-active')) return;
 
@@ -99,3 +99,215 @@ elementor.hooks.addAction('panel/open_editor/widget', function (panel, model) {
 		$input.val(widgetId).trigger('input');
 	}
 });
+
+// elementor.hooks.addAction('panel/open_editor/widget', function () {
+// 	const pageModel = elementor.getPreviewView().model;
+
+// 	function traverse(element) {
+// 		if (!element) return;
+
+// 		if (element.get('elType') === 'widget' && element.get('widgetType') === 'alpha-inputs') {
+// 			if (element.attributes.settings.attributes.field_name)
+// 				console.log("Field-" + element.attributes.settings.attributes.field_name)
+// 			else
+// 				console.log("Field-" + element.get('id'));
+// 		}
+
+// 		const children = element.get('elements');
+// 		if (children && children.length) {
+// 			children.forEach(traverse);
+// 		}
+// 	}
+
+// 	pageModel.get('elements').models.forEach(traverse);
+
+// });
+
+// elementor.hooks.addAction('panel/open_editor/widget', function () {
+// 	const $select = jQuery('select[data-setting="mailchimp_list_id_custom"]');
+// 	const selectedText = $select.find('option:selected').text();
+// 	const selectedValue = $select.val();
+
+// 	console.log('Lista selecionada:', selectedText);
+// 	console.log('ID da lista:', selectedValue);
+// });
+
+
+(function ($) {
+	function alphaformLoadIntegrationFields(prefix, options = {}) {
+		const model = elementor.getPanelView()?.getCurrentPageView()?.model;
+		const apiKey = $(`input[data-setting="${prefix}_custom_api_key"]`).val();
+		const server = $(`input[data-setting="${prefix}_custom_server"]`).val();
+		const $selectList = $(`select[data-setting="${prefix}_list_id"]`);
+		const $selectListCustom = $(`select[data-setting="${prefix}_list_id_custom"]`);
+		const typeDataLine = $(`select[data-setting="${prefix}_source_type"]`).val();
+
+		if (typeDataLine === 'custom') {
+			if (!apiKey) {
+				elementor.notifications.showToast({
+					message: 'Preencha os dados da API!',
+					type: 'error',
+					timeout: 2000
+				});
+				$selectListCustom.empty().append('<option value=""></option>').val('');
+				return;
+
+			} else if (!server) {
+				elementor.notifications.showToast({
+					message: 'Preencha os dados da API!',
+					type: 'error',
+					timeout: 2000
+				});
+				$selectListCustom.empty().append('<option value=""></option>').val('');
+			}
+			else
+				$.ajax({
+					url: ajaxurl,
+					method: 'POST',
+					data: {
+						action: 'alphaform_load_lists',
+						prefix: prefix,
+						_ajax_nonce: alphaFormVars.nonce
+					},
+					success: function (response) {
+						console.log(response)
+						if (!response.success || !response.data) return;
+
+
+						const listas = response.data.lists;
+						const campo = $selectList.data('setting');
+						const valorAtual = model?.get('settings')?.get(campo);
+
+						$selectListCustom.empty().append('<option value="">Selecione uma lista</option>');
+
+						$.each(listas, function (val, label) {
+							const selected = val === valorAtual ? 'selected' : '';
+							$selectListCustom.append(`<option value="${val}" ${selected}>${label}</option>`);
+						});
+
+						if (valorAtual) $selectListCustom.val(valorAtual);
+
+						elementor.notifications.showToast({
+							message: 'Listas carregadas!',
+							type: 'success',
+							timeout: 1000
+						});
+
+						const listId = $selectListCustom.val();
+						if (!listId) return;
+
+					}
+				});
+		}
+
+
+		const settings = model.get('settings').attributes;
+
+		// 🔁 Coleta campos do formulário
+		const inputFields = [];
+		function traverseInputs(element) {
+			if (!element) return;
+			if (element.get('elType') === 'widget' && element.get('widgetType') === 'alpha-inputs') {
+				const fieldName = element.attributes.settings.attributes.field_name || element.get('id');
+				inputFields.push({
+					value: element.get('id'),
+					label: 'Field-' + fieldName
+				});
+			}
+			const children = element.get('elements');
+			if (children?.length) {
+				children.forEach(traverseInputs);
+			}
+		}
+		elementor.getPreviewView().model.get('elements').models.forEach(traverseInputs);
+
+		const integrationFields = {
+			mc: ["email_address", "FNAME", "LNAME", "PHONE", "BIRTHDAY", "ADDRESS", "COMPANY"],
+			ac: ["email", "first_name", "last_name", "phone"],
+			gr: ["email", "name", "phone", "city"],
+			drip: ["email", "first_name", "last_name"],
+			ck: ["email", "first_name"],
+			ml: ["email", "name", "phone"],
+			cs: ["email", "name", "phone", "address"]
+		};
+
+		if (prefix === 'mailchimp')
+			prefix = 'mc'
+		if (prefix === 'active-campaign')
+			prefix = 'ac'
+		if (prefix === 'drip')
+			prefix = 'drip'
+		if (prefix === 'getresponse')
+			prefix = 'gr'
+		if (prefix === 'convertkit')
+			prefix = 'ck'
+		if (prefix === 'clicksend')
+			prefix = 'cs'
+		if (prefix === 'mailerlite')
+			prefix = 'ml'
+
+		if (!integrationFields[prefix]) return;
+
+		integrationFields[prefix].forEach(function (fieldKeyBase) {
+			const selectName = `map_field_${fieldKeyBase}_${prefix}`;
+			const $select = $(`select[data-setting="${selectName}"]`);
+			const valorAtual = settings[selectName] || '';
+
+			$select.empty().append('<option value="">— Nenhum campo —</option>');
+
+			inputFields.forEach(field => {
+				const selected = field.value === valorAtual ? 'selected' : '';
+				$select.append(`<option value="${field.value}" ${selected}>${field.label}</option>`);
+			});
+
+
+			if (valorAtual) $select.val(valorAtual);
+		});
+
+
+
+		elementor.notifications.showToast({
+			message: 'Campos da lista sincronizados!',
+			type: 'success',
+			timeout: 1500
+		});
+
+
+	}
+
+	jQuery(document).ready(function ($) {
+		const integrations = ['mailchimp', 'drip', 'active-campaign', 'getresponse', 'convertkit', 'mailerlite', 'clicksend'];
+
+		integrations.forEach(function (integration) {
+			elementor.channels.editor.on(`alphaform:editor:load_data_${integration}`, function () {
+				alphaformLoadIntegrationFields(integration);
+			});
+		});
+	});
+
+})(jQuery);
+
+
+// jQuery(document).ready(function ($) {
+// 	elementor.hooks.addAction('panel/open_editor/widget', function (panel, model, view) {
+// 		var selectControl = panel.$el.find('[data-setting="mailchimp_list_id_custom"]');
+// 		// console.log(selectControl)
+// 		selectControl.on('change', function () {
+// 			var selectedValue = $(this).val();
+// 			// console.log('Selected value:', selectedValue);
+// 			// Execute sua lógica personalizada aqui
+// 		});
+// 	});
+// });
+// jQuery(document).ready(function ($) {
+// 	elementor.hooks.addAction('panel/open_editor/widget', function (panel, model, view) {
+
+// 		var firstSelectControl = panel.$el.find('[data-setting="mailchimp_list_id"]');
+// 		var secondSelectControl = panel.$el.find('[data-setting="mailchimp_list_id_custom"]');
+
+// 		firstSelectControl.on('change', function () {
+// 			var selectedValue = $(this).val();
+// 			secondSelectControl.val(selectedValue);
+// 		});
+// 	});
+// });

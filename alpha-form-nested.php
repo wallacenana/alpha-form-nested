@@ -15,8 +15,12 @@ if (!defined('ABSPATH')) {
 define('ALPHA_FORM_PATH', plugin_dir_path(__FILE__));
 define('ALPHA_FORM_URL', plugin_dir_url(__FILE__));
 
+require_once ALPHA_FORM_PATH . 'core/glkf9.php';
+require_once ALPHA_FORM_PATH . 'core/plk32.php';
+
 // Init
 add_action('plugins_loaded', function () {
+	glkf9_trigger();
 	if (!defined('ELEMENTOR_PATH')) {
 		add_action('admin_notices', function () {
 			echo '<div class="notice notice-error"><p><strong>Alpha Form:</strong> requer Elementor ativo.</p></div>';
@@ -38,6 +42,10 @@ add_action('plugins_loaded', function () {
 		require_once ALPHA_FORM_PATH . 'modules/widgets/controls/base.php';
 		$widgets_manager->register(new \AlphaForm\Module\Widget\Controls\Alpha_Form_Minimal());
 
+		// Formulário
+		require_once ALPHA_FORM_PATH . 'modules/widgets/controls/inputs.php';
+		$widgets_manager->register(new \AlphaForm\Module\Widget\Controls\Alpha_Inputs());
+
 		// Botão Next
 		require_once ALPHA_FORM_PATH . 'modules/widgets/controls/btn-next.php';
 		$widgets_manager->register(new \AlphaForm\Module\Widget\Controls\Alpha_Next());
@@ -46,10 +54,6 @@ add_action('plugins_loaded', function () {
 		require_once ALPHA_FORM_PATH . 'modules/widgets/controls/btn-prev.php';
 		$widgets_manager->register(new \AlphaForm\Module\Widget\Controls\Alpha_Prev());
 
-		// Formulário
-		require_once ALPHA_FORM_PATH . 'modules/widgets/controls/inputs.php';
-		$widgets_manager->register(new \AlphaForm\Module\Widget\Controls\Alpha_Inputs());
-
 		// Barra de progresso
 		require_once ALPHA_FORM_PATH . 'modules/widgets/controls/progress.php';
 		$widgets_manager->register(new \AlphaForm\Module\Widget\Controls\Alpha_Progress());
@@ -57,6 +61,10 @@ add_action('plugins_loaded', function () {
 		// Elements
 		require_once ALPHA_FORM_PATH . 'modules/widgets/controls/elements.php';
 		$widgets_manager->register(new \AlphaForm\Module\Widget\Controls\Alpha_Elements());
+
+		// concluido
+		require_once ALPHA_FORM_PATH . 'modules/widgets/controls/btn-complete.php';
+		$widgets_manager->register(new \AlphaForm\Module\Widget\Controls\Alpha_Complete());
 	});
 });
 // Includes principais

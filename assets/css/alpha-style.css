@@ -1,6 +1,5 @@
 .widget-alpha-form-n {
     width: 100% !important;
-    display: block !important;
 }
 
 .alpha-aux {
@@ -35,20 +34,14 @@ label.alpha-letter-active::before {
     display: flex;
     align-items: center;
     padding: 8px 8px;
-    border-radius: 5px;
     cursor: pointer;
     transition: all 0.2s ease;
     position: relative;
     font-size: 16px;
     gap: 15px;
+    border-radius: 4px;
 }
 
-/* Hover + focus */
-/* Input escondido */
-.alpha-inputs-options input[type="radio"],
-.alpha-inputs-options input[type="checkbox"] {
-    display: none;
-}
 
 /* Bolinha do radio */
 .alpha-inputs-options input[type="radio"]+.alpha-option::before {
@@ -94,15 +87,60 @@ label.alpha-letter-active::before {
     outline: none;
 }
 
-input[type="radio"]:checked + label::before {
-  content: "✓";
-  text-align: center;
-  font-size: 14px;
-  line-height: 18px;
-}
-
-.alpha-error-message{
+.alpha-error-message {
     padding: 5px 10px;
     font-size: 13px;
     font-weight: 400;
+}
+
+
+
+/* Oculta o input original */
+.alpha-option input[type="radio"],
+.alpha-option input[type="checkbox"] {
+    appearance: none;
+    -webkit-appearance: none;
+    background-color: #fff;
+    margin-left: 10px;
+    /* distância do texto */
+    width: 25px;
+    height: 25px;
+    border: 1px solid #000000;
+    border-radius: 6px;
+    display: inline-block;
+    position: relative;
+    cursor: pointer;
+    vertical-align: middle;
+    transition: border 0.2s ease, box-shadow 0.2s ease;
+    margin-left: auto;
+}
+
+/* Estilo quando marcado */
+.alpha-option input:checked::after {
+	content: '✔';
+	color: #000;
+	font-size: 12px;
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	transform: translate(-50%, -50%);
+	line-height: 1;
+}
+
+.alpha-radio-next-wrapper {
+	opacity: 0;
+	transform: translateY(5px);
+	transition: opacity 0.3s ease, transform 0.3s ease;
+	display: none;
+}
+
+.alpha-radio-next-wrapper.alpha-fade-in {
+	opacity: 1;
+	transform: translateY(0);
+}
+
+
+.chartjs-size-monitor{
+    width: 100%;
+    display: block;
 }

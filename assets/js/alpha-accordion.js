@@ -45,3 +45,5 @@ elementor.hooks.addAction('panel/open_editor/widget', function (panel, model, vi
 		}, 300);
 	}
 });
+
+

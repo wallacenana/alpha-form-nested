@@ -114,6 +114,21 @@ class Alpha_Progress extends Widget_Base
             ],
         ]);
 
+        $this->add_control('ajax_button', [
+            'label'       => __('Atualizar lista de formulários', 'alpha-form'),
+            'type'        => Controls_Manager::BUTTON,
+            'text'        => __('Atualizar', 'alpha-form'),
+            'button_type' => 'success',
+            'event'       => 'alphaform:editor:load_widget_id',
+        ]);
+
+        $this->add_control('form_target', [
+            'label' => esc_html__('Formulário Alvo', 'alpha-form'),
+            'type' => Controls_Manager::SELECT,
+            'default' => '',
+            'options' => [],
+            'label_block' => true,
+        ]);
         $this->end_controls_section();
 
         // sessão de estilo
@@ -216,7 +231,6 @@ class Alpha_Progress extends Widget_Base
                 'show_percentage' => 'yes',
             ],
         ]);
-
         $this->end_controls_section();
     }
 
@@ -224,7 +238,7 @@ class Alpha_Progress extends Widget_Base
     {
         $settings = $this->get_settings_for_display();
 
-        echo '<div class="alpha-form-progress-wrapper">';
+        echo '<div class="alpha-form-progress-wrapper" data-target="' . $settings['form_target'] . '">';
         echo '<div class="alpha-form-progress-bar-bg">';
         echo '<div class="alpha-form-progress-bar-fill" style="width: 0%;"></div>';
         echo '</div>';

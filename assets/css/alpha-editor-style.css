@@ -34,3 +34,61 @@
 .alpha-f-n-item-content {
     border-top: none;
 }
+
+
+/* wp-admin */
+
+
+.alpha-license-form {
+    max-width: 400px;
+    margin: 40px auto;
+    background: #fff;
+    padding: 20px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.05);
+    font-family: sans-serif;
+}
+
+.alpha-license-form label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: bold;
+}
+
+.alpha-license-form input[type="text"] {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    margin-bottom: 15px;
+    box-sizing: border-box;
+}
+
+.alpha-license-button {
+    width: 100%;
+    background: #0073aa;
+    color: #fff;
+    border: none;
+    padding: 10px;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background 0.3s ease;
+}
+
+.alpha-license-button:hover {
+    background: #005d8d;
+}
+
+.alpha-license-status {
+    margin-top: 15px;
+    font-weight: bold;
+}
+
+.alpha-license-success {
+    color: green;
+}
+
+.alpha-license-error {
+    color: red;
+}

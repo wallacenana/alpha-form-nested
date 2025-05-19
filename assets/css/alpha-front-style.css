@@ -71,3 +71,7 @@
     margin: 0 !important;
 
 }
+
+.alpha-option img.alpha-option-icon{
+    max-width: 45px;
+}

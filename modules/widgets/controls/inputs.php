@@ -80,7 +80,7 @@ class Alpha_Inputs extends Widget_Base
 					'cep'       => 'CEP',
 					'currency'  => 'Moeda',
 				],
-				'default' => 'text',
+				'default' => 'radio',
 			]
 		);
 
@@ -137,18 +137,128 @@ class Alpha_Inputs extends Widget_Base
 		);
 
 
-		$this->add_control(
-			'field_options',
+		$repeater = new \Elementor\Repeater();
+
+		$repeater->add_control(
+			'label',
 			[
-				'label' => __('Opções (uma por linha)', 'alpha-form'),
-				'type' => Controls_Manager::TEXTAREA,
-				'rows' => 5,
+				'label' => __('Label da opção', 'alpha-form'),
+				'type'  => Controls_Manager::TEXT,
+				'default' => __('Opção 1', 'alpha-form'),
+			]
+		);
+
+		$repeater->add_control(
+			'icon_library',
+			[
+				'label'   => __('Ícone', 'alpha-form'),
+				'type'    => Controls_Manager::SELECT2,
+				'label_block' => true,
+				'options' => [
+					'check'           => '✔️ Confirmação',
+					'confused'        => '😕 Confuso',
+					'angry'           => '😠 Irritado',
+					'dizziness'       => '💫 Tonto',
+					'cool-1'          => '🕶️ Descolado',
+					'poisoned'        => '☠️ Envenenado',
+					'angel'           => '😇 Anjo',
+					'poisoned-1'      => '🎯 Foco / Alvo',
+					'vomiting-1'      => '🤮 Vomitando',
+					'zombie'          => '🧟 Zumbi',
+					'vomit'           => '🤢 Enjoado',
+					'tongue-out-2'    => '😜 Língua de fora',
+					'squint'          => '😆 Apertando os olhos',
+					'wink'            => '😉 Piscando',
+					'tongue'          => '👅 Língua',
+					'think'           => '🤔 Pensando',
+					'exhausted'       => '🥵 Exausto',
+					'sinister-smile'  => '😏 Sorriso malicioso',
+					'jealous'         => '😒 Com ciúmes',
+					'laugh-1'         => '😂 Rindo muito',
+					'smile-1'         => '😊 Sorridente',
+					'sleep'           => '😴 Dormindo',
+					'laugh'           => '😄 Rindo',
+					'get-ill'         => '🤒 Doente',
+					'fear-1'          => '😱 Apavorado',
+					'fear'            => '😨 Assustado',
+					'cool'            => '😎 Estilo',
+					'shut-up'         => '🤐 Boca fechada',
+					'shocked-1'       => '😲 Chocado',
+					'sad-1'           => '😢 Triste',
+					'mute'            => '😶 Silêncio',
+					'sad'             => '☹️ Decepcionado',
+					'deadpan-1'       => '😑 Sem reação',
+					'face-mask'       => '😷 Máscara',
+					'kiss-1'          => '😘 Beijo',
+					'kiss-2'          => '😗 Beijo leve',
+					'kiss'            => '💋 Beijo marcante',
+					'laugh-and-cry'   => '🤣 Gargalhando',
+					'in-love'         => '😍 Apaixonado',
+					'happy-2'         => '😁 Feliz',
+					'happy'           => '🙂 Contente',
+					'injuried'        => '🤕 Machucado',
+					'devil'           => '😈 Diabinho',
+					'cry'             => '😭 Chorando muito',
+					'cry-1'           => '😥 Chorando',
+					'happy-1'         => '😃 Alegre',
+					'poker-face'      => '😐 Poker Face',
+					'stupid-b'        => '🤪 Tonto/Doido',
+				],
+				'default' => 'happy-2'
+			]
+		);
+
+		$repeater->add_control(
+			'value',
+			[
+				'label' => __('Valor', 'alpha-form'),
+				'type'  => Controls_Manager::TEXT,
+			]
+		);
+
+		$repeater->add_control(
+			'target',
+			[
+				'label' => __('Target', 'alpha-form'),
+				'type'  => Controls_Manager::TEXT,
+				'placeholder' => 'Ex: 3',
+				'description' => 'Insira o numero da próxima pergunta quando clicar neste item'
+			]
+		);
+
+		$this->add_control(
+			'field_choices',
+			[
+				'label' => __('Opções do campo', 'alpha-form'),
+				'type' => Controls_Manager::REPEATER,
+				'fields' => $repeater->get_controls(),
+				'default' => [
+					[
+						'label' => __('Opção 1', 'alpha-form'),
+					],
+					[
+						'label' => __('Opção 2', 'alpha-form'),
+					],
+					[
+						'label' => __('Opção 3', 'alpha-form'),
+					],
+					[
+						'label' => __('Opção 4', 'alpha-form'),
+					],
+					[
+						'label' => __('Opção 5', 'alpha-form'),
+					],
+					[
+						'label' => __('Opção 6', 'alpha-form'),
+					],
+				],
 				'condition' => [
 					'field_type' => ['select', 'radio', 'checkbox'],
 				],
-				'description' => __('Insira cada opção em uma linha separada. Para diferenciar entre rótulo e valor, separe-os com um caractere de barra vertical ("|"). Por exemplo: First Name|f_name', 'alpha-form'),
+				'title_field' => '{{{ label }}}',
 			]
 		);
+
 
 
 		$this->add_control(
@@ -159,7 +269,7 @@ class Alpha_Inputs extends Widget_Base
 				'default' => 'Próximo',
 				'placeholder' => 'ex: Continuar',
 				'condition' => [
-					'field_type' => ['text', 'email', 'textarea', 'tel', 'url', 'number', 'password', 'date', 'time', 'stext', 'checkbox', 'cpf', 'cnpj', 'cep', 'currency', 'select', 'cel'],
+					'field_type!' => ['hidden', 'acceptance'],
 				],
 			]
 		);
@@ -171,8 +281,10 @@ class Alpha_Inputs extends Widget_Base
 				'default' => 'Preencha este campo',
 				'placeholder' => 'ex: Continuar',
 				'condition' => [
-					'field_type!' => 'hidden',
-					'stext'
+					'field_type!' => [
+						'hidden',
+						'stext'
+					]
 				],
 			]
 		);
@@ -207,6 +319,11 @@ class Alpha_Inputs extends Widget_Base
 					'field_type!' => 'acceptance',
 				],
 			],
+			'condition' => [
+				'field_type!' =>
+				'checkbox',
+				'select'
+			],
 		]);
 
 		$this->add_control('btn_icon_position', [
@@ -229,6 +346,8 @@ class Alpha_Inputs extends Widget_Base
 			],
 			'condition' => [
 				'field_type!' => 'acceptance',
+				'checkbox',
+				'select'
 			],
 		]);
 
@@ -240,7 +359,7 @@ class Alpha_Inputs extends Widget_Base
 				'label_on' => __('Sim', 'alpha-form'),
 				'label_off' => __('Não', 'alpha-form'),
 				'return_value' => 'yes',
-				'default' => 'yes',
+				'default' => 'no',
 				'condition' => [
 					'field_type' => ['radio', 'checkbox'],
 				],
@@ -269,7 +388,8 @@ class Alpha_Inputs extends Widget_Base
 						'cpf',
 						'cnpj',
 						'cep',
-						'currency'
+						'currency',
+						'cel'
 					],
 				],
 			]
@@ -1658,7 +1778,7 @@ class Alpha_Inputs extends Widget_Base
 		$settings = $this->get_settings_for_display();
 
 		$type = $settings['field_type'] ?? '';
-		$pattern = $settings['field_pattern'] ?? '';
+		$pattern = $settings['field_pattern'] ? 'pattern="' . esc_attr($settings['field_pattern']) . '"' : '';
 		$aux_text = $settings['aux_text'] ?? '';
 		$label = $settings['field_label_n'] ?? '';
 		$name = !empty($settings['field_name']) ? $settings['field_name'] : 'field_' . $type . '_' . substr($this->get_id(), 0, 6);
@@ -1671,12 +1791,13 @@ class Alpha_Inputs extends Widget_Base
 		$special_masks = ['cpf', 'cnpj', 'cep', 'currency', 'cel'];
 		$mask = in_array($type, $special_masks) ? ' data-mask=' . esc_attr($type) . '' : '';
 		$class = 'alpha-input-field';
-		// $show_required = $settings['show_required_mark'] === 'yes';
-		// $requiredMark = $show_required && esc_html($required) ? '<span class="alpha-mask-required">*</span>' : '';
+		$id = $this->get_id(); 
+		
 		$this->add_render_attribute('button', [
 			'class' => 'alpha-form-next form',
 			'type'  => 'button',
 			'data-alpha' => 'next',
+			'style' => $type === 'radio' ? 'display: none' : '',
 		]);
 		$allowed_html = array(
 			'a' => array(
@@ -1734,22 +1855,22 @@ class Alpha_Inputs extends Widget_Base
 		// Campo
 		switch ($type) {
 			case 'textarea':
-				echo '<textarea class="' . esc_attr($class) . '" name="' . esc_attr($name) . '" id="' . esc_attr($name) . '" placeholder="' . esc_attr($placeholder) . '" ' . esc_attr($required) . '>' . esc_textarea($value) . '</textarea>';
+				echo '<textarea class="' . esc_attr($class) . '" name="' . esc_attr($name) . '" id="' . esc_attr($id) . '" placeholder="' . esc_attr($placeholder) . '" ' . esc_attr($required) . '>' . esc_textarea($value) . '</textarea>';
 				break;
 
 			case 'radio':
 			case 'checkbox':
 			case 'select':
-				$options = explode("\n", $settings['field_options']);
-				$input_type = $type; // radio ou checkbox
+				$options = $settings['field_choices'] ?? [];
+				$input_type = $type;
+				echo '<div class="alpha-inputs-options">';
 				if ($type === 'select') {
-					echo '<div class="alpha-inputs-options">';
-					echo '<select name="' . esc_attr($name) . '" ' . $required . ' class="alpha-select">';
-					foreach ($options as $option_line) {
-						$parts = explode('|', $option_line);
-						$label = trim($parts[0] ?? '');
-						$value = trim($parts[1] ?? sanitize_title($label));
-						$next = trim($parts[2] ?? '');
+					echo '<select name="' . esc_attr($name) . '" ' . $required . ' class="alpha-select" id="' . esc_attr($id) . '">';
+
+					foreach ($options as $choice) {
+						$label = trim($choice['label'] ?? '');
+						$value = trim($choice['value'] ?? sanitize_title($label));
+						$next  = trim($choice['target'] ?? '');
 
 						$attrs = 'value="' . esc_attr($value) . '"';
 						if ($next) {
@@ -1758,51 +1879,56 @@ class Alpha_Inputs extends Widget_Base
 
 						echo '<option ' . $attrs . '>' . esc_html($label) . '</option>';
 					}
-					echo '</select>';
-					echo "</div>";
-				} else {
-					foreach ($options as $index => $option_line) {
-						$parts = explode('|', $option_line);
-						$label = trim($parts[0] ?? '');
-						$value = trim($parts[1] ?? sanitize_title($label));
-						$next = trim($parts[2] ?? '');
 
+					echo '</select>';
+				} else {
+					foreach ($options as $index => $choice) {
+						$label = trim($choice['label'] ?? '');
+						$value = trim($choice['value'] ?? sanitize_title($label));
+						$next  = trim($choice['target'] ?? '');
+						$icon  = trim($choice['icon_library'] ?? '');
 						$input_id = esc_attr($name . '_' . $index);
-						$attrs = 'type="' . esc_attr($input_type) . '" name="' . esc_attr($name) . '" id="' . $input_id . '" value="' . esc_attr($value) . '" ' . $required . '';
+
+						$attrs = 'type="' . esc_attr($input_type) . '" name="' . esc_attr($name) . '" id="' . esc_attr($input_id) . '" value="' . esc_attr($value) . '" ' . $required;
 						if ($next) {
 							$attrs .= ' data-next="' . esc_attr($next) . '"';
 						}
+
 						$label_attrs = '';
 						$letter = chr(65 + $index);
 						if ($show_hint) {
-							$label_attrs .= ' data-letter=' . $letter . '';
-							$label_attrs .= ' data-icon=✓';
+							$label_attrs .= ' data-letter="' . $letter . '"';
+							$label_attrs .= ' data-icon="✓"';
 						}
-						echo '<div class="alpha-inputs-options">';
-						echo '<label for="' . $input_id . '"' . esc_attr($label_attrs) . '" class="alpha-option">';
-						echo '<input ' . $attrs . '> ' . esc_html($label);
+						echo '<label for="' . $input_id . '" class="alpha-option" ' . $label_attrs . '>';
+
+						if ($icon) {
+							$icon_url = strpos($icon, 'http') === 0 ? $icon : ALPHA_FORM_URL . 'assets/elements/icones/' . $icon . '.svg';
+							echo '<img src="' . esc_url($icon_url) . '" class="alpha-option-icon" />';
+						}
+						echo esc_html($label);
+						echo '<input ' . $attrs . '> ';
 						echo '</label>';
-						echo "</div>";
 					}
+					echo '</div>';
 				}
 
 				break;
 
-
 			case 'hidden':
-				echo '<input type="hidden" name="' . esc_attr($name) . '" value="' . esc_attr($value) . '" />';
+				echo '<input type="hidden" name="' . esc_attr($name) . '" value="' . esc_attr($value) . '" id="' . esc_attr($id) . '"/>';
 				break;
 
 
 			case 'acceptance':
-				echo '<label class="acceptance"><input type="checkbox" class="acceptance" name="' . esc_attr($name) . '" ' . esc_attr($required) . '> ' . esc_html($settings['acceptance_text']) . '</label>';
+				echo '<label class="acceptance"><input type="checkbox" class="acceptance" name="' . esc_attr($name) . '" ' . esc_attr($required) . ' id="' . esc_attr($id) . '"> ' . esc_html($settings['acceptance_text']) . '</label>';
 				break;
 
 			case 'stext':
 				break;
 
 			default:
-				echo '<input  class="' . esc_attr($class) . '" type="' . esc_attr($type) . '" name="' . esc_attr($name) . '" id="' . esc_attr($name) . '" placeholder="' . esc_attr($placeholder) . '" value="' .  esc_attr($value) . '" pattern="' . esc_attr($pattern) . '" ' . esc_attr($required) . esc_attr($mask) . ' autofocus />';
+				echo '<input  class="' . esc_attr($class) . '" type="' . esc_attr($type) . '" name="' . esc_attr($name) . '" id="' . esc_attr($id) . '" placeholder="' . esc_attr($placeholder) . '" value="' .  esc_attr($value) . '" ' . $pattern . ' ' . esc_attr($required) . esc_attr($mask) . ' autofocus />';
 				break;
 		}
 
@@ -1856,8 +1982,7 @@ class Alpha_Inputs extends Widget_Base
 
 		// Botão
 		echo '<div class="alpha-aux">';
-		error_log($type);
-		if (!in_array($type, ['hidden', 'radio'], true) && $next_button_text) {
+		if (!in_array($type, ['hidden'], true) && $next_button_text) {
 			echo '<button ' . $this->get_render_attribute_string('button') . '>';
 
 			// Abre o wrapper do conteúdo do botão

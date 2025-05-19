@@ -98,7 +98,7 @@ class Alpha_Prev extends Widget_Base
 				],
 				'after' => [
 					'title' => esc_html__('Depois', 'alpha-form'),
-					'icon' => 'eicon-arrow-left',
+					'icon' => 'eicon-arrow-right',
 				],
 			],
 			'default' => 'after',
@@ -110,7 +110,7 @@ class Alpha_Prev extends Widget_Base
 
 		$this->add_control('ajax_button_prev', [
 			'label'       => __('Atualizar lista de formulários', 'alpha-form'),
-			'type'        => \Elementor\Controls_Manager::BUTTON,
+			'type'        => Controls_Manager::BUTTON,
 			'text'        => __('Atualizar', 'alpha-form'),
 			'button_type' => 'success',
 			'event'       => 'alphaform:editor:load_widget_id',
