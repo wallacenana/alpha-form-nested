@@ -6,6 +6,7 @@ register_uninstall_hook(ALPHA_FORM_PATH . 'alpha-form-nested.php', 'alpha_form_u
 
 require_once ALPHA_FORM_PATH . 'ajax/handler-core.php';
 require_once ALPHA_FORM_PATH . 'ajax/handler-integrations.php';
+require_once ALPHA_FORM_PATH . 'ajax/alpha_form_save_progress.php';
 require_once ALPHA_FORM_PATH . 'modules/widgets/actions/handle-actions.php';
 
 function alpha_form_activate()

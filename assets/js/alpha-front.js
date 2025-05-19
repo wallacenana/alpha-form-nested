@@ -292,7 +292,7 @@ function initAlphaNavigation() {
 	});
 }
 
-function saveAlphaProgress(formId, updates = {}) {
+function initAlphaFormSession(formId) {
 	const storage = getAlphaStorage();
 	const sessionId = getOrCreateSessionId();
 
@@ -304,42 +304,54 @@ function saveAlphaProgress(formId, updates = {}) {
 			complete: 0,
 			lastQuest: null,
 			data: {},
-			tempo: {},
-			city: '',
-			region: '',
-			country: ''
 		};
+		saveAlphaStorage(storage);
 	}
+}
 
-	const current = storage[formId];
-	const now = Date.now();
 
-	// Atualiza campos enviados
-	Object.assign(current, updates);
+function saveAlphaStep(formId, key, value) {
+	const storage = getAlphaStorage();
+	if (!storage[formId]) return;
 
+	storage[formId].data[key] = value;
+	storage[formId].lastQuest = key;
 	saveAlphaStorage(storage);
+}
 
-	// AJAX para salvar no banco
-	fetch(alphaFormVars.ajaxurl, {
-		method: 'POST',
-		headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-		body: new URLSearchParams({
-			action: 'alpha_form_save_progress',
-			nonce: alphaFormVars.nonce,
-			post_id: alphaFormVars.postId,
-			form_id: formId,
-			session_id: current.sessionId,
-			pageView: current.pageView,
-			startForm: current.startForm,
-			complete: current.complete,
-			lastQuest: current.lastQuest,
-			tempo: JSON.stringify(current.tempo),
-			respostas: JSON.stringify(current.data),
-			city: current.city,
-			region: current.region,
-			country: current.country,
-		})
-	});
+function markFormStarted(formId) {
+	const storage = getAlphaStorage();
+	if (storage[formId] && storage[formId].startForm === 0) {
+		storage[formId].startForm = 1;
+		saveAlphaStorage(storage);
+
+		if (window.alphaFormEvents?.facebook) {
+			fbq('trackCustom', 'StartForm');
+		}
+		if (window.alphaFormEvents?.analytics) {
+			gtag('event', 'start_form', {
+				event_category: 'Alpha Form',
+				event_label: 'Formulário iniciado'
+			});
+		}
+	}
+}
+
+function markFormCompleted(formId) {
+	const storage = getAlphaStorage();
+	if (storage[formId]) {
+		storage[formId].complete = 1;
+		saveAlphaStorage(storage);
+		if (window.alphaFormEvents?.facebook) {
+			fbq('track', 'CompleteRegistration');
+		}
+		if (window.alphaFormEvents?.analytics) {
+			gtag('event', 'form_submit', {
+				event_category: 'Alpha Form',
+				event_label: 'Formulário enviado'
+			});
+		}
+	}
 }
 
 function saveAlphaStorage(data) {

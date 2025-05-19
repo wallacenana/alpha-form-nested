@@ -86,7 +86,7 @@ class Alpha_Form_Minimal extends Widget_Nested_Base
 
     protected function get_default_repeater_title_setting_key()
     {
-        return 'item_title';
+        return 'item_title_alpha';
     }
 
     protected function get_default_children_title()
@@ -175,17 +175,17 @@ class Alpha_Form_Minimal extends Widget_Nested_Base
                 'fields' => $repeater->get_controls(),
                 'default' => [
                     [
-                        'item_title' => esc_html__('Item #1', 'alpha-form'),
+                        'item_title_alpha' => esc_html__('Item #1', 'alpha-form'),
                     ],
                     [
-                        'item_title' => esc_html__('Item #2', 'alpha-form'),
+                        'item_title_alpha' => esc_html__('Item #2', 'alpha-form'),
                     ],
                     [
-                        'item_title' => esc_html__('Item #3', 'alpha-form'),
+                        'item_title_alpha' => esc_html__('Item #3', 'alpha-form'),
                     ],
                 ],
-                'title_field' => '{{{ item_title }}}',
-                'button_text' => esc_html__('Add Item', 'alpha-form'),
+                'title_field' => '{{{ item_title_alpha }}}',
+                'button_text' => esc_html__('Adicionar questão', 'alpha-form'),
             ]
         );
         $this->end_controls_section();
@@ -1356,10 +1356,14 @@ class Alpha_Form_Minimal extends Widget_Nested_Base
             const itemWrapperAttributes={ 'id' : 'alpha-f-n-item-' + elementUid, 'class' : [ 'alpha-f-n-item' , 'e-normal' ],
             };
 
-            const itemTitleAttributes={ 'class' : [ 'alpha-f-n-item-title' ], 'data-form-index' : view.collection.length + 1, 'tabindex' : -1, 'aria-expanded' : 'false' , 'aria-controls' : 'alpha-f-n-item-' + elementUid,
+            const itemTitleAttributes={ 
+                'class' : [ 'alpha-f-n-item-title' ], 
+                'data-form-index' : view.collection.length + 1, 'tabindex' : -1, 'aria-expanded' : 'false' , 'aria-controls' : 'alpha-f-n-item-' + elementUid,
             };
 
-            const itemTitleTextAttributes={ 'class' : [ 'alpha-f-n-item-title-text' ], 'data-binding-type' : 'repeater-item' , 'data-binding-repeater-name' : 'items' , 'data-binding-setting' : ['item_title_alpha'], 'data-binding-index' : view.collection.length + 1, 'data-binding-dynamic' : 'true' ,
+            const itemTitleTextAttributes={ 
+                'class' : [ 'alpha-f-n-item-title-text' ], 
+                'data-binding-type' : 'repeater-item' , 'data-binding-repeater-name' : 'item_title_alpha' , 'data-binding-setting' : ['item_title_alpha'], 'data-binding-index' : view.collection.length + 1, 'data-binding-dynamic' : 'true' ,
             };
 
             view.addRenderAttribute( 'div-container' , itemWrapperAttributes, null, true );
@@ -1417,7 +1421,8 @@ class Alpha_Form_Minimal extends Widget_Nested_Base
                         view.addRenderAttribute( itemTitleKey, { 'class' : ['alpha-f-n-item-title'], 'data-form-index' : itemCount, 'tabindex' : 0===index ? 0 : -1, 'aria-expanded' : ariaExpanded, 'aria-controls' : itemId,
                         });
 
-                        view.addRenderAttribute( itemTitleTextKey, { 'class' : ['alpha-f-n-item-title-text'], 'data-binding-type' : 'repeater-item' , 'data-binding-repeater-name' : 'items' , 'data-binding-setting' : ['item_title'], 'data-binding-index' : itemCount, 'data-binding-dynamic' : 'true' , 'data-binding-dynamic-css-id' : 'element_css_id' , 'data-binding-single-item-html-wrapper-tag' : 'div' ,
+                        view.addRenderAttribute( itemTitleTextKey, { 'class' : ['alpha-f-n-item-title-text'], 
+                            'data-binding-type' : 'repeater-item' , 'data-binding-repeater-name' : 'items' , 'data-binding-setting' : ['item_title'], 'data-binding-index' : itemCount, 'data-binding-dynamic' : 'true' , 'data-binding-dynamic-css-id' : 'element_css_id' , 'data-binding-single-item-html-wrapper-tag' : 'div' ,
                         });
                         #>
 
@@ -1425,7 +1430,7 @@ class Alpha_Form_Minimal extends Widget_Nested_Base
                             <summary {{{ view.getRenderAttributeString( itemTitleKey ) }}}>
                                 <span class="alpha-f-n-item-title-header">
                                     <{{{ titleHTMLTag }}} {{{ view.getRenderAttributeString( itemTitleTextKey ) }}}>
-                                        {{{ item.item_title }}}
+                                        {{{ item.item_title_alpha }}}
                                     </{{{ titleHTMLTag }}}>
                                 </span>
                                 <# if (settings.form_item_title_icon_alpha.value) { #>

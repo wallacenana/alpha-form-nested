@@ -34,7 +34,7 @@ class Alpha_Complete extends Widget_Base
 
 	public function get_keywords()
 	{
-		return ['nested', 'form', 'toggle', 'alpha', 'formulario'];
+		return ['nested', 'form', 'toggle', 'alpha', 'formulario', 'enviar', 'envio'];
 	}
 
 	public function get_categories()
@@ -57,7 +57,7 @@ class Alpha_Complete extends Widget_Base
 			[
 				'label' => __('Título', 'alpha-form'),
 				'type' => Controls_Manager::TEXT,
-				'default' => 'Digite a questão',
+				'default' => 'Concluido com sucesso',
 				'label_block' => true,
 			]
 		);
@@ -66,6 +66,7 @@ class Alpha_Complete extends Widget_Base
 			[
 				'label' => __('Descrição', 'alpha-form'),
 				'type' => Controls_Manager::WYSIWYG,
+				'default' => 'Clique no botão abaixo para enviar'
 			]
 		);
 
