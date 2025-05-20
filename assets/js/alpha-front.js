@@ -27,6 +27,8 @@ document.addEventListener('DOMContentLoaded', () => {
 	applyAlphaInputMasks();
 	// initAlphaFormIntegrations();
 	initShortcodeTextBindings();
+	initAlphaEnterNavigation();
+
 
 	document.querySelectorAll('[data-alpha="next"]').forEach(btn => {
 		btn.addEventListener('click', () => {
@@ -91,7 +93,6 @@ function initAlphaForm() {
 	if (!wrappers.length) return;
 
 	const globalStorage = getAlphaStorage();
-	console.log(globalStorage)
 
 	const exitBlockForms = new Set();
 	const locationForms = new Set();
@@ -240,13 +241,12 @@ function activateLastVisitedStep(fields, saved) {
 		return input && (input.name === saved.lastQuest || input.id === saved.lastQuest);
 	});
 
-	if (!fieldByLast && saved.lastQuest.startsWith('__step_')) {
-		const index = parseInt(saved.lastQuest.replace('__step_', ''));
+	if (!fieldByLast && !isNaN(saved.lastQuest)) {
+		const index = parseInt(saved.lastQuest);
 		if (fields[index]) {
 			fieldByLast = fields[index];
 		}
 	}
-
 
 	if (fieldByLast) {
 		fieldByLast.classList.add('active');
@@ -328,6 +328,35 @@ function initAlphaNavigation() {
 	});
 }
 
+function initAlphaEnterNavigation() {
+	document.addEventListener('keydown', e => {
+		// Só segue se for Enter
+		if (e.key !== 'Enter') return;
+
+		const field = e.target.closest('.alpha-form-field');
+		if (!field) return;
+
+		// Não avança se for textarea (Enter serve para quebra de linha)
+		if (e.target.tagName === 'TEXTAREA') return;
+
+		const wrapper = field.closest('.widget-alpha-form-n[data-id]');
+		if (!wrapper) return;
+
+		const formId = wrapper.getAttribute('data-id');
+		if (!formId) return;
+
+		// Valida antes de avançar
+		if (!isValid(field)) {
+			toggleErrorMessage(field, true);
+			return;
+		}
+
+		e.preventDefault(); 
+		toggleErrorMessage(field, false);
+		goToNextField(formId);
+	});
+}
+
 function saveAlphaStepToDB(formId, fieldKey, value, status = {}, stepIndex = 0, tempoJson = '{}') {
 	const storage = getAlphaStorage();
 	const sessionId = getOrCreateSessionId();
@@ -341,6 +370,12 @@ function saveAlphaStepToDB(formId, fieldKey, value, status = {}, stepIndex = 0, 
 			lastQuest: null,
 			data: {},
 		};
+	}
+	else {
+		status.startForm = 1;
+
+		const last = storage[formId].lastQuest || '';
+		stepIndex = last;
 	}
 
 	saveAlphaStep(formId, fieldKey, value, stepIndex);
@@ -426,7 +461,7 @@ function saveAlphaStep(formId, key, value, stepIndex = 0) {
 	storage[formId].data[key] = value;
 
 	if (key !== '__init') {
-		storage[formId].lastQuest = `__step_${stepIndex}`;
+		storage[formId].lastQuest = stepIndex;
 	}
 
 	saveAlphaStorage(storage);
