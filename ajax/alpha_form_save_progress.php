@@ -66,3 +66,30 @@ function alpha_form_save_step()
 
     wp_send_json_success();
 }
+
+
+add_action('wp_ajax_alpha_form_mark_complete', 'alpha_form_mark_complete');
+add_action('wp_ajax_nopriv_alpha_form_mark_complete', 'alpha_form_mark_complete');
+
+function alpha_form_mark_complete()
+{
+    check_ajax_referer('alpha_form_nonce', 'nonce');
+
+    $form_id    = sanitize_text_field($_POST['form_id'] ?? '');
+    $session_id = sanitize_text_field($_POST['session_id'] ?? '');
+
+    if (!$form_id || !$session_id) {
+        wp_send_json_error(['message' => 'Dados incompletos.']);
+    }
+
+    global $wpdb;
+    $table = $wpdb->prefix . 'alpha_form_nested_responses';
+
+    $updated = $wpdb->update(
+        $table,
+        ['complete' => 1, 'updated_at' => current_time('mysql', 1)],
+        ['form_id' => $form_id, 'session_id' => $session_id]
+    );
+
+    wp_send_json_success(['updated' => $updated]);
+}

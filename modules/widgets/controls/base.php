@@ -345,6 +345,53 @@ class Alpha_Form_Minimal extends Widget_Nested_Base
 
         $this->end_controls_section();
 
+        $this->start_controls_section(
+            'section_overlay',
+            [
+                'label' => esc_html__('Overlay de Envio', 'alpha-form'),
+                'tab'   => Controls_Manager::TAB_CONTENT,
+            ]
+        );
+
+        $this->add_control(
+            'show_overlay',
+            [
+                'label'        => esc_html__('Exibir overlay durante envio', 'alpha-form'),
+                'type'         => Controls_Manager::SWITCHER,
+                'label_on'     => esc_html__('Sim', 'alpha-form'),
+                'label_off'    => esc_html__('Não', 'alpha-form'),
+                'default'      => 'yes',
+            ]
+        );
+        $this->add_control(
+            'show_editor',
+            [
+                'label'        => esc_html__('Exibir no editor', 'alpha-form'),
+                'type'         => Controls_Manager::SWITCHER,
+                'label_on'     => esc_html__('Sim', 'alpha-form'),
+                'label_off'    => esc_html__('Não', 'alpha-form'),
+                'default'      => 'yes',
+            ]
+        );
+
+        $this->add_control(
+            'overlay_loader_image',
+            [
+                'label' => esc_html__('GIF de carregamento', 'alpha-form'),
+                'type' => \Elementor\Controls_Manager::MEDIA,
+                'default' => [
+                    'url' => \Elementor\Utils::get_placeholder_image_src(),
+                ],
+                'media_types' => ['image'],
+                'condition' => [
+                    'show_overlay' => 'yes',
+                ],
+            ]
+        );
+
+        $this->end_controls_section();
+
+
         // 🔹 Seção principal
         $this->start_controls_section(
             'section_post_submit_alpha',
@@ -1065,6 +1112,56 @@ class Alpha_Form_Minimal extends Widget_Nested_Base
         );
 
         $this->end_controls_section();
+
+        $this->start_controls_section(
+            'section_overlay_style',
+            [
+                'label' => esc_html__('Estilo do Overlay', 'alpha-form'),
+                'tab'   => Controls_Manager::TAB_STYLE,
+                'condition' => [
+                    'show_overlay' => 'yes',
+                ],
+            ]
+        );
+
+        $this->add_control(
+            'overlay_background',
+            [
+                'label'     => esc_html__('Cor de fundo', 'alpha-form'),
+                'type'      => Controls_Manager::COLOR,
+                'default'   => 'rgba(0, 0, 0, 0.6)',
+                'selectors' => [
+                    '{{WRAPPER}} .alpha-form-overlay' => 'background-color: {{VALUE}}',
+                ],
+            ]
+        );
+
+        // Background padrão do Elementor
+
+        $this->add_control(
+            'overlay_image_size',
+            [
+                'label' => esc_html__('Tamanho do GIF', 'alpha-form'),
+                'type' => \Elementor\Controls_Manager::SLIDER,
+                'size_units' => ['px'],
+                'range' => [
+                    'px' => [
+                        'min' => 10,
+                        'max' => 500,
+                        'step' => 1,
+                    ],
+                ],
+                'default' => [
+                    'unit' => 'px',
+                    'size' => 120,
+                ],
+                'selectors' => [
+                    '{{WRAPPER}} .alpha-form-overlay img' => 'width: {{SIZE}}{{UNIT}};',
+                ],
+            ]
+        );
+
+        $this->end_controls_section();
     }
 
 
@@ -1241,30 +1338,53 @@ class Alpha_Form_Minimal extends Widget_Nested_Base
                 'url' => $settings['redirect_url_alpha'],
             ],
             'mailchimp' => [
-                'list_id' => $this->alpha_get_integration_id($settings, 'mailchimp'),
-                'fields'  => $this->alpha_get_mapped_fields($settings, 'mc', $fields_mc),
+                'source_type'      => $settings['mailchimp_source_type'],
+                'api_key'          => $settings['mailchimp_custom_api_key'] ?? '',
+                'server'           => $settings['mailchimp_custom_server'] ?? '',
+                'list_id_custom'   => $settings['mailchimp_list_id_custom'] ?? '',
+                'list_id'          => $this->alpha_get_integration_id($settings, 'mailchimp'),
+                'fields'           => $this->alpha_get_mapped_fields($settings, 'mc', $fields_mc),
             ],
             'active-campaign' => [
+                'source_type'      => $settings['active-campaign_source_type'],
+                'api_key'          => $settings['active-campaign_custom_api_key'] ?? '',
+                'server'           => $settings['active-campaign_custom_server'] ?? '',
+                'list_id_custom'   => $settings['active-campaign_list_id_custom'] ?? '',
                 'list_id' => $this->alpha_get_integration_id($settings, 'active-campaign'),
                 'fields'  => $this->alpha_get_mapped_fields($settings, 'ac', $fields_ac),
             ],
             'getresponse' => [
+                'source_type'      => $settings['getresponse_source_type'],
+                'api_key'          => $settings['getresponse_custom_api_key'] ?? '',
+                'list_id_custom'   => $settings['getresponse_list_id_custom'] ?? '',
                 'list_id' => $this->alpha_get_integration_id($settings, 'getresponse'),
                 'fields'  => $this->alpha_get_mapped_fields($settings, 'gr', $fields_gr),
             ],
             'drip' => [
+                'source_type'      => $settings['drip_source_type'],
+                'api_key'          => $settings['drip_custom_api_key'] ?? '',
+                'list_id_custom'   => $settings['drip_list_id_custom'] ?? '',
                 'tag'    => $this->alpha_get_integration_id($settings, 'drip'),
                 'fields' => $this->alpha_get_mapped_fields($settings, 'drip', $fields_drip),
             ],
             'convertkit' => [
+                'source_type'      => $settings['convertkit_source_type'],
+                'api_key'          => $settings['convertkit_custom_api_key'] ?? '',
+                'list_id_custom'   => $settings['convertkit_list_id_custom'] ?? '',
                 'form_id' => $this->alpha_get_integration_id($settings, 'convertkit'),
                 'fields'  => $this->alpha_get_mapped_fields($settings, 'ck', $fields_ck),
             ],
             'mailerlite' => [
+                'source_type'      => $settings['mailerlite_source_type'],
+                'api_key'          => $settings['mailerlite_custom_api_key'] ?? '',
+                'list_id_custom'   => $settings['mailerlite_list_id_custom'] ?? '',
                 'group_id' => $this->alpha_get_integration_id($settings, 'mailerlite'),
                 'fields'   => $this->alpha_get_mapped_fields($settings, 'ml', $fields_ml),
             ],
             'clicksend' => [
+                'source_type'      => $settings['clicksend_source_type'],
+                'api_key'          => $settings['clicksend_custom_api_key'] ?? '',
+                'list_id_custom'   => $settings['clicksend_list_id_custom'] ?? '',
                 'list_id' => $this->alpha_get_integration_id($settings, 'clicksend'),
                 'fields'  => $this->alpha_get_mapped_fields($settings, 'cs', $fields_cs),
             ],
@@ -1323,8 +1443,22 @@ class Alpha_Form_Minimal extends Widget_Nested_Base
             return !empty(array_filter((array) $v));
         });
 
-        echo '<input type="hidden" class="alpha-actions-data alpha-ignore-shortcode" value=\'' . esc_attr(wp_json_encode($actions_data)) . '\' />';
+        echo '<input type="hidden" data-alpha-submit class="alpha-actions-data alpha-ignore-shortcode" value=\'' . esc_attr(wp_json_encode($actions_data)) . '\' />';
         echo '</form>';
+        if ('yes' === $settings['show_overlay'] && !empty($settings['overlay_loader_image']['id'])) {
+            echo '<div class="alpha-form-overlay" style="display:none;">';
+            echo wp_get_attachment_image(
+                $settings['overlay_loader_image']['id'],
+                'full',
+                false,
+                [
+                    'class' => 'alpha-form-overlay-gif',
+                    'alt'   => esc_attr__('Carregando...', 'alpha-form'),
+                ]
+            );
+            echo '</div>';
+        }
+        echo '<div class="alpha-form-toast"></div>';
     }
 
 
@@ -1356,14 +1490,10 @@ class Alpha_Form_Minimal extends Widget_Nested_Base
             const itemWrapperAttributes={ 'id' : 'alpha-f-n-item-' + elementUid, 'class' : [ 'alpha-f-n-item' , 'e-normal' ],
             };
 
-            const itemTitleAttributes={ 
-                'class' : [ 'alpha-f-n-item-title' ], 
-                'data-form-index' : view.collection.length + 1, 'tabindex' : -1, 'aria-expanded' : 'false' , 'aria-controls' : 'alpha-f-n-item-' + elementUid,
+            const itemTitleAttributes={ 'class' : [ 'alpha-f-n-item-title' ], 'data-form-index' : view.collection.length + 1, 'tabindex' : -1, 'aria-expanded' : 'false' , 'aria-controls' : 'alpha-f-n-item-' + elementUid,
             };
 
-            const itemTitleTextAttributes={ 
-                'class' : [ 'alpha-f-n-item-title-text' ], 
-                'data-binding-type' : 'repeater-item' , 'data-binding-repeater-name' : 'item_title_alpha' , 'data-binding-setting' : ['item_title_alpha'], 'data-binding-index' : view.collection.length + 1, 'data-binding-dynamic' : 'true' ,
+            const itemTitleTextAttributes={ 'class' : [ 'alpha-f-n-item-title-text' ], 'data-binding-type' : 'repeater-item' , 'data-binding-repeater-name' : 'item_title_alpha' , 'data-binding-setting' : ['item_title_alpha'], 'data-binding-index' : view.collection.length + 1, 'data-binding-dynamic' : 'true' ,
             };
 
             view.addRenderAttribute( 'div-container' , itemWrapperAttributes, null, true );
@@ -1421,8 +1551,7 @@ class Alpha_Form_Minimal extends Widget_Nested_Base
                         view.addRenderAttribute( itemTitleKey, { 'class' : ['alpha-f-n-item-title'], 'data-form-index' : itemCount, 'tabindex' : 0===index ? 0 : -1, 'aria-expanded' : ariaExpanded, 'aria-controls' : itemId,
                         });
 
-                        view.addRenderAttribute( itemTitleTextKey, { 'class' : ['alpha-f-n-item-title-text'], 
-                            'data-binding-type' : 'repeater-item' , 'data-binding-repeater-name' : 'items' , 'data-binding-setting' : ['item_title'], 'data-binding-index' : itemCount, 'data-binding-dynamic' : 'true' , 'data-binding-dynamic-css-id' : 'element_css_id' , 'data-binding-single-item-html-wrapper-tag' : 'div' ,
+                        view.addRenderAttribute( itemTitleTextKey, { 'class' : ['alpha-f-n-item-title-text'], 'data-binding-type' : 'repeater-item' , 'data-binding-repeater-name' : 'items' , 'data-binding-setting' : ['item_title'], 'data-binding-index' : itemCount, 'data-binding-dynamic' : 'true' , 'data-binding-dynamic-css-id' : 'element_css_id' , 'data-binding-single-item-html-wrapper-tag' : 'div' ,
                         });
                         #>
 
@@ -1441,8 +1570,16 @@ class Alpha_Form_Minimal extends Widget_Nested_Base
                                     <# } #>
                             </summary>
                         </div>
+
+
                         <# } ); #>
                             <# } #>
+                                <# if ( settings.show_overlay==='yes' && settings.show_editor==='yes' && settings.overlay_loader_image && settings.overlay_loader_image.url ) { #>
+                                    <div class="alpha-form-overlay">
+                                        <img src="{{ settings.overlay_loader_image.url }}" alt="Carregando..." class="alpha-form-overlay-gif" />
+                                    </div>
+                                    <# } #>
+
             </div>
     <?php
     }

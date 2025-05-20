@@ -8,6 +8,7 @@ require_once ALPHA_FORM_PATH . 'ajax/handler-core.php';
 require_once ALPHA_FORM_PATH . 'ajax/handler-integrations.php';
 require_once ALPHA_FORM_PATH . 'ajax/alpha_form_save_progress.php';
 require_once ALPHA_FORM_PATH . 'modules/widgets/actions/handle-actions.php';
+require_once ALPHA_FORM_PATH . 'modules/widgets/actions/handle-submit.php';
 
 function alpha_form_activate()
 {

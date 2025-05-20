@@ -174,3 +174,21 @@ label.alpha-letter-active::before {
 .alpha-shake {
     animation: alphaShake 0.4s ease;
 }
+
+.alpha-form-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.6);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 9999;
+}
+
+.alpha-form-overlay-gif {
+    max-width: 100px;
+    max-height: 100px;
+}

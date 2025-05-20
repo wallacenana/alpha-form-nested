@@ -59,7 +59,7 @@ class Alpha_Next extends Widget_Base
 			],
 		]);
 
-		$this->add_control('icon', [
+		$this->add_control('icon_next', [
 			'label' => esc_html__('Ícone', 'alpha-form'),
 			'type' => Controls_Manager::ICONS,
 			'skin' => 'inline',
@@ -94,11 +94,11 @@ class Alpha_Next extends Widget_Base
 			'options' => [
 				'before' => [
 					'title' => esc_html__('Antes', 'alpha-form'),
-					'icon' => 'eicon-arrow-left',
+					'icon_next' => 'eicon-arrow-left',
 				],
 				'after' => [
 					'title' => esc_html__('Depois', 'alpha-form'),
-					'icon' => 'eicon-arrow-right',
+					'icon_next' => 'eicon-arrow-right',
 				],
 			],
 			'default' => 'after',
@@ -278,9 +278,9 @@ class Alpha_Next extends Widget_Base
 		echo '<span class="alpha-form-button-inner">';
 
 		// Ícone antes do texto
-		if (!empty($settings['icon']['value']) && $settings['icon_position'] === 'before') {
+		if (!empty($settings['icon_next']['value']) && $settings['icon_position'] === 'before') {
 			echo '<span class="alpha-form-button-icon before">';
-			Icons_Manager::render_icon($settings['icon'], ['aria-hidden' => 'true']);
+			Icons_Manager::render_icon($settings['icon_next'], ['aria-hidden' => 'true']);
 			echo '</span>';
 		}
 
@@ -290,9 +290,9 @@ class Alpha_Next extends Widget_Base
 		}
 
 		// Ícone depois do texto
-		if (!empty($settings['icon']['value']) && $settings['icon_position'] === 'after') {
+		if (!empty($settings['icon_next']['value']) && $settings['icon_position'] === 'after') {
 			echo '<span class="alpha-form-button-icon after">';
-			Icons_Manager::render_icon($settings['icon'], ['aria-hidden' => 'true']);
+			Icons_Manager::render_icon($settings['icon_next'], ['aria-hidden' => 'true']);
 			echo '</span>';
 		}
 

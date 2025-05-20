@@ -301,34 +301,7 @@ class Alpha_Inputs extends Widget_Base
 			'skin' => 'inline',
 			'label_block' => false,
 			'default' => [
-				'value' => 'fa-solid',
-				'library' => 'fa-solid',
-			],
-			'recommended' => [
-				'fa-solid' => [
-					'arrow-right',
-					'chevron-right',
-					'angle-right',
-					'caret-right',
-					'circle-arrow-right',
-					'long-arrow-alt-right',
-					'arrow-circle-right',
-					'angle-double-right',
-					'hand-point-right',
-					'step-forward',
-				],
-				'fa-regular' => [
-					'hand-point-right',
-					'arrow-alt-circle-right',
-				],
-				'condition' => [
-					'field_type!' => 'acceptance',
-				],
-			],
-			'condition' => [
-				'field_type!' =>
-				'checkbox',
-				'select'
+				'value' => '',
 			],
 		]);
 
@@ -1987,39 +1960,46 @@ class Alpha_Inputs extends Widget_Base
 				</script>';
 		}
 
-		// Botão
-		echo '<div class="alpha-aux">';
-		if (!in_array($type, ['hidden'], true) && $next_button_text) {
-			echo '<button ' . $this->get_render_attribute_string('button') . '>';
+		if (
+			!empty($settings['next_button_text']) ||
+			!empty($settings['icon']['value']) ||
+			!empty($settings['aux_text'])
+		) {
 
-			// Abre o wrapper do conteúdo do botão
-			echo '<span class="alpha-form-button-inner" data-alpha="next">';
+			// Botão
+			echo '<div class="alpha-aux">';
+			if (!in_array($type, ['hidden'], true) && $next_button_text) {
+				echo '<button ' . $this->get_render_attribute_string('button') . '>';
 
-			// Ícone antes do texto
-			if (!empty($settings['icon']['value']) && $settings['btn_icon_position'] === 'before') {
-				echo '<span class="alpha-form-button-icon before" data-alpha="next">';
-				Icons_Manager::render_icon($settings['icon'], ['aria-hidden' => 'true']);
-				echo '</span>';
+				// Abre o wrapper do conteúdo do botão
+				echo '<span class="alpha-form-button-inner" data-alpha="next">';
+
+				// Ícone antes do texto
+				if (!empty($settings['icon']['value']) && $settings['btn_icon_position'] === 'before') {
+					echo '<span class="alpha-form-button-icon before" data-alpha="next">';
+					Icons_Manager::render_icon($settings['icon'], ['aria-hidden' => 'true']);
+					echo '</span>';
+				}
+
+				// Texto do botão
+				if (!empty($settings['next_button_text'])) {
+					echo '<span class="alpha-form-button-text" data-alpha="next">' . esc_html($settings['next_button_text']) . '</span>';
+				}
+
+				// Ícone depois do texto
+				if (!empty($settings['icon']['value']) && $settings['btn_icon_position'] === 'after') {
+					echo '<span class="alpha-form-button-icon after" data-alpha="next">';
+					Icons_Manager::render_icon($settings['icon'], ['aria-hidden' => 'true']);
+					echo '</span>';
+				}
+
+				// Fecha o wrapper
+				echo '</span></button>';
 			}
-
-			// Texto do botão
-			if (!empty($settings['next_button_text'])) {
-				echo '<span class="alpha-form-button-text" data-alpha="next">' . esc_html($settings['next_button_text']) . '</span>';
-			}
-
-			// Ícone depois do texto
-			if (!empty($settings['icon']['value']) && $settings['btn_icon_position'] === 'after') {
-				echo '<span class="alpha-form-button-icon after" data-alpha="next">';
-				Icons_Manager::render_icon($settings['icon'], ['aria-hidden' => 'true']);
-				echo '</span>';
-			}
-
-			// Fecha o wrapper
-			echo '</span></button>';
+			if ($aux_text)
+				echo '<p class="aux"> ' . esc_html($aux_text) . '</p>';
+			echo '</div>';
 		}
-		if ($aux_text)
-			echo '<p class="aux"> ' . esc_html($aux_text) . '</p>';
-		echo '</div>';
 		echo '</div>';
 	}
 }

@@ -289,7 +289,7 @@ class Alpha_Complete extends Widget_Base
 			Group_Control_Typography::get_type(),
 			[
 				'name' => 'btn_typography_complete',
-				'selector' => '{{WRAPPER}} .alpha-form-next.form',
+				'selector' => '{{WRAPPER}} .alpha-form-submit.form',
 				'global' => [
 					'default' => Global_Typography::TYPOGRAPHY_PRIMARY,
 				],
@@ -315,7 +315,7 @@ class Alpha_Complete extends Widget_Base
 					'default' => Global_Colors::COLOR_SECONDARY,
 				],
 				'selectors' => [
-					'{{WRAPPER}} .alpha-form-next.form' => 'color: {{VALUE}};fill: {{VALUE}};',
+					'{{WRAPPER}} .alpha-form-submit.form' => 'color: {{VALUE}};fill: {{VALUE}};',
 				],
 			]
 		);
@@ -328,7 +328,7 @@ class Alpha_Complete extends Widget_Base
 					'default' => Global_Colors::COLOR_ACCENT,
 				],
 				'selectors' => [
-					'{{WRAPPER}} .alpha-form-next.form' => 'background: {{VALUE}};',
+					'{{WRAPPER}} .alpha-form-submit.form' => 'background: {{VALUE}};',
 				],
 			]
 		);
@@ -337,7 +337,7 @@ class Alpha_Complete extends Widget_Base
 			Group_Control_Border::get_type(),
 			[
 				'name' => 'btn_border_complete',
-				'selector' => '{{WRAPPER}} .alpha-form-next.form',
+				'selector' => '{{WRAPPER}} .alpha-form-submit.form',
 			]
 		);
 
@@ -348,7 +348,7 @@ class Alpha_Complete extends Widget_Base
 				'type' => Controls_Manager::DIMENSIONS,
 				'size_units' => ['px', '%', 'em', 'custom'],
 				'selectors' => [
-					'{{WRAPPER}} .alpha-form-next.form' => 'border-radius: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};',
+					'{{WRAPPER}} .alpha-form-submit.form' => 'border-radius: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};',
 				],
 			]
 		);
@@ -360,7 +360,7 @@ class Alpha_Complete extends Widget_Base
 				'type' => Controls_Manager::DIMENSIONS,
 				'size_units' => ['px', '%', 'em', 'custom'],
 				'selectors' => [
-					'{{WRAPPER}} .alpha-form-next.form' => 'padding: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};',
+					'{{WRAPPER}} .alpha-form-submit.form' => 'padding: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};',
 				],
 				'fields_options' => [
 					'top' => [
@@ -396,7 +396,7 @@ class Alpha_Complete extends Widget_Base
 					'default' => Global_Colors::COLOR_SECONDARY,
 				],
 				'selectors' => [
-					'{{WRAPPER}} .alpha-form-next.form:hover' => 'color: {{VALUE}}; fill: {{VALUE}};',
+					'{{WRAPPER}} .alpha-form-submit.form:hover' => 'color: {{VALUE}}; fill: {{VALUE}};',
 				],
 			]
 		);
@@ -409,7 +409,7 @@ class Alpha_Complete extends Widget_Base
 					'default' => Global_Colors::COLOR_ACCENT,
 				],
 				'selectors' => [
-					'{{WRAPPER}} .alpha-form-next.form:hover' => 'background: {{VALUE}};',
+					'{{WRAPPER}} .alpha-form-submit.form:hover' => 'background: {{VALUE}};',
 				],
 			]
 		);
@@ -418,7 +418,7 @@ class Alpha_Complete extends Widget_Base
 			Group_Control_Border::get_type(),
 			[
 				'name' => 'btn_border_hover_complete',
-				'selector' => '{{WRAPPER}} .alpha-form-next.form:hover',
+				'selector' => '{{WRAPPER}} .alpha-form-submit.form:hover',
 			]
 		);
 
@@ -427,7 +427,7 @@ class Alpha_Complete extends Widget_Base
 			[
 				'name'     => 'button_box_shadow_hover_complete',
 				'label'    => __('Sombra do Input', 'alpha-form'),
-				'selector' => '{{WRAPPER}} .alpha-form-next.form:hover',
+				'selector' => '{{WRAPPER}} .alpha-form-submit.form:hover',
 			]
 		);
 		$this->end_controls_tab();
@@ -447,7 +447,7 @@ class Alpha_Complete extends Widget_Base
 				],
 			],
 			'selectors' => [
-				'{{WRAPPER}} .alpha-form-next.form .alpha-form-button-icon svg' => 'width: {{SIZE}}{{UNIT}};',
+				'{{WRAPPER}} .alpha-form-submit.form .alpha-form-button-icon svg' => 'width: {{SIZE}}{{UNIT}};',
 			],
 		]);
 
@@ -465,7 +465,7 @@ class Alpha_Complete extends Widget_Base
 				],
 			],
 			'selectors' => [
-				'{{WRAPPER}} .alpha-form-next.form .alpha-form-button-inner' => 'gap: {{SIZE}}{{UNIT}};',
+				'{{WRAPPER}} .alpha-form-submit.form .alpha-form-button-inner' => 'gap: {{SIZE}}{{UNIT}};',
 			],
 		]);
 		$this->end_controls_section();
@@ -477,7 +477,7 @@ class Alpha_Complete extends Widget_Base
 
 		$label = $settings['field_label_complete'] ?? '';
 		$description = $settings['field_descricao_complete'] ?? '';
-		$next_button_text = $settings['complete_button_text'] ?? '';
+		$submit_button_text = $settings['complete_button_text'] ?? '';
 		$allowed_html = array(
 			'a' => array(
 				'href' => true,
@@ -519,7 +519,7 @@ class Alpha_Complete extends Widget_Base
 			),
 		);
 		$this->add_render_attribute('button', [
-			'class' => 'alpha-form-next form',
+			'class' => 'alpha-form-submit form',
 			'type'  => 'submit',
 			'data-alpha' => 'submit',
 		]);
@@ -536,33 +536,33 @@ class Alpha_Complete extends Widget_Base
 			echo '<div class="alpha-form-description">' . wp_kses($description, $allowed_html) . '</div>';
 		}
 
-		// Botão
-		echo '<button ' . $this->get_render_attribute_string('button') . '>';
+		// Só renderiza se houver texto ou ícone
+		if (!empty($submit_button_text) || !empty($settings['icon_complete']['value'])) {
+			echo '<button ' . $this->get_render_attribute_string('button') . '>';
 
-		// Abre o wrapper do conteúdo do botão
-		echo '<span class="alpha-form-button-inner" data-alpha="next">';
+			// Wrapper do conteúdo do botão
+			echo '<span class="alpha-form-button-inner" data-alpha="submit">';
 
-		// Ícone antes do texto
-		if (!empty($settings['icon_complete']['value']) && $settings['btn_icon_position_complete'] === 'before') {
-			echo '<span class="alpha-form-button-icon before" data-alpha="next">';
-			Icons_Manager::render_icon($settings['icon_complete'], ['aria-hidden' => 'true']);
-			echo '</span>';
+			// Ícone antes do texto
+			if (!empty($settings['icon_complete']['value']) && $settings['btn_icon_position_complete'] === 'before') {
+				echo '<span class="alpha-form-button-icon before" data-alpha="submit">';
+				Icons_Manager::render_icon($settings['icon_complete'], ['aria-hidden' => 'true']);
+				echo '</span>';
+			}
+
+			// Texto
+			if (!empty($submit_button_text)) {
+				echo '<span class="alpha-form-button-text" data-alpha="submit">' . esc_html($submit_button_text) . '</span>';
+			}
+
+			// Ícone depois do texto
+			if (!empty($settings['icon_complete']['value']) && $settings['btn_icon_position_complete'] === 'after') {
+				echo '<span class="alpha-form-button-icon after" data-alpha="submit">';
+				Icons_Manager::render_icon($settings['icon_complete'], ['aria-hidden' => 'true']);
+				echo '</span>';
+			}
+
+			echo '</span></button>';
 		}
-
-		// Texto do botão
-		if (!empty($next_button_text)) {
-			echo '<span class="alpha-form-button-text" data-alpha="next">' . esc_html($next_button_text) . '</span>';
-		}
-
-		// Ícone depois do texto
-		if (!empty($settings['icon_complete']['value']) && $settings['btn_icon_position_complete'] === 'after') {
-			echo '<span class="alpha-form-button-icon after" data-alpha="next">';
-			Icons_Manager::render_icon($settings['icon_complete'], ['aria-hidden' => 'true']);
-			echo '</span>';
-		}
-
-		// Fecha o wrapper
-		echo '</span></button>';
-		echo '</div>';
 	}
 }

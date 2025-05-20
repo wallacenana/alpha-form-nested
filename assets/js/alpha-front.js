@@ -83,12 +83,72 @@ function updateShortcodeText(scope = document.body) {
 	});
 }
 
+function markFormCompleted(formId) {
+	const storage = getAlphaStorage();
+	if (!storage[formId]) return;
+
+	storage[formId].complete = 1;
+	saveAlphaStorage(storage);
+
+	// 🔁 Dispara eventos
+	if (window.alphaFormEvents?.facebook) {
+		fbq('track', 'CompleteRegistration');
+	}
+	if (window.alphaFormEvents?.analytics) {
+		gtag('event', 'form_submit', {
+			event_category: 'Alpha Form',
+			event_label: 'Formulário enviado'
+		});
+	}
+
+	// Envia pro servidor
+	fetch(alphaFormVars.ajaxurl, {
+		method: 'POST',
+		headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+		body: new URLSearchParams({
+			action: 'alpha_form_mark_complete',
+			nonce: alphaFormVars.nonce,
+			form_id: formId,
+			session_id: getOrCreateSessionId()
+		})
+	});
+}
+
+function resolveAlphaShortcodesInText(text, form) {
+	if (!text || typeof text !== 'string') return text;
+	if (!form) form = document;
+
+	const inputs = form.querySelectorAll('input, select, textarea');
+	const map = {};
+
+	inputs.forEach(input => {
+		const key = input.name || input.id;
+		if (!key) return;
+
+		let value = '';
+		if (input.type === 'checkbox') {
+			const checked = form.querySelectorAll(`input[name="${input.name}"]:checked`);
+			value = Array.from(checked).map(cb => cb.value).join(', ');
+		} else if (input.type === 'radio') {
+			const selected = form.querySelector(`input[name="${input.name}"]:checked`);
+			value = selected ? selected.value : '';
+		} else {
+			value = input.value || '';
+		}
+
+		map[key] = value;
+	});
+
+	return text.replace(/\[field-([^\|\]]+)(\|([^\]]+))?\]/g, (_, key, __, fallback = '') => {
+		return map[key] || fallback || '';
+	});
+}
+
 function initAlphaForm() {
 	const wrappers = document.querySelectorAll('.widget-alpha-form-n[data-id]');
 	if (!wrappers.length) return;
 
 	const globalStorage = getAlphaStorage();
-	console.log(globalStorage)
 
 	const exitBlockForms = new Set();
 	const locationForms = new Set();
@@ -356,6 +416,38 @@ function initAlphaEnterNavigation() {
 		toggleErrorMessage(field, false);
 		goToNextField(formId);
 	});
+}
+
+function toggleAlphaOverlay(show = true) {
+	const overlay = document.querySelector('.alpha-form-overlay');
+	if (!overlay) return;
+	overlay.style.display = show ? 'flex' : 'none';
+}
+
+function showAlphaToast(message = 'Tudo certo!', duration = 5000) {
+	let toast = document.querySelector('.alpha-form-toast');
+
+	if (!toast) {
+		toast = document.createElement('div');
+		toast.className = 'alpha-form-toast';
+		document.body.appendChild(toast);
+	}
+
+	toast.textContent = message;
+	toast.classList.add('visible');
+
+	// Remove a classe após o tempo + transição
+	setTimeout(() => {
+		toast.classList.remove('visible');
+
+		// Aguarda a transição terminar antes de esconder
+		setTimeout(() => {
+			toast.style.display = 'none';
+		}, 4000); // deve ser igual à duração do transition no CSS
+	}, duration);
+
+	// Garante que aparece se estava escondido
+	toast.style.display = 'block';
 }
 
 function saveAlphaStepToDB(formId, fieldKey, value, status = {}, stepIndex = 0, tempoJson = '{}') {
@@ -959,5 +1051,87 @@ async function initAlphaFormIntegrations() {
 	}
 }
 
+async function handleAlphaFormSubmit(form) {
+	toggleAlphaOverlay(true);
+
+	const formId = form.getAttribute('data-alpha-widget-id');
+	const hiddenInput = form.querySelector('input[type="hidden"][data-alpha-submit]');
+	if (!formId || !hiddenInput) {
+		toggleAlphaOverlay(false);
+		return;
+	}
+
+	let integrations = {};
+	try {
+		integrations = JSON.parse(hiddenInput.value);
+	} catch (e) {
+		console.error('Erro ao parsear integrações', e);
+		toggleAlphaOverlay(false);
+		return;
+	}
+
+	// Loop por integração
+	for (const [name, config] of Object.entries(integrations)) {
+		if (!config || Object.keys(config).length === 0) continue;
+
+		// Mapeia os campos se houver 'fields' definidos
+		if (config.fields && typeof config.fields === 'object') {
+			const mappedFields = {};
+			for (const [finalKey, inputId] of Object.entries(config.fields)) {
+				const input = form.querySelector(`#${inputId}`);
+				if (input) {
+					mappedFields[finalKey] = input.value;
+				}
+			}
+			// Substitui os campos mapeados
+			config.data = mappedFields;
+			delete config.fields;
+		}
+
+		// Envia para o PHP central
+		const response = await fetch(alphaFormVars.ajaxurl, {
+			method: 'POST',
+			headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+			body: new URLSearchParams({
+				action: 'alpha_form_handle_integration',
+				nonce: alphaFormVars.nonce,
+				integration: name,
+				form_id: formId,
+				data: JSON.stringify(config)
+			})
+		});
+
+		const result = await response.json();
+		if (result.success && result.result === true) {
+			showAlphaToast(`✅ Enviado com sucesso para ${name}`);
+		} else {
+			showAlphaToast(`❌ Falha ao enviar para ${name}`, true);
+			console.warn(`Falha ao enviar para ${name}`, result);
+		}
+	}
+
+	// Marca como completo
+	markFormCompleted(formId);
+	toggleAlphaOverlay(false);
+
+	// Redirecionamento, se configurado
+	if (integrations.redirect?.url) {
+		const finalUrl = resolveAlphaShortcodesInText(integrations.redirect.url, form);
+		setTimeout(() => window.location.href = finalUrl, 500);
+	} else {
+		showAlphaToast('Formulário enviado com sucesso!');
+	}
+}
+
 
 window.addEventListener('DOMContentLoaded', markRequiredFields);
+
+document.addEventListener('submit', async e => {
+	const form = e.target.closest('.alpha-form');
+	if (form) {
+		e.preventDefault();
+		await handleAlphaFormSubmit(form);
+	}
+});
+
+
