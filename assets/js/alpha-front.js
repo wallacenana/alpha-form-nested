@@ -29,12 +29,7 @@ document.addEventListener('DOMContentLoaded', () => {
 	initShortcodeTextBindings();
 	initAlphaEnterNavigation();
 
-
-	document.querySelectorAll('[data-alpha="next"]').forEach(btn => {
-		btn.addEventListener('click', () => {
-			updateShortcodeText();
-		});
-	});
+	updateShortcodeText();
 });
 
 function initShortcodeTextBindings(scope = document.body) {
@@ -93,6 +88,7 @@ function initAlphaForm() {
 	if (!wrappers.length) return;
 
 	const globalStorage = getAlphaStorage();
+	console.log(globalStorage)
 
 	const exitBlockForms = new Set();
 	const locationForms = new Set();
@@ -199,38 +195,43 @@ function resetActiveStates(fields) {
 }
 
 function restoreSavedValues(fields, savedData) {
-	fields.forEach(field => {
+	Object.entries(savedData).forEach(([stepKey, stepData], index) => {
+		if (!/^\d+$/.test(stepKey)) return; // Só entra se for step numérico
+
+		const stepIndex = parseInt(stepKey, 10);
+		const field = fields[stepIndex - 1];
+		if (!field || typeof stepData !== 'object') return;
+
 		const inputs = field.querySelectorAll('input, select, textarea');
-		if (!inputs.length) return;
 
-		const input = inputs[0];
-		const key = input.name || input.id || input.dataset.customId;
-		if (!key) return;
+		inputs.forEach(input => {
+			const key = input.name || input.id || input.dataset.customId;
+			if (!key) return;
 
-		const value = savedData[key];
-		if (value == null) return;
+			const value = stepData[key];
+			if (value == null) return;
 
-		if (input.type === 'checkbox') {
-			// marca todos os checkboxes do mesmo nome que estiverem no valor
-			const group = field.querySelectorAll(`input[type="checkbox"][name="${input.name}"]`);
-			const values = Array.isArray(value) ? value : [value];
-			group.forEach(cb => {
-				cb.checked = values.includes(cb.value);
-			});
-		} else if (input.type === 'radio') {
-			const group = field.querySelectorAll(`input[type="radio"][name="${input.name}"]`);
-			group.forEach(r => {
-				r.checked = r.value == value;
-			});
-		} else if (input.tagName === 'SELECT') {
-			Array.from(input.options).forEach(option => {
-				option.selected = option.value == value;
-			});
-		} else {
-			input.value = value;
-		}
-		updateAllRadioButtonsVisibility();
+			if (input.type === 'checkbox') {
+				const group = field.querySelectorAll(`input[type="checkbox"][name="${input.name}"]`);
+				const values = Array.isArray(value) ? value : [value];
+				group.forEach(cb => {
+					cb.checked = values.includes(cb.value);
+				});
+			} else if (input.type === 'radio') {
+				const group = field.querySelectorAll(`input[type="radio"][name="${input.name}"]`);
+				group.forEach(r => {
+					r.checked = r.value == value;
+				});
+			} else if (input.tagName === 'SELECT') {
+				Array.from(input.options).forEach(option => {
+					option.selected = option.value == value;
+				});
+			} else {
+				input.value = value;
+			}
+		});
 	});
+	updateAllRadioButtonsVisibility();
 }
 
 function activateLastVisitedStep(fields, saved) {
@@ -351,7 +352,7 @@ function initAlphaEnterNavigation() {
 			return;
 		}
 
-		e.preventDefault(); 
+		e.preventDefault();
 		toggleErrorMessage(field, false);
 		goToNextField(formId);
 	});
@@ -367,18 +368,17 @@ function saveAlphaStepToDB(formId, fieldKey, value, status = {}, stepIndex = 0, 
 			pageView: 0,
 			startForm: 0,
 			complete: 0,
-			lastQuest: null,
+			lastQuest: 0,
 			data: {},
 		};
 	}
 	else {
+		const last = parseInt(storage[formId].lastQuest || '0');
+		stepIndex = last + 1;
 		status.startForm = 1;
-
-		const last = storage[formId].lastQuest || '';
-		stepIndex = last;
 	}
 
-	saveAlphaStep(formId, fieldKey, value, stepIndex);
+	saveAlphaStep(formId, fieldKey, value, stepIndex, JSON.parse(tempoJson || '{}'));
 
 	// Atualiza status
 	if (status.pageView) storage[formId].pageView = 1;
@@ -408,7 +408,6 @@ function saveAlphaStepToDB(formId, fieldKey, value, status = {}, stepIndex = 0, 
 	// 🔁 GeoIP só uma vez por sessão
 	if (!storage[formId]._geoSent) {
 		storage[formId]._geoSent = true;
-		saveAlphaStorage(storage);
 
 		fetch('https://ipwho.is/')
 			.then(res => res.json())
@@ -427,6 +426,15 @@ function saveAlphaStepToDB(formId, fieldKey, value, status = {}, stepIndex = 0, 
 	}
 
 	function sendAlphaFormAjax() {
+		// 🔄 Merge dos tempos antigos com os atuais
+		const fullTempo = {
+			...(storage[formId].tempo || {}),
+			...(JSON.parse(tempoJson || '{}'))
+		};
+
+		// Atualiza o localStorage também com o tempo completo
+		storage[formId].tempo = fullTempo;
+
 		fetch(alphaFormVars.ajaxurl, {
 			method: 'POST',
 			headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
@@ -438,7 +446,7 @@ function saveAlphaStepToDB(formId, fieldKey, value, status = {}, stepIndex = 0, 
 				session_id: sessionId,
 				field_key: fieldKey,
 				last_quest: stepIndex,
-				value: value,
+				value: typeof value === 'object' ? JSON.stringify(value) : value,
 				status: JSON.stringify({
 					pageView: storage[formId].pageView,
 					startForm: storage[formId].startForm,
@@ -448,22 +456,29 @@ function saveAlphaStepToDB(formId, fieldKey, value, status = {}, stepIndex = 0, 
 				city: storage[formId].city || '',
 				region: storage[formId].region || '',
 				country: storage[formId].country || '',
-				tempo_json: tempoJson,
+				tempo_json: JSON.stringify(fullTempo)
 			})
 		});
 	}
 }
 
-function saveAlphaStep(formId, key, value, stepIndex = 0) {
+function saveAlphaStep(formId, key, value, stepIndex = null, tempo = null) {
 	const storage = getAlphaStorage();
 	if (!storage[formId]) return;
 
 	storage[formId].data[key] = value;
-
-	if (key !== '__init') {
-		storage[formId].lastQuest = stepIndex;
+	if (key !== "__init") {
+		storage[formId].startForm = 1;
+		storage[formId].lastQuest = key;
 	}
 
+	if (tempo && typeof tempo === 'object') {
+		storage[formId].tempo = {
+			...(storage[formId].tempo || {}),
+			...tempo,
+			__last: tempo.__last || storage[formId].tempo?.__last
+		};
+	}
 	saveAlphaStorage(storage);
 }
 
@@ -605,20 +620,22 @@ function getPrevField(current, form) {
 }
 
 function toggleErrorMessage(field, show = true) {
-	const errorMessage = field.querySelector('.alpha-error-message');
-	if (!errorMessage) return;
+	const errorMessages = field.querySelectorAll('.alpha-error-message');
 
-	const input = errorMessage.previousElementSibling;
-	if (input && ['INPUT', 'SELECT', 'TEXTAREA'].includes(input.tagName)) {
-		if (show) {
-			input.classList.add('alpha-error');
-			shakeInput(input);
-		} else {
-			input.classList.remove('alpha-error');
+	errorMessages.forEach(errorMessage => {
+		const input = errorMessage.previousElementSibling;
+
+		if (input && ['INPUT', 'SELECT', 'TEXTAREA'].includes(input.tagName)) {
+			if (show) {
+				input.classList.add('alpha-error');
+				shakeInput(input);
+			} else {
+				input.classList.remove('alpha-error');
+			}
 		}
-	}
 
-	errorMessage.style.display = show ? 'block' : 'none';
+		errorMessage.style.display = show ? 'block' : 'none';
+	});
 }
 
 function goToNextField(formId, next = 1, absolute = false) {
@@ -634,7 +651,7 @@ function goToNextField(formId, next = 1, absolute = false) {
 	const nextField = fields[targetIndex];
 
 	const result = getAlphaFieldValue(current);
-	const stepKey = result?.key || `__step_${index + 1}`;
+	const stepKey = index + 1;
 	const value = result?.value ?? 1;
 
 	// status dinâmico
@@ -661,7 +678,7 @@ function goToNextField(formId, next = 1, absolute = false) {
 	tempo.__last = now;
 
 	// salva resposta e tempo corretamente
-	saveAlphaStepToDB(formId, stepKey, value, status, index + 1, JSON.stringify(tempo));
+	saveAlphaStepToDB(formId, stepKey, { ...value }, status, index + 1, JSON.stringify(tempo));
 
 	updateShortcodeText();
 
@@ -680,34 +697,31 @@ function getAlphaFieldValue(field) {
 	const inputs = field.querySelectorAll('input, select, textarea');
 	if (!inputs.length) return null;
 
-	const input = Array.from(inputs).find(el =>
-		['INPUT', 'TEXTAREA', 'SELECT'].includes(el.tagName)
-	);
-	if (!input) return null;
+	const values = {};
+	let firstValidKey = null;
 
-	const key = input.name || input.id || input.dataset.customId;
-	if (!key) return null;
+	inputs.forEach(input => {
+		const key = input.name || input.id || input.dataset.customId;
+		if (!key) return;
 
-	let value = null;
+		let value = null;
 
-	if (input.type === 'checkbox') {
-		const checkboxes = field.querySelectorAll(`input[type="checkbox"][name="${input.name}"]:checked`);
-		value = Array.from(checkboxes).map(cb => cb.value);
-		if (!value.length) return null;
-	} else if (input.type === 'radio') {
-		const checked = field.querySelector(`input[type="radio"][name="${input.name}"]:checked`);
-		if (!checked) return null;
-		value = checked.value;
+		if (input.type === 'radio') {
+			const checked = field.querySelector(`input[type="radio"][name="${input.name}"]:checked`);
+			if (checked) value = checked.value;
+		} else if (input.type === 'checkbox') {
+			const group = field.querySelectorAll(`input[type="checkbox"][name="${input.name}"]:checked`);
+			value = Array.from(group).map(i => i.value);
+		} else {
+			value = input.value;
+		}
 
-	} else {
-		value = input.value?.trim();
-		if (!value) return null;
-	}
+		values[key] = value;
+		if (!firstValidKey) firstValidKey = key;
+	});
 
-	return { key, value };
+	return { key: firstValidKey || Date.now(), value: values };
 }
-
-
 
 function goToPrevField(formId) {
 	const form = document.querySelector(`.widget-alpha-form-n[data-id="${formId}"]`);

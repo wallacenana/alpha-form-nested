@@ -12,7 +12,7 @@ function alpha_form_save_step()
     $form_id    = sanitize_text_field($_POST['form_id']);
     $session_id = sanitize_text_field($_POST['session_id']);
     $field_key  = sanitize_text_field($_POST['field_key']);
-    $value      = sanitize_text_field($_POST['value']);
+    $value = json_decode(stripslashes($_POST['value']), true);
     $last_quest = intval($_POST['last_quest'] ?? 0);
     $post_id    = intval($_POST['post_id'] ?? 0);
     $status     = json_decode(stripslashes($_POST['status']), true);
@@ -35,6 +35,7 @@ function alpha_form_save_step()
         $respostas = json_decode($existing->respostas_json, true);
     }
     $respostas[$field_key] = $value;
+    $respostas_json = wp_json_encode($respostas);
 
     $data = [
         'post_id'        => $post_id,
@@ -48,7 +49,7 @@ function alpha_form_save_step()
         'start_form'     => intval($status['startForm'] ?? 0),
         'complete'       => intval($status['complete'] ?? 0),
         'last_quest'     => $last_quest,
-        'respostas_json' => wp_json_encode($respostas),
+        'respostas_json' => $respostas_json,
         'tempo_json'     => wp_json_encode($tempo_data),
         'updated_at'     => current_time('mysql'),
     ];
