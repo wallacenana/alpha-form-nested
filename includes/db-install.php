@@ -13,25 +13,26 @@ function alpha_form_create_response_table()
 
 
     $sql1 = "
-        CREATE TABLE $responses_table (
-        id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
-        post_id BIGINT UNSIGNED NOT NULL,
-        form_id VARCHAR(32) NOT NULL,
-        session_id VARCHAR(64) NOT NULL,
+        CREATE TABLE wp_alpha_form_nested_responses (
+        id BIGINT AUTO_INCREMENT PRIMARY KEY,
+        post_id BIGINT,
+        form_id VARCHAR(32),
+        session_id VARCHAR(64),
         ip_address VARCHAR(45),
         city VARCHAR(100),
         region VARCHAR(100),
         country VARCHAR(100),
-        page_view TINYINT(1) DEFAULT 0,
-        start_form TINYINT(1) DEFAULT 0,
-        complete TINYINT(1) DEFAULT 0,
+        page_view TINYINT(1),
+        start_form TINYINT(1),
+        complete TINYINT(1),
         last_quest VARCHAR(100),
         tempo_json TEXT,
         respostas_json LONGTEXT,
-        created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
-        updated_at DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+        created_at DATETIME,
+        updated_at DATETIME,
         UNIQUE KEY unique_session (session_id, form_id)
-    ) $charset_collate;
+    )
+$charset_collate;
     ";
 
     $sql2 = "

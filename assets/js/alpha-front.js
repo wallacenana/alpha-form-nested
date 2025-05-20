@@ -3,13 +3,22 @@ console.log("[Alpha Forms] - iniciado");
 document.addEventListener('DOMContentLoaded', () => {
 	const forms = document.querySelectorAll('.alpha-form[data-alpha-widget-id]');
 	let formId = [];
+
 	forms.forEach(form => {
 		const id = form.getAttribute('data-alpha-widget-id');
 		if (id) {
+			if (!window.alphaFormTime) window.alphaFormTime = {};
+			if (!window.alphaFormTime[id]) {
+				window.alphaFormTime[id] = {
+					__last: Date.now()
+				};
+			}
+
 			formId.push(id);
-			initAlphaFormSession(id);
+			saveAlphaStepToDB(id, '__init', 1, { pageView: 1 }, 0, JSON.stringify(window.alphaFormTime[id]));
 		}
 	});
+
 
 	initAlphaForm();
 	initAlphaNavigation();
@@ -19,10 +28,6 @@ document.addEventListener('DOMContentLoaded', () => {
 	// initAlphaFormIntegrations();
 	initShortcodeTextBindings();
 
-	// Atualiza com dados do localStorage ao carregar
-	updateShortcodeTextWithLocalStorage();
-
-	// Atualiza ao clicar no botão "Próximo"
 	document.querySelectorAll('[data-alpha="next"]').forEach(btn => {
 		btn.addEventListener('click', () => {
 			updateShortcodeText();
@@ -81,33 +86,13 @@ function updateShortcodeText(scope = document.body) {
 	});
 }
 
-function updateShortcodeTextWithLocalStorage(scope = document.body) {
-	try {
-		const storage = JSON.parse(localStorage.getItem('alpha-form-data-response'));
-		if (!storage) return;
-
-		Object.values(storage).forEach(formData => {
-			const data = formData.data || {};
-			Object.keys(data).forEach(key => {
-				const value = data[key];
-				const spans = scope.querySelectorAll(`.alpha-shortcode[data-key="${key}"]`);
-				spans.forEach(span => {
-					span.textContent = value || span.dataset.default;
-				});
-			});
-		});
-	} catch (e) {
-		console.warn('Alpha Form: erro ao recuperar dados do localStorage.', e);
-	}
-}
-
 function initAlphaForm() {
 	const wrappers = document.querySelectorAll('.widget-alpha-form-n[data-id]');
 	if (!wrappers.length) return;
 
 	const globalStorage = getAlphaStorage();
+	console.log(globalStorage)
 
-	// Grupos de controle por atributo
 	const exitBlockForms = new Set();
 	const locationForms = new Set();
 	const returnForms = new Set();
@@ -128,12 +113,10 @@ function initAlphaForm() {
 		resetActiveStates(fields);
 		restoreSavedValues(fields, savedData);
 
-		// Marca permissões por atributo
 		if (form.hasAttribute('data-exit-block')) exitBlockForms.add(formId);
 		if (form.hasAttribute('data-location')) locationForms.add(formId);
 		if (form.hasAttribute('data-return')) returnForms.add(formId);
 
-		// Ativa o step
 		const shouldReturn = returnForms.has(formId);
 		const stepActivated = shouldReturn ? activateLastVisitedStep(fields, saved) : false;
 
@@ -141,20 +124,72 @@ function initAlphaForm() {
 			activateFirstStep(fields);
 		}
 
-		initAlphaFormSession(formId);
-
-		if (locationForms.has(formId)) {
-			fetchCityFromIP(formId);
-		}
-
 		updateAlphaProgressBar(formId);
-		updateShortcodeText()
+		resolveAlphaShortcodes(form);
 	});
 
-	// Só ativa alerta se necessário
 	if (exitBlockForms.size > 0) {
 		enableFormLeaveWarning(exitBlockForms);
 	}
+}
+
+function resolveAlphaShortcodes(formElement) {
+
+	if (!formElement) return;
+	const values = {};
+
+	const inputs = formElement.querySelectorAll('input, select, textarea');
+	inputs.forEach(input => {
+		const id = input.name || input.id || input.dataset.customId;
+		if (!id) return;
+
+		const key = `[field-${id}]`;
+		let value = '';
+
+		if (input.type === 'checkbox') {
+			const checked = formElement.querySelectorAll(`input[name="${input.name}"]:checked`);
+			value = Array.from(checked).map(cb => cb.value).join(', ');
+		} else if (input.type === 'radio') {
+			const selected = formElement.querySelector(`input[name="${input.name}"]:checked`);
+			value = selected ? selected.value : '';
+		} else {
+			value = input.value;
+		}
+
+		values[key] = value;
+	});
+
+	// 1. Substituir em todos os elementos com texto
+	document.querySelectorAll('body *').forEach(el => {
+		if (el.children.length === 0) {
+			let html = el.innerHTML;
+			let altered = false;
+
+			Object.entries(values).forEach(([shortcode, val]) => {
+				if (html.includes(shortcode)) {
+					html = html.replaceAll(shortcode, val);
+					altered = true;
+				}
+			});
+
+			if (altered) el.innerHTML = html;
+		}
+	});
+
+	// 2. Substituir em atributos comuns
+	const attrList = ['src', 'action', 'data-href', 'data-url', 'data-target'];
+	document.querySelectorAll('*').forEach(el => {
+		attrList.forEach(attr => {
+			const original = el.getAttribute(attr);
+			if (original && original.includes('[field-')) {
+				let updated = original;
+				Object.entries(values).forEach(([shortcode, val]) => {
+					updated = updated.replaceAll(shortcode, val);
+				});
+				el.setAttribute(attr, updated);
+			}
+		});
+	});
 }
 
 
@@ -211,6 +246,7 @@ function activateLastVisitedStep(fields, saved) {
 			fieldByLast = fields[index];
 		}
 	}
+
 
 	if (fieldByLast) {
 		fieldByLast.classList.add('active');
@@ -292,66 +328,112 @@ function initAlphaNavigation() {
 	});
 }
 
-function initAlphaFormSession(formId) {
+function saveAlphaStepToDB(formId, fieldKey, value, status = {}, stepIndex = 0, tempoJson = '{}') {
 	const storage = getAlphaStorage();
 	const sessionId = getOrCreateSessionId();
 
 	if (!storage[formId]) {
 		storage[formId] = {
 			sessionId,
-			pageView: 1,
+			pageView: 0,
 			startForm: 0,
 			complete: 0,
 			lastQuest: null,
 			data: {},
 		};
+	}
+
+	saveAlphaStep(formId, fieldKey, value, stepIndex);
+
+	// Atualiza status
+	if (status.pageView) storage[formId].pageView = 1;
+	if (status.startForm) storage[formId].startForm = 1;
+	if (status.complete) storage[formId].complete = 1;
+
+	// Dispara eventos
+	if (status.startForm && window.alphaFormEvents?.facebook) {
+		fbq('trackCustom', 'StartForm');
+	}
+	if (status.startForm && window.alphaFormEvents?.analytics) {
+		gtag('event', 'start_form', {
+			event_category: 'Alpha Form',
+			event_label: 'Formulário iniciado'
+		});
+	}
+	if (status.complete && window.alphaFormEvents?.facebook) {
+		fbq('track', 'CompleteRegistration');
+	}
+	if (status.complete && window.alphaFormEvents?.analytics) {
+		gtag('event', 'form_submit', {
+			event_category: 'Alpha Form',
+			event_label: 'Formulário enviado'
+		});
+	}
+
+	// 🔁 GeoIP só uma vez por sessão
+	if (!storage[formId]._geoSent) {
+		storage[formId]._geoSent = true;
 		saveAlphaStorage(storage);
+
+		fetch('https://ipwho.is/')
+			.then(res => res.json())
+			.then(data => {
+				storage[formId].ip = data.ip;
+				storage[formId].city = data.city;
+				storage[formId].region = data.region;
+				storage[formId].country = data.country;
+				saveAlphaStorage(storage);
+
+				// Chamada AJAX com geolocalização
+				sendAlphaFormAjax();
+			});
+	} else {
+		sendAlphaFormAjax();
+	}
+
+	function sendAlphaFormAjax() {
+		fetch(alphaFormVars.ajaxurl, {
+			method: 'POST',
+			headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+			body: new URLSearchParams({
+				action: 'alpha_form_save_step',
+				nonce: alphaFormVars.nonce,
+				form_id: formId,
+				post_id: getPostId(),
+				session_id: sessionId,
+				field_key: fieldKey,
+				last_quest: stepIndex,
+				value: value,
+				status: JSON.stringify({
+					pageView: storage[formId].pageView,
+					startForm: storage[formId].startForm,
+					complete: storage[formId].complete
+				}),
+				ip: storage[formId].ip || '',
+				city: storage[formId].city || '',
+				region: storage[formId].region || '',
+				country: storage[formId].country || '',
+				tempo_json: tempoJson,
+			})
+		});
 	}
 }
 
-
-function saveAlphaStep(formId, key, value) {
+function saveAlphaStep(formId, key, value, stepIndex = 0) {
 	const storage = getAlphaStorage();
 	if (!storage[formId]) return;
 
 	storage[formId].data[key] = value;
-	storage[formId].lastQuest = key;
+
+	if (key !== '__init') {
+		storage[formId].lastQuest = `__step_${stepIndex}`;
+	}
+
 	saveAlphaStorage(storage);
 }
 
-function markFormStarted(formId) {
-	const storage = getAlphaStorage();
-	if (storage[formId] && storage[formId].startForm === 0) {
-		storage[formId].startForm = 1;
-		saveAlphaStorage(storage);
-
-		if (window.alphaFormEvents?.facebook) {
-			fbq('trackCustom', 'StartForm');
-		}
-		if (window.alphaFormEvents?.analytics) {
-			gtag('event', 'start_form', {
-				event_category: 'Alpha Form',
-				event_label: 'Formulário iniciado'
-			});
-		}
-	}
-}
-
-function markFormCompleted(formId) {
-	const storage = getAlphaStorage();
-	if (storage[formId]) {
-		storage[formId].complete = 1;
-		saveAlphaStorage(storage);
-		if (window.alphaFormEvents?.facebook) {
-			fbq('track', 'CompleteRegistration');
-		}
-		if (window.alphaFormEvents?.analytics) {
-			gtag('event', 'form_submit', {
-				event_category: 'Alpha Form',
-				event_label: 'Formulário enviado'
-			});
-		}
-	}
+function getPostId() {
+	return parseInt(document.querySelector('[data-elementor-id]')?.dataset.elementorId || 0);
 }
 
 function saveAlphaStorage(data) {
@@ -369,25 +451,6 @@ function getOrCreateSessionId() {
 
 function getAlphaStorage() {
 	return JSON.parse(localStorage.getItem('alpha-form-data-response') || '{}');
-}
-
-function fetchCityFromIP(formId) {
-	const storage = getAlphaStorage();
-	if (!storage[formId]) return;
-
-	fetch('https://ipwho.is/')
-		.then(res => res.json())
-		.then(data => {
-			storage[formId].ip = data.ip;
-			storage[formId].city = data.city;
-			storage[formId].region = data.region;
-			storage[formId].country = data.country;
-
-			saveAlphaStorage(storage);
-		})
-		.catch(() => {
-			console.warn('Falha ao obter cidade por IP');
-		});
 }
 
 function markRequiredFields() {
@@ -421,59 +484,79 @@ function markRequiredFields() {
 }
 
 function isValid(field) {
-	const input = field.querySelector('input, select, textarea');
-	if (!input) return true;
-	else if (input.type === 'hidden') return true;
+	const inputs = field.querySelectorAll('input, select, textarea');
+	if (!inputs.length) return true;
 
-	else if (!input.hasAttribute('required')) return true;
+	let isFieldValid = true;
 
-	const type = input.type;
+	inputs.forEach(input => {
+		if (!input.hasAttribute('required') || input.type === 'hidden') return;
 
-	const mask = input.dataset.mask;
-	if (mask) {
 		const value = input.value.trim();
+		const type = input.type;
+		const mask = input.dataset.mask;
 
-		switch (mask) {
-			case 'cpf':
-				if (value.length !== 14) return false;
-				break;
-			case 'cnpj':
-				if (value.length !== 18) return false;
-				break;
-			case 'cep':
-				if (value.length !== 9) return false;
-				break;
-			case 'cel':
-				if (value.length < 14) return false;
-				break;
-			case 'currency':
-				if (!/R\$ (\d{1,3}(\.\d{3})*|\d+),\d{2}/.test(value)) return false;
-				break;
+		if (mask) {
+			switch (mask) {
+				case 'cpf':
+					if (value.length !== 14) isFieldValid = false;
+					break;
+				case 'cnpj':
+					if (value.length !== 18) isFieldValid = false;
+					break;
+				case 'cep':
+					if (value.length !== 9) isFieldValid = false;
+					break;
+				case 'cel':
+					if (value.length < 14) isFieldValid = false;
+					break;
+				case 'currency':
+					if (!/R\$ (\d{1,3}(\.\d{3})*|\d+),\d{2}/.test(value)) isFieldValid = false;
+					break;
+			}
+			return; // se tiver máscara, ignora os próximos testes
 		}
-	}
 
-	if (type === 'email') {
-		const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-		return emailRegex.test(input.value);
-	}
+		if (type === 'email') {
+			const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+			if (!emailRegex.test(value)) isFieldValid = false;
+			return;
+		}
 
-	if (input.hasAttribute('pattern')) {
-		const pattern = new RegExp(input.getAttribute('pattern'));
-		return pattern.test(input.value);
-	}
+		if (input.hasAttribute('pattern')) {
+			const pattern = new RegExp(input.getAttribute('pattern'));
+			if (!pattern.test(value)) isFieldValid = false;
+			return;
+		}
 
-	if (type === 'radio') {
-		const name = input.name;
-		const group = field.querySelectorAll(`input[type="radio"][name="${name}"]`);
-		return Array.from(group).some(r => r.checked);
-	}
+		if (type === 'radio') {
+			const name = input.name;
+			const group = field.querySelectorAll(`input[type="radio"][name="${name}"]`);
+			if (!Array.from(group).some(r => r.checked)) isFieldValid = false;
+			return;
+		}
 
-	if (type === 'checkbox') {
-		const group = field.querySelectorAll('input[type="checkbox"]');
-		return Array.from(group).some(c => c.checked);
-	}
+		if (type === 'checkbox') {
+			const group = field.querySelectorAll('input[type="checkbox"]');
+			if (!Array.from(group).some(c => c.checked)) isFieldValid = false;
+			return;
+		}
 
-	return !!input.value.trim();
+		if (!value) isFieldValid = false;
+	});
+
+	return isFieldValid;
+}
+
+function shakeInput(input) {
+	if (!input) return;
+
+	input.classList.add('alpha-shake');
+
+	// Remove após a animação para permitir repetir no futuro
+	input.addEventListener('animationend', () => {
+		input.classList.remove('alpha-shake');
+	}, { once: true });
 }
 
 function getPrevField(current, form) {
@@ -488,9 +571,19 @@ function getPrevField(current, form) {
 
 function toggleErrorMessage(field, show = true) {
 	const errorMessage = field.querySelector('.alpha-error-message');
-	if (errorMessage) {
-		errorMessage.style.display = show ? 'block' : 'none';
+	if (!errorMessage) return;
+
+	const input = errorMessage.previousElementSibling;
+	if (input && ['INPUT', 'SELECT', 'TEXTAREA'].includes(input.tagName)) {
+		if (show) {
+			input.classList.add('alpha-error');
+			shakeInput(input);
+		} else {
+			input.classList.remove('alpha-error');
+		}
 	}
+
+	errorMessage.style.display = show ? 'block' : 'none';
 }
 
 function goToNextField(formId, next = 1, absolute = false) {
@@ -501,34 +594,49 @@ function goToNextField(formId, next = 1, absolute = false) {
 	const current = form.querySelector('.alpha-form-field.active');
 	if (!current || !fields.length) return;
 
-	let saved = false;
-
-	const result = getAlphaFieldValue(current);
-	if (result && result.key && result.value != null && result.value !== '') {
-		saveAlphaStep(formId, result.key, result.value);
-		saved = true;
-		updateShortcodeText()
-	}
-
-	if (!saved) {
-		// Força o salvamento mesmo sem input
-		const index = fields.indexOf(current);
-		const stepKey = index >= 0 ? `__step_${index + 1}` : `__step_${Date.now()}`;
-		saveAlphaStep(formId, stepKey, 1);
-		updateShortcodeText()
-	}
-
-	markFormStarted(formId);
-
 	const index = fields.indexOf(current);
 	const targetIndex = absolute ? (parseInt(next) - 1) : (index + parseInt(next));
 	const nextField = fields[targetIndex];
 
+	const result = getAlphaFieldValue(current);
+	const stepKey = result?.key || `__step_${index + 1}`;
+	const value = result?.value ?? 1;
+
+	// status dinâmico
+	const status = {};
+	if (index === 0) status.startForm = 1;
+	if (targetIndex >= fields.length - 1) status.complete = 1;
+
+	// Inicializa o mapa local de tempo (pode estar no window, session ou outro escopo)
+	if (!window.alphaFormTime) window.alphaFormTime = {};
+	if (!window.alphaFormTime[formId]) {
+		window.alphaFormTime[formId] = {
+			__last: Date.now(),
+		};
+	}
+
+	const now = Date.now();
+	const last = window.alphaFormTime[formId].__last;
+	const elapsed = (now - last) / 1000;
+
+	const tempo = window.alphaFormTime[formId];
+
+	// Salva o tempo da etapa anterior
+	tempo[stepKey] = elapsed;
+	tempo.__last = now;
+
+	// salva resposta e tempo corretamente
+	saveAlphaStepToDB(formId, stepKey, value, status, index + 1, JSON.stringify(tempo));
+
+	updateShortcodeText();
+
 	if (nextField) {
 		current.classList.remove('active');
 		nextField.classList.add('active');
+
 		const input = nextField.querySelector('input:not([type="hidden"]), select, textarea');
 		if (input) input.focus();
+
 		updateAlphaProgressBar(formId);
 	}
 }
@@ -537,11 +645,9 @@ function getAlphaFieldValue(field) {
 	const inputs = field.querySelectorAll('input, select, textarea');
 	if (!inputs.length) return null;
 
-	// Encontra o primeiro input visível válido
-	let input = Array.from(inputs).find(el =>
+	const input = Array.from(inputs).find(el =>
 		['INPUT', 'TEXTAREA', 'SELECT'].includes(el.tagName)
 	);
-
 	if (!input) return null;
 
 	const key = input.name || input.id || input.dataset.customId;
@@ -549,20 +655,23 @@ function getAlphaFieldValue(field) {
 
 	let value = null;
 
-	if (input.tagName === 'SELECT') {
-		value = input.value;
+	if (input.type === 'checkbox') {
+		const checkboxes = field.querySelectorAll(`input[type="checkbox"][name="${input.name}"]:checked`);
+		value = Array.from(checkboxes).map(cb => cb.value);
+		if (!value.length) return null;
 	} else if (input.type === 'radio') {
 		const checked = field.querySelector(`input[type="radio"][name="${input.name}"]:checked`);
-		if (checked) value = checked.value;
-	} else if (input.type === 'checkbox') {
-		const group = field.querySelectorAll(`input[type="checkbox"][name="${input.name}"]:checked`);
-		value = Array.from(group).map(i => i.value);
+		if (!checked) return null;
+		value = checked.value;
+
 	} else {
-		value = input.value;
+		value = input.value?.trim();
+		if (!value) return null;
 	}
 
 	return { key, value };
 }
+
 
 
 function goToPrevField(formId) {
@@ -594,10 +703,9 @@ function initAlphaRadioNavigation() {
 		const nextAttr = input.dataset.next;
 
 		if (nextAttr) {
-			// Trata como índice absoluto (campo 3 → índice 2)
 			setTimeout(() => goToNextField(formId, nextAttr, true), 50);
 		} else {
-			setTimeout(() => goToNextField(formId), 50); // Padrão: próximo item
+			setTimeout(() => goToNextField(formId), 50);
 		}
 
 		updateAllRadioButtonsVisibility();
@@ -610,7 +718,7 @@ function updateAlphaProgressBar(formId) {
 
 	const fields = Array.from(formWrapper.querySelectorAll('.alpha-form-field'));
 	const total = fields.length;
-	if (total < 2) return; // evita divisão por zero
+	if (total < 2) return;
 
 	const current = formWrapper.querySelector('.alpha-form-field.active');
 	if (!current) return;
@@ -622,6 +730,7 @@ function updateAlphaProgressBar(formId) {
 	if (!progressWrapper) return;
 
 	const fill = progressWrapper.querySelector('.alpha-form-progress-bar-fill');
+
 	if (fill) {
 		fill.style.transition = 'width 0.4s ease';
 		fill.style.width = `${percentage}%`;
@@ -727,7 +836,7 @@ function applyAlphaInputMasks() {
 
 function applyAlphaLetters() {
 	document.querySelectorAll('label[data-letter]').forEach(label => {
-		// Evita duplicação
+
 		if (label.classList.contains('alpha-letter-active')) return;
 
 		const letter = label.getAttribute('data-letter');
@@ -802,5 +911,4 @@ async function initAlphaFormIntegrations() {
 }
 
 
-// Chama a função no carregamento
 window.addEventListener('DOMContentLoaded', markRequiredFields);

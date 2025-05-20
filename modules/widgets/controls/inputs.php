@@ -158,24 +158,23 @@ class Alpha_Inputs extends Widget_Base
 					'check'           => '✔️ Confirmação',
 					'confused'        => '😕 Confuso',
 					'angry'           => '😠 Irritado',
-					'dizziness'       => '💫 Tonto',
-					'cool-1'          => '🕶️ Descolado',
-					'poisoned'        => '☠️ Envenenado',
+					'dizziness'       => '🥴 Tonto',
+					'cool-1'          => '😎 Descolado',
+					'poisoned'        => '🤢 Envenenado',
 					'angel'           => '😇 Anjo',
-					'poisoned-1'      => '🎯 Foco / Alvo',
-					'vomiting-1'      => '🤮 Vomitando',
+					'vomit'           => '🤮 Vomitando',
 					'zombie'          => '🧟 Zumbi',
 					'vomit'           => '🤢 Enjoado',
 					'tongue-out-2'    => '😜 Língua de fora',
 					'squint'          => '😆 Apertando os olhos',
 					'wink'            => '😉 Piscando',
-					'tongue'          => '👅 Língua',
+					'tongue'          => '😜 Língua',
 					'think'           => '🤔 Pensando',
 					'exhausted'       => '🥵 Exausto',
 					'sinister-smile'  => '😏 Sorriso malicioso',
 					'jealous'         => '😒 Com ciúmes',
 					'laugh-1'         => '😂 Rindo muito',
-					'smile-1'         => '😊 Sorridente',
+					'smile-1'         => '😊 Sem jeito',
 					'sleep'           => '😴 Dormindo',
 					'laugh'           => '😄 Rindo',
 					'get-ill'         => '🤒 Doente',
@@ -191,7 +190,7 @@ class Alpha_Inputs extends Widget_Base
 					'face-mask'       => '😷 Máscara',
 					'kiss-1'          => '😘 Beijo',
 					'kiss-2'          => '😗 Beijo leve',
-					'kiss'            => '💋 Beijo marcante',
+					'kiss'            => '😘 Beijo marcante',
 					'laugh-and-cry'   => '🤣 Gargalhando',
 					'in-love'         => '😍 Apaixonado',
 					'happy-2'         => '😁 Feliz',
@@ -234,22 +233,28 @@ class Alpha_Inputs extends Widget_Base
 				'fields' => $repeater->get_controls(),
 				'default' => [
 					[
-						'label' => __('Opção 1', 'alpha-form'),
+						'label'         => __('Opção 1', 'alpha-form'),
+						'icon_library'  => 'kiss-2',
 					],
 					[
 						'label' => __('Opção 2', 'alpha-form'),
+						'icon_library'  => 'angry',
 					],
 					[
 						'label' => __('Opção 3', 'alpha-form'),
+						'icon_library'  => 'cool-1',
 					],
 					[
 						'label' => __('Opção 4', 'alpha-form'),
+						'icon_library'  => 'in-love',
 					],
 					[
 						'label' => __('Opção 5', 'alpha-form'),
+						'icon_library'  => 'fear-1',
 					],
 					[
 						'label' => __('Opção 6', 'alpha-form'),
+						'icon_library'  => 'poisoned',
 					],
 				],
 				'condition' => [
@@ -258,6 +263,7 @@ class Alpha_Inputs extends Widget_Base
 				'title_field' => '{{{ label }}}',
 			]
 		);
+
 
 
 
@@ -1114,7 +1120,7 @@ class Alpha_Inputs extends Widget_Base
 			Group_Control_Border::get_type(),
 			[
 				'name' => 'error_border',
-				'selector' => '{{WRAPPER}} .alpha-error-message',
+				'selector' => '{{WRAPPER}} .alpha-error-message, {{WRAPPER}} .alpha-error',
 				'fields_options' => [
 					'border' => [
 						'default' => 'solid',
@@ -1134,6 +1140,7 @@ class Alpha_Inputs extends Widget_Base
 				],
 			]
 		);
+
 
 		$this->add_responsive_control(
 			'error_border_radius',
@@ -1791,8 +1798,8 @@ class Alpha_Inputs extends Widget_Base
 		$special_masks = ['cpf', 'cnpj', 'cep', 'currency', 'cel'];
 		$mask = in_array($type, $special_masks) ? ' data-mask=' . esc_attr($type) . '' : '';
 		$class = 'alpha-input-field';
-		$id = $this->get_id(); 
-		
+		$id = $this->get_id();
+
 		$this->add_render_attribute('button', [
 			'class' => 'alpha-form-next form',
 			'type'  => 'button',
@@ -1869,7 +1876,7 @@ class Alpha_Inputs extends Widget_Base
 
 					foreach ($options as $choice) {
 						$label = trim($choice['label'] ?? '');
-						$value = trim($choice['value'] ?? sanitize_title($label));
+						$value = trim($choice['value']) ? trim($choice['value']) : sanitize_title($label);
 						$next  = trim($choice['target'] ?? '');
 
 						$attrs = 'value="' . esc_attr($value) . '"';
@@ -1884,10 +1891,10 @@ class Alpha_Inputs extends Widget_Base
 				} else {
 					foreach ($options as $index => $choice) {
 						$label = trim($choice['label'] ?? '');
-						$value = trim($choice['value'] ?? sanitize_title($label));
+						$value = trim($choice['value']) ? trim($choice['value']) : sanitize_title($label);
 						$next  = trim($choice['target'] ?? '');
 						$icon  = trim($choice['icon_library'] ?? '');
-						$input_id = esc_attr($name . '_' . $index);
+						$input_id = esc_attr($id . '_' . $index);
 
 						$attrs = 'type="' . esc_attr($input_type) . '" name="' . esc_attr($name) . '" id="' . esc_attr($input_id) . '" value="' . esc_attr($value) . '" ' . $required;
 						if ($next) {

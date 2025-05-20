@@ -117,30 +117,60 @@ label.alpha-letter-active::before {
 
 /* Estilo quando marcado */
 .alpha-option input:checked::after {
-	content: '✔';
-	color: #000;
-	font-size: 12px;
-	position: absolute;
-	top: 50%;
-	left: 50%;
-	transform: translate(-50%, -50%);
-	line-height: 1;
+    content: '✔';
+    color: #000;
+    font-size: 12px;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    line-height: 1;
 }
 
 .alpha-radio-next-wrapper {
-	opacity: 0;
-	transform: translateY(5px);
-	transition: opacity 0.3s ease, transform 0.3s ease;
-	display: none;
+    opacity: 0;
+    transform: translateY(5px);
+    transition: opacity 0.3s ease, transform 0.3s ease;
+    display: none;
 }
 
 .alpha-radio-next-wrapper.alpha-fade-in {
-	opacity: 1;
-	transform: translateY(0);
+    opacity: 1;
+    transform: translateY(0);
 }
 
 
-.chartjs-size-monitor{
+.chartjs-size-monitor {
     width: 100%;
     display: block;
+}
+
+@keyframes alphaShake {
+    0% {
+        transform: translateX(0);
+    }
+
+    20% {
+        transform: translateX(-5px);
+    }
+
+    40% {
+        transform: translateX(5px);
+    }
+
+    60% {
+        transform: translateX(-5px);
+    }
+
+    80% {
+        transform: translateX(5px);
+    }
+
+    100% {
+        transform: translateX(0);
+    }
+}
+
+.alpha-shake {
+    animation: alphaShake 0.4s ease;
 }
