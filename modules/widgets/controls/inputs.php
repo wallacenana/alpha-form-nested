@@ -24,7 +24,7 @@ class Alpha_Inputs extends Widget_Base
 
 	public function get_title()
 	{
-		return esc_html__('Alpha Inputs', 'alpha-form');
+		return esc_html__('Alpha Inputs', 'alpha-form-nested');
 	}
 
 	public function get_icon()
@@ -39,7 +39,7 @@ class Alpha_Inputs extends Widget_Base
 
 	public function get_categories()
 	{
-		return ['alpha-form'];
+		return ['alpha-form-nested'];
 	}
 
 	public function register_controls()
@@ -47,7 +47,7 @@ class Alpha_Inputs extends Widget_Base
 		$this->start_controls_section(
 			'section_form_fields',
 			[
-				'label' => __('Campos do Formulário', 'alpha-form'),
+				'label' => __('Campos do Formulário', 'alpha-form-nested'),
 				'tab' => Controls_Manager::TAB_CONTENT,
 			]
 		);
@@ -56,7 +56,7 @@ class Alpha_Inputs extends Widget_Base
 		$this->add_control(
 			'field_type',
 			[
-				'label' => __('Tipo do Campo', 'alpha-form'),
+				'label' => __('Tipo do Campo', 'alpha-form-nested'),
 				'type' => Controls_Manager::SELECT,
 				'options' => [
 					'text'      => 'Texto',
@@ -87,14 +87,14 @@ class Alpha_Inputs extends Widget_Base
 		$this->start_controls_tabs('form_fields_tabs');
 
 		$this->start_controls_tab('form_fields_conteudo_tab', [
-			'label' => esc_html__('Conteúdo', 'alpha-form'),
+			'label' => esc_html__('Conteúdo', 'alpha-form-nested'),
 		]);
 
 
 		$this->add_control(
 			'acceptance_text',
 			[
-				'label' => __('Texto da Aceitação', 'alpha-form'),
+				'label' => __('Texto da Aceitação', 'alpha-form-nested'),
 				'type' => Controls_Manager::TEXTAREA,
 				'default' => 'Li e aceito a política de privacidade.',
 				'condition' => [
@@ -105,7 +105,7 @@ class Alpha_Inputs extends Widget_Base
 		$this->add_control(
 			'field_label_n',
 			[
-				'label' => __('Pergunta', 'alpha-form'),
+				'label' => __('Pergunta', 'alpha-form-nested'),
 				'type' => Controls_Manager::TEXT,
 				'default' => 'Digite a questão',
 				'label_block' => true,
@@ -114,7 +114,7 @@ class Alpha_Inputs extends Widget_Base
 		$this->add_control(
 			'field_descricao',
 			[
-				'label' => __('Descrição', 'alpha-form'),
+				'label' => __('Descrição', 'alpha-form-nested'),
 				'type' => Controls_Manager::WYSIWYG,
 				'default' => '',
 				'condition' => [
@@ -127,7 +127,7 @@ class Alpha_Inputs extends Widget_Base
 		$this->add_control(
 			'field_placeholder',
 			[
-				'label' => __('Placeholder', 'alpha-form'),
+				'label' => __('Placeholder', 'alpha-form-nested'),
 				'type' => Controls_Manager::TEXT,
 				'default' => '',
 				'condition' => [
@@ -142,16 +142,16 @@ class Alpha_Inputs extends Widget_Base
 		$repeater->add_control(
 			'label',
 			[
-				'label' => __('Label da opção', 'alpha-form'),
+				'label' => __('Label da opção', 'alpha-form-nested'),
 				'type'  => Controls_Manager::TEXT,
-				'default' => __('Opção 1', 'alpha-form'),
+				'default' => __('Opção 1', 'alpha-form-nested'),
 			]
 		);
 
 		$repeater->add_control(
 			'icon_library',
 			[
-				'label'   => __('Ícone', 'alpha-form'),
+				'label'   => __('Ícone', 'alpha-form-nested'),
 				'type'    => Controls_Manager::SELECT2,
 				'label_block' => true,
 				'options' => [
@@ -210,7 +210,7 @@ class Alpha_Inputs extends Widget_Base
 		$repeater->add_control(
 			'value',
 			[
-				'label' => __('Valor', 'alpha-form'),
+				'label' => __('Valor', 'alpha-form-nested'),
 				'type'  => Controls_Manager::TEXT,
 			]
 		);
@@ -218,7 +218,7 @@ class Alpha_Inputs extends Widget_Base
 		$repeater->add_control(
 			'target',
 			[
-				'label' => __('Target', 'alpha-form'),
+				'label' => __('Target', 'alpha-form-nested'),
 				'type'  => Controls_Manager::TEXT,
 				'placeholder' => 'Ex: 3',
 				'description' => 'Insira o numero da próxima pergunta quando clicar neste item'
@@ -228,32 +228,32 @@ class Alpha_Inputs extends Widget_Base
 		$this->add_control(
 			'field_choices',
 			[
-				'label' => __('Opções do campo', 'alpha-form'),
+				'label' => __('Opções do campo', 'alpha-form-nested'),
 				'type' => Controls_Manager::REPEATER,
 				'fields' => $repeater->get_controls(),
 				'default' => [
 					[
-						'label'         => __('Opção 1', 'alpha-form'),
+						'label'         => __('Opção 1', 'alpha-form-nested'),
 						'icon_library'  => 'kiss-2',
 					],
 					[
-						'label' => __('Opção 2', 'alpha-form'),
+						'label' => __('Opção 2', 'alpha-form-nested'),
 						'icon_library'  => 'angry',
 					],
 					[
-						'label' => __('Opção 3', 'alpha-form'),
+						'label' => __('Opção 3', 'alpha-form-nested'),
 						'icon_library'  => 'cool-1',
 					],
 					[
-						'label' => __('Opção 4', 'alpha-form'),
+						'label' => __('Opção 4', 'alpha-form-nested'),
 						'icon_library'  => 'in-love',
 					],
 					[
-						'label' => __('Opção 5', 'alpha-form'),
+						'label' => __('Opção 5', 'alpha-form-nested'),
 						'icon_library'  => 'fear-1',
 					],
 					[
-						'label' => __('Opção 6', 'alpha-form'),
+						'label' => __('Opção 6', 'alpha-form-nested'),
 						'icon_library'  => 'poisoned',
 					],
 				],
@@ -270,7 +270,7 @@ class Alpha_Inputs extends Widget_Base
 		$this->add_control(
 			'next_button_text',
 			[
-				'label' => __('Texto do botão', 'alpha-form'),
+				'label' => __('Texto do botão', 'alpha-form-nested'),
 				'type' => Controls_Manager::TEXT,
 				'default' => 'Próximo',
 				'placeholder' => 'ex: Continuar',
@@ -282,7 +282,7 @@ class Alpha_Inputs extends Widget_Base
 		$this->add_control(
 			'aux_text',
 			[
-				'label' => __('Texto auxiliar', 'alpha-form'),
+				'label' => __('Texto auxiliar', 'alpha-form-nested'),
 				'type' => Controls_Manager::TEXT,
 				'default' => 'Preencha este campo',
 				'placeholder' => 'ex: Continuar',
@@ -296,7 +296,7 @@ class Alpha_Inputs extends Widget_Base
 		);
 
 		$this->add_control('icon', [
-			'label' => esc_html__('Ícone', 'alpha-form'),
+			'label' => esc_html__('Ícone', 'alpha-form-nested'),
 			'type' => Controls_Manager::ICONS,
 			'skin' => 'inline',
 			'label_block' => false,
@@ -306,15 +306,15 @@ class Alpha_Inputs extends Widget_Base
 		]);
 
 		$this->add_control('btn_icon_position', [
-			'label' => esc_html__('Posição do Ícone', 'alpha-form'),
+			'label' => esc_html__('Posição do Ícone', 'alpha-form-nested'),
 			'type' => Controls_Manager::CHOOSE,
 			'options' => [
 				'before' => [
-					'title' => esc_html__('Antes', 'alpha-form'),
+					'title' => esc_html__('Antes', 'alpha-form-nested'),
 					'icon' => 'eicon-arrow-left',
 				],
 				'after' => [
-					'title' => esc_html__('Depois', 'alpha-form'),
+					'title' => esc_html__('Depois', 'alpha-form-nested'),
 					'icon' => 'eicon-arrow-right',
 				],
 			],
@@ -333,10 +333,10 @@ class Alpha_Inputs extends Widget_Base
 		$this->add_control(
 			'key-hint',
 			[
-				'label' => __('Mostrar marcadores', 'alpha-form'),
+				'label' => __('Mostrar marcadores', 'alpha-form-nested'),
 				'type' => Controls_Manager::SWITCHER,
-				'label_on' => __('Sim', 'alpha-form'),
-				'label_off' => __('Não', 'alpha-form'),
+				'label_on' => __('Sim', 'alpha-form-nested'),
+				'label_off' => __('Não', 'alpha-form-nested'),
 				'return_value' => 'yes',
 				'default' => 'no',
 				'condition' => [
@@ -348,10 +348,10 @@ class Alpha_Inputs extends Widget_Base
 		$this->add_control(
 			'required',
 			[
-				'label' => __('Obrigatório', 'alpha-form'),
+				'label' => __('Obrigatório', 'alpha-form-nested'),
 				'type' => Controls_Manager::SWITCHER,
-				'label_on' => __('Sim', 'alpha-form'),
-				'label_off' => __('Não', 'alpha-form'),
+				'label_on' => __('Sim', 'alpha-form-nested'),
+				'label_off' => __('Não', 'alpha-form-nested'),
 				'return_value' => 'yes',
 				'default' => '',
 				'condition' => [
@@ -377,7 +377,7 @@ class Alpha_Inputs extends Widget_Base
 		$this->add_control(
 			'error_message',
 			[
-				'label' => __('Mensagem de erro', 'alpha-form'),
+				'label' => __('Mensagem de erro', 'alpha-form-nested'),
 				'type' => Controls_Manager::TEXT,
 				'default' => 'Este campo é obrigatório.',
 				'placeholder' => 'Digite a mensagem de erro',
@@ -394,7 +394,7 @@ class Alpha_Inputs extends Widget_Base
 		$this->start_controls_tab(
 			'form_fields_advanced_tab',
 			[
-				'label' => esc_html__('Avançado', 'alpha-form'),
+				'label' => esc_html__('Avançado', 'alpha-form-nested'),
 				'condition' => [
 					'field_type!' => 'html',
 				],
@@ -403,7 +403,7 @@ class Alpha_Inputs extends Widget_Base
 		$this->add_control(
 			'field_value_n',
 			[
-				'label' => __('Valor Padrão', 'alpha-form'),
+				'label' => __('Valor Padrão', 'alpha-form-nested'),
 				'type' => Controls_Manager::TEXT,
 				'default' => '',
 				'condition' => [
@@ -414,7 +414,7 @@ class Alpha_Inputs extends Widget_Base
 		$this->add_control(
 			'field_name',
 			[
-				'label' => __('Nome do input', 'alpha-form'),
+				'label' => __('Nome do input', 'alpha-form-nested'),
 				'type' => Controls_Manager::TEXT,
 				'default' => '',
 			]
@@ -423,9 +423,9 @@ class Alpha_Inputs extends Widget_Base
 		$this->add_control(
 			'field_pattern',
 			[
-				'label' => __('Padrão (Pattern)', 'alpha-form'),
+				'label' => __('Padrão (Pattern)', 'alpha-form-nested'),
 				'type' => Controls_Manager::TEXT,
-				'description' => __('Regex ou padrão de validação HTML5. Ex: [0-9]{3}-[0-9]{2}', 'alpha-form'),
+				'description' => __('Regex ou padrão de validação HTML5. Ex: [0-9]{3}-[0-9]{2}', 'alpha-form-nested'),
 				'condition' => [
 					'field_type' => ['text', 'email', 'password'],
 				],
@@ -440,7 +440,7 @@ class Alpha_Inputs extends Widget_Base
 		$this->start_controls_section(
 			'style_input_section',
 			[
-				'label' => __('Caixa geral', 'alpha-form'),
+				'label' => __('Caixa geral', 'alpha-form-nested'),
 				'tab' => Controls_Manager::TAB_STYLE,
 			]
 		);
@@ -448,7 +448,7 @@ class Alpha_Inputs extends Widget_Base
 		$this->add_responsive_control(
 			'box_gap',
 			[
-				'label' => __('Espaço entre itens', 'alpha-form'),
+				'label' => __('Espaço entre itens', 'alpha-form-nested'),
 				'type' => Controls_Manager::SLIDER,
 				'size_units' => ['px', '%', 'em'],
 				'range' => [
@@ -472,7 +472,7 @@ class Alpha_Inputs extends Widget_Base
 		$this->start_controls_section(
 			'style_label_section',
 			[
-				'label' => __('Perguntas', 'alpha-form'),
+				'label' => __('Perguntas', 'alpha-form-nested'),
 				'tab' => Controls_Manager::TAB_STYLE,
 			]
 		);
@@ -490,7 +490,7 @@ class Alpha_Inputs extends Widget_Base
 		$this->add_control(
 			'label_text_color',
 			[
-				'label' => __('Cor do Texto', 'alpha-form'),
+				'label' => __('Cor do Texto', 'alpha-form-nested'),
 				'type' => Controls_Manager::COLOR,
 				'selectors' => [
 					'{{WRAPPER}} .alpha-form-titulo' => 'color: {{VALUE}};',
@@ -504,19 +504,19 @@ class Alpha_Inputs extends Widget_Base
 		$this->add_responsive_control(
 			'label_text_alinhamento',
 			[
-				'label' => esc_html__('Alinhamento', 'alpha-form'),
+				'label' => esc_html__('Alinhamento', 'alpha-form-nested'),
 				'type' => Controls_Manager::CHOOSE,
 				'options' => [
 					'left' => [
-						'title' => esc_html__('Left', 'alpha-form'),
+						'title' => esc_html__('Left', 'alpha-form-nested'),
 						'icon' => 'eicon-text-align-left',
 					],
 					'center' => [
-						'title' => esc_html__('Center', 'alpha-form'),
+						'title' => esc_html__('Center', 'alpha-form-nested'),
 						'icon' => 'eicon-text-align-center',
 					],
 					'right' => [
-						'title' => esc_html__('Right', 'alpha-form'),
+						'title' => esc_html__('Right', 'alpha-form-nested'),
 						'icon' => 'eicon-text-align-right',
 					],
 				],
@@ -531,7 +531,7 @@ class Alpha_Inputs extends Widget_Base
 		$this->start_controls_section(
 			'style_descricao_section',
 			[
-				'label' => __('Descrição', 'alpha-form'),
+				'label' => __('Descrição', 'alpha-form-nested'),
 				'tab' => Controls_Manager::TAB_STYLE,
 			]
 		);
@@ -548,7 +548,7 @@ class Alpha_Inputs extends Widget_Base
 		$this->add_control(
 			'descricao_text_color',
 			[
-				'label' => __('Cor do Texto', 'alpha-form'),
+				'label' => __('Cor do Texto', 'alpha-form-nested'),
 				'type' => Controls_Manager::COLOR,
 				'selectors' => [
 					'{{WRAPPER}} .alpha-form-description p' => 'color: {{VALUE}};',
@@ -562,19 +562,19 @@ class Alpha_Inputs extends Widget_Base
 		$this->add_responsive_control(
 			'descricao_text_alinhamento',
 			[
-				'label' => esc_html__('Alinhamento', 'alpha-form'),
+				'label' => esc_html__('Alinhamento', 'alpha-form-nested'),
 				'type' => Controls_Manager::CHOOSE,
 				'options' => [
 					'left' => [
-						'title' => esc_html__('Left', 'alpha-form'),
+						'title' => esc_html__('Left', 'alpha-form-nested'),
 						'icon' => 'eicon-text-align-left',
 					],
 					'center' => [
-						'title' => esc_html__('Center', 'alpha-form'),
+						'title' => esc_html__('Center', 'alpha-form-nested'),
 						'icon' => 'eicon-text-align-center',
 					],
 					'right' => [
-						'title' => esc_html__('Right', 'alpha-form'),
+						'title' => esc_html__('Right', 'alpha-form-nested'),
 						'icon' => 'eicon-text-align-right',
 					],
 				],
@@ -589,7 +589,7 @@ class Alpha_Inputs extends Widget_Base
 		$this->start_controls_section(
 			'style_inputs_section',
 			[
-				'label' => __('Campos', 'alpha-form'),
+				'label' => __('Campos', 'alpha-form-nested'),
 				'tab' => Controls_Manager::TAB_STYLE,
 			]
 		);
@@ -610,13 +610,13 @@ class Alpha_Inputs extends Widget_Base
 		$this->start_controls_tab(
 			'tab_input_normal',
 			[
-				'label' => __('Normal', 'alpha-form'),
+				'label' => __('Normal', 'alpha-form-nested'),
 			]
 		);
 		$this->add_control(
 			'input_text_color',
 			[
-				'label' => __('Cor do Texto', 'alpha-form'),
+				'label' => __('Cor do Texto', 'alpha-form-nested'),
 				'type' => Controls_Manager::COLOR,
 				'selectors' => [
 					'{{WRAPPER}} .alpha-input-field' => 'color: {{VALUE}};',
@@ -630,7 +630,7 @@ class Alpha_Inputs extends Widget_Base
 		$this->add_control(
 			'input_text_bg',
 			[
-				'label' => __('Background', 'alpha-form'),
+				'label' => __('Background', 'alpha-form-nested'),
 				'type' => Controls_Manager::COLOR,
 				'selectors' => [
 					'{{WRAPPER}} .alpha-input-field' => 'background: {{VALUE}};',
@@ -650,7 +650,7 @@ class Alpha_Inputs extends Widget_Base
 		$this->add_responsive_control(
 			'input_border_radius',
 			[
-				'label' => __('Arredondamento', 'alpha-form'),
+				'label' => __('Arredondamento', 'alpha-form-nested'),
 				'type' => Controls_Manager::DIMENSIONS,
 				'size_units' => ['px', '%', 'em', 'custom'],
 				'selectors' => [
@@ -662,7 +662,7 @@ class Alpha_Inputs extends Widget_Base
 		$this->add_responsive_control(
 			'input_padding',
 			[
-				'label' => __('Espaçamento Interno', 'alpha-form'),
+				'label' => __('Espaçamento Interno', 'alpha-form-nested'),
 				'type' => Controls_Manager::DIMENSIONS,
 				'size_units' => ['px', '%', 'em', 'custom'],
 				'selectors' => [
@@ -690,14 +690,14 @@ class Alpha_Inputs extends Widget_Base
 		$this->start_controls_tab(
 			'tab_input_focus',
 			[
-				'label' => esc_html('Focus', 'alpha-form'),
+				'label' => esc_html('Focus', 'alpha-form-nested'),
 			]
 		);
 
 		$this->add_control(
 			'input_text_color_focus',
 			[
-				'label' => __('Cor do Texto', 'alpha-form'),
+				'label' => __('Cor do Texto', 'alpha-form-nested'),
 				'type' => Controls_Manager::COLOR,
 				'selectors' => [
 					'{{WRAPPER}} .alpha-input-field:focus' => 'color: {{VALUE}};',
@@ -711,7 +711,7 @@ class Alpha_Inputs extends Widget_Base
 		$this->add_control(
 			'input_text_bg_focus',
 			[
-				'label' => __('Background', 'alpha-form'),
+				'label' => __('Background', 'alpha-form-nested'),
 				'type' => Controls_Manager::COLOR,
 				'selectors' => [
 					'{{WRAPPER}} .alpha-input-field:focus' => 'background: {{VALUE}};',
@@ -732,7 +732,7 @@ class Alpha_Inputs extends Widget_Base
 			Group_Control_Box_Shadow::get_type(),
 			[
 				'name'     => 'input_box_shadow_focus',
-				'label'    => __('Sombra do Input', 'alpha-form'),
+				'label'    => __('Sombra do Input', 'alpha-form-nested'),
 				'selector' => '{{WRAPPER}} .alpha-input-field:focus',
 			]
 		);
@@ -746,7 +746,7 @@ class Alpha_Inputs extends Widget_Base
 		$this->start_controls_section(
 			'style_buttons_section',
 			[
-				'label' => __('Botão', 'alpha-form'),
+				'label' => __('Botão', 'alpha-form-nested'),
 				'tab' => Controls_Manager::TAB_STYLE,
 			]
 		);
@@ -768,13 +768,13 @@ class Alpha_Inputs extends Widget_Base
 		$this->start_controls_tab(
 			'tab_button_normal',
 			[
-				'label' => __('Normal', 'alpha-form'),
+				'label' => __('Normal', 'alpha-form-nested'),
 			]
 		);
 		$this->add_control(
 			'btn_text_color',
 			[
-				'label' => __('Cor do Texto', 'alpha-form'),
+				'label' => __('Cor do Texto', 'alpha-form-nested'),
 				'type' => Controls_Manager::COLOR,
 				'global' => [
 					'default' => Global_Colors::COLOR_SECONDARY,
@@ -787,7 +787,7 @@ class Alpha_Inputs extends Widget_Base
 		$this->add_control(
 			'btn_text_bg',
 			[
-				'label' => __('Background', 'alpha-form'),
+				'label' => __('Background', 'alpha-form-nested'),
 				'type' => Controls_Manager::COLOR,
 				'global' => [
 					'default' => Global_Colors::COLOR_ACCENT,
@@ -809,7 +809,7 @@ class Alpha_Inputs extends Widget_Base
 		$this->add_responsive_control(
 			'button_border_radius',
 			[
-				'label' => __('Arredondamento', 'alpha-form'),
+				'label' => __('Arredondamento', 'alpha-form-nested'),
 				'type' => Controls_Manager::DIMENSIONS,
 				'size_units' => ['px', '%', 'em', 'custom'],
 				'selectors' => [
@@ -821,7 +821,7 @@ class Alpha_Inputs extends Widget_Base
 		$this->add_responsive_control(
 			'btn_padding',
 			[
-				'label' => __('Espaçamento Interno', 'alpha-form'),
+				'label' => __('Espaçamento Interno', 'alpha-form-nested'),
 				'type' => Controls_Manager::DIMENSIONS,
 				'size_units' => ['px', '%', 'em', 'custom'],
 				'selectors' => [
@@ -849,13 +849,13 @@ class Alpha_Inputs extends Widget_Base
 		$this->start_controls_tab(
 			'tab_button_hover',
 			[
-				'label' => esc_html('Hover', 'alpha-form'),
+				'label' => esc_html('Hover', 'alpha-form-nested'),
 			]
 		);
 		$this->add_control(
 			'btn_text_color_hover',
 			[
-				'label' => __('Cor do Texto', 'alpha-form'),
+				'label' => __('Cor do Texto', 'alpha-form-nested'),
 				'type' => Controls_Manager::COLOR,
 				'global' => [
 					'default' => Global_Colors::COLOR_SECONDARY,
@@ -868,7 +868,7 @@ class Alpha_Inputs extends Widget_Base
 		$this->add_control(
 			'btn_text_bg_hover',
 			[
-				'label' => __('Background', 'alpha-form'),
+				'label' => __('Background', 'alpha-form-nested'),
 				'type' => Controls_Manager::COLOR,
 				'global' => [
 					'default' => Global_Colors::COLOR_ACCENT,
@@ -891,7 +891,7 @@ class Alpha_Inputs extends Widget_Base
 			Group_Control_Box_Shadow::get_type(),
 			[
 				'name'     => 'button_box_shadow_hover',
-				'label'    => __('Sombra do Input', 'alpha-form'),
+				'label'    => __('Sombra do Input', 'alpha-form-nested'),
 				'selector' => '{{WRAPPER}} .alpha-form-next.form:hover',
 			]
 		);
@@ -899,7 +899,7 @@ class Alpha_Inputs extends Widget_Base
 		$this->end_controls_tabs();
 
 		$this->add_control('icon_size', [
-			'label' => esc_html__('Tamanho do Ícone', 'alpha-form'),
+			'label' => esc_html__('Tamanho do Ícone', 'alpha-form-nested'),
 			'type' => Controls_Manager::SLIDER,
 			'default' => [
 				'size' => 8,
@@ -917,7 +917,7 @@ class Alpha_Inputs extends Widget_Base
 		]);
 
 		$this->add_control('icon_spacing', [
-			'label' => esc_html__('Espaçamento entre Ícone e Texto', 'alpha-form'),
+			'label' => esc_html__('Espaçamento entre Ícone e Texto', 'alpha-form-nested'),
 			'type' => Controls_Manager::SLIDER,
 			'default' => [
 				'size' => 10,
@@ -939,7 +939,7 @@ class Alpha_Inputs extends Widget_Base
 		$this->start_controls_section(
 			'style_aux_section',
 			[
-				'label' => __('Texto auxiliar', 'alpha-form'),
+				'label' => __('Texto auxiliar', 'alpha-form-nested'),
 				'tab' => Controls_Manager::TAB_STYLE,
 			]
 		);
@@ -957,7 +957,7 @@ class Alpha_Inputs extends Widget_Base
 		$this->add_control(
 			'label_aux_color',
 			[
-				'label' => __('Cor do Texto', 'alpha-form'),
+				'label' => __('Cor do Texto', 'alpha-form-nested'),
 				'type' => Controls_Manager::COLOR,
 				'selectors' => [
 					'{{WRAPPER}} .alpha-aux p' => 'margin: 0; color: {{VALUE}};',
@@ -969,15 +969,15 @@ class Alpha_Inputs extends Widget_Base
 		);
 
 		$this->add_control('label_aux_position', [
-			'label' => esc_html__('Posição do texto auxiliar', 'alpha-form'),
+			'label' => esc_html__('Posição do texto auxiliar', 'alpha-form-nested'),
 			'type' => Controls_Manager::CHOOSE,
 			'options' => [
 				'row' => [
-					'title' => esc_html__('Direita', 'alpha-form'),
+					'title' => esc_html__('Direita', 'alpha-form-nested'),
 					'icon' => 'eicon-arrow-right',
 				],
 				'column' => [
-					'title' => esc_html__('Abaixo', 'alpha-form'),
+					'title' => esc_html__('Abaixo', 'alpha-form-nested'),
 					'icon' => 'eicon-arrow-down',
 				],
 			],
@@ -993,7 +993,7 @@ class Alpha_Inputs extends Widget_Base
 		$this->start_controls_section(
 			'style_error_section',
 			[
-				'label' => __('Mensagem de erro', 'alpha-form'),
+				'label' => __('Mensagem de erro', 'alpha-form-nested'),
 				'tab' => Controls_Manager::TAB_STYLE,
 			]
 		);
@@ -1020,7 +1020,7 @@ class Alpha_Inputs extends Widget_Base
 		$this->add_control(
 			'label_error_color',
 			[
-				'label' => __('Cor do Texto', 'alpha-form'),
+				'label' => __('Cor do Texto', 'alpha-form-nested'),
 				'type' => Controls_Manager::COLOR,
 				'selectors' => [
 					'{{WRAPPER}} .alpha-error-message' => 'margin: 0; color: {{VALUE}};',
@@ -1032,7 +1032,7 @@ class Alpha_Inputs extends Widget_Base
 		$this->add_control(
 			'error_text_bg',
 			[
-				'label' => __('Background', 'alpha-form'),
+				'label' => __('Background', 'alpha-form-nested'),
 				'type' => Controls_Manager::COLOR,
 				'selectors' => [
 					'{{WRAPPER}} .alpha-error-message' => 'background: {{VALUE}};',
@@ -1044,7 +1044,7 @@ class Alpha_Inputs extends Widget_Base
 		$this->add_responsive_control(
 			'error_padding',
 			[
-				'label' => __('Espaçamento Interno', 'alpha-form'),
+				'label' => __('Espaçamento Interno', 'alpha-form-nested'),
 				'type' => Controls_Manager::DIMENSIONS,
 				'size_units' => ['px', '%', 'em', 'custom'],
 				'selectors' => [
@@ -1070,7 +1070,7 @@ class Alpha_Inputs extends Widget_Base
 
 
 		$this->add_responsive_control('error_margin_top', [
-			'label' => esc_html__('Espaçamento vertical', 'alpha-form'),
+			'label' => esc_html__('Espaçamento vertical', 'alpha-form-nested'),
 			'type' => Controls_Manager::SLIDER,
 			'size_units' => ['px', 'em', 'rem'],
 			'range' => [
@@ -1118,7 +1118,7 @@ class Alpha_Inputs extends Widget_Base
 		$this->add_responsive_control(
 			'error_border_radius',
 			[
-				'label' => __('Arredondamento', 'alpha-form'),
+				'label' => __('Arredondamento', 'alpha-form-nested'),
 				'type' => Controls_Manager::DIMENSIONS,
 				'size_units' => ['px', '%', 'em', 'custom'],
 				'selectors' => [
@@ -1133,13 +1133,13 @@ class Alpha_Inputs extends Widget_Base
 		$this->start_controls_section(
 			'style_option_section',
 			[
-				'label' => __('Opções', 'alpha-form'),
+				'label' => __('Opções', 'alpha-form-nested'),
 				'tab' => Controls_Manager::TAB_STYLE,
 			]
 		);
 
 		$this->add_control('options_columns', [
-			'label' => esc_html__('Itens por linha', 'alpha-form'),
+			'label' => esc_html__('Itens por linha', 'alpha-form-nested'),
 			'type' => Controls_Manager::SELECT,
 			'default' => '2',
 			'options' => [
@@ -1153,7 +1153,7 @@ class Alpha_Inputs extends Widget_Base
 
 
 		$this->add_responsive_control('options_gap', [
-			'label' => esc_html__('Espaçamento entre opções', 'alpha-form'),
+			'label' => esc_html__('Espaçamento entre opções', 'alpha-form-nested'),
 			'type' => Controls_Manager::SLIDER,
 			'size_units' => ['px', 'em'],
 			'default' => [
@@ -1189,7 +1189,7 @@ class Alpha_Inputs extends Widget_Base
 		$this->add_responsive_control(
 			'option_image_size',
 			[
-				'label' => __('Tamanho da imagem', 'alpha-form'),
+				'label' => __('Tamanho da imagem', 'alpha-form-nested'),
 				'type' => Controls_Manager::SLIDER,
 				'size_units' => ['px', '%', 'em'],
 				'separator' => 'before',
@@ -1224,14 +1224,14 @@ class Alpha_Inputs extends Widget_Base
 		$this->start_controls_tab(
 			'tab_option_normal',
 			[
-				'label' => __('Normal', 'alpha-form'),
+				'label' => __('Normal', 'alpha-form-nested'),
 			]
 		);
 
 		$this->add_control(
 			'label_option_color',
 			[
-				'label' => __('Cor do Texto', 'alpha-form'),
+				'label' => __('Cor do Texto', 'alpha-form-nested'),
 				'type' => Controls_Manager::COLOR,
 				'selectors' => [
 					'{{WRAPPER}} .alpha-option' => 'margin: 0; color: {{VALUE}};',
@@ -1245,7 +1245,7 @@ class Alpha_Inputs extends Widget_Base
 		$this->add_control(
 			'option_text_bg',
 			[
-				'label' => __('Background', 'alpha-form'),
+				'label' => __('Background', 'alpha-form-nested'),
 				'type' => Controls_Manager::COLOR,
 				'selectors' => [
 					'{{WRAPPER}} .alpha-option' => 'background: {{VALUE}};',
@@ -1286,7 +1286,7 @@ class Alpha_Inputs extends Widget_Base
 		$this->add_responsive_control(
 			'option_border_radius',
 			[
-				'label' => __('Arredondamento', 'alpha-form'),
+				'label' => __('Arredondamento', 'alpha-form-nested'),
 				'type' => Controls_Manager::DIMENSIONS,
 				'size_units' => ['px', '%', 'em', 'custom'],
 				'selectors' => [
@@ -1299,14 +1299,14 @@ class Alpha_Inputs extends Widget_Base
 		$this->start_controls_tab(
 			'tab_option_hover',
 			[
-				'label' => __('Hover', 'alpha-form'),
+				'label' => __('Hover', 'alpha-form-nested'),
 			]
 		);
 
 		$this->add_control(
 			'label_option_color_hover',
 			[
-				'label' => __('Cor do Texto', 'alpha-form'),
+				'label' => __('Cor do Texto', 'alpha-form-nested'),
 				'type' => Controls_Manager::COLOR,
 				'selectors' => [
 					'{{WRAPPER}} .alpha-option:hover' => 'margin: 0; color: {{VALUE}};',
@@ -1317,7 +1317,7 @@ class Alpha_Inputs extends Widget_Base
 		$this->add_control(
 			'option_text_bg_hover',
 			[
-				'label' => __('Background', 'alpha-form'),
+				'label' => __('Background', 'alpha-form-nested'),
 				'type' => Controls_Manager::COLOR,
 				'selectors' => [
 					'{{WRAPPER}} .alpha-option:hover' => 'background: {{VALUE}};',
@@ -1351,7 +1351,7 @@ class Alpha_Inputs extends Widget_Base
 			Group_Control_Box_Shadow::get_type(),
 			[
 				'name'     => 'option_shadow_hover',
-				'label'    => __('Sombra do Input', 'alpha-form'),
+				'label'    => __('Sombra do Input', 'alpha-form-nested'),
 				'selector' => '{{WRAPPER}} .alpha-option:hover',
 			]
 		);
@@ -1360,13 +1360,13 @@ class Alpha_Inputs extends Widget_Base
 		$this->start_controls_tab(
 			'tab_option_checkec',
 			[
-				'label' => __('Checado', 'alpha-form'),
+				'label' => __('Checado', 'alpha-form-nested'),
 			]
 		);
 		$this->add_control(
 			'label_option_color_check',
 			[
-				'label' => __('Cor do Texto', 'alpha-form'),
+				'label' => __('Cor do Texto', 'alpha-form-nested'),
 				'type' => Controls_Manager::COLOR,
 				'selectors' => [
 					'{{WRAPPER}} .alpha-option:has(input:checked)' => 'margin: 0; color: {{VALUE}};',
@@ -1377,7 +1377,7 @@ class Alpha_Inputs extends Widget_Base
 		$this->add_control(
 			'option_text_bg_check',
 			[
-				'label' => __('Background', 'alpha-form'),
+				'label' => __('Background', 'alpha-form-nested'),
 				'type' => Controls_Manager::COLOR,
 				'selectors' => [
 					'{{WRAPPER}} .alpha-option:has(input:checked)' => 'background: {{VALUE}};',
@@ -1411,7 +1411,7 @@ class Alpha_Inputs extends Widget_Base
 			Group_Control_Box_Shadow::get_type(),
 			[
 				'name'     => 'option_shadow_focus',
-				'label'    => __('Sombra do Input', 'alpha-form'),
+				'label'    => __('Sombra do Input', 'alpha-form-nested'),
 				'selector' => '{{WRAPPER}} .alpha-option:has(input:checked)',
 			]
 		);
@@ -1422,7 +1422,7 @@ class Alpha_Inputs extends Widget_Base
 		$this->add_responsive_control(
 			'option_padding',
 			[
-				'label' => __('Espaçamento Interno', 'alpha-form'),
+				'label' => __('Espaçamento Interno', 'alpha-form-nested'),
 				'type' => Controls_Manager::DIMENSIONS,
 				'size_units' => ['px', '%', 'em', 'custom'],
 				'selectors' => [
@@ -1451,7 +1451,7 @@ class Alpha_Inputs extends Widget_Base
 			'heading_form_item_title_hey_hint',
 			[
 				'type' => Controls_Manager::HEADING,
-				'label' => esc_html__('Key hint', 'alpha-form'),
+				'label' => esc_html__('Key hint', 'alpha-form-nested'),
 				'separator' => 'before',
 			]
 		);
@@ -1479,7 +1479,7 @@ class Alpha_Inputs extends Widget_Base
 		$this->add_control(
 			'label_key_hint_color',
 			[
-				'label' => __('Cor do Texto', 'alpha-form'),
+				'label' => __('Cor do Texto', 'alpha-form-nested'),
 				'type' => Controls_Manager::COLOR,
 				'selectors' => [
 					'{{WRAPPER}} label.alpha-letter-active::before' => 'margin: 0; color: {{VALUE}};',
@@ -1491,7 +1491,7 @@ class Alpha_Inputs extends Widget_Base
 		$this->add_control(
 			'key_hint_bg',
 			[
-				'label' => __('Background', 'alpha-form'),
+				'label' => __('Background', 'alpha-form-nested'),
 				'type' => Controls_Manager::COLOR,
 				'selectors' => [
 					'{{WRAPPER}} label.alpha-letter-active::before' => 'background: {{VALUE}};',
@@ -1503,7 +1503,7 @@ class Alpha_Inputs extends Widget_Base
 		$this->add_responsive_control(
 			'key_hint_padding',
 			[
-				'label' => __('Espaçamento Interno', 'alpha-form'),
+				'label' => __('Espaçamento Interno', 'alpha-form-nested'),
 				'type' => Controls_Manager::DIMENSIONS,
 				'size_units' => ['px', '%', 'em', 'custom'],
 				'selectors' => [
@@ -1554,7 +1554,7 @@ class Alpha_Inputs extends Widget_Base
 		$this->add_responsive_control(
 			'key_hint_border_radius',
 			[
-				'label' => __('Arredondamento', 'alpha-form'),
+				'label' => __('Arredondamento', 'alpha-form-nested'),
 				'type' => Controls_Manager::DIMENSIONS,
 				'size_units' => ['px', '%', 'em', 'custom'],
 				'selectors' => [
@@ -1572,7 +1572,7 @@ class Alpha_Inputs extends Widget_Base
 		$this->start_controls_section(
 			'style_select_section',
 			[
-				'label' => __('Select', 'alpha-form'),
+				'label' => __('Select', 'alpha-form-nested'),
 				'tab' => Controls_Manager::TAB_STYLE,
 			]
 		);
@@ -1603,14 +1603,14 @@ class Alpha_Inputs extends Widget_Base
 		$this->start_controls_tab(
 			'tab_select_normal',
 			[
-				'label' => __('Normal', 'alpha-form'),
+				'label' => __('Normal', 'alpha-form-nested'),
 			]
 		);
 
 		$this->add_control(
 			'label_select_color',
 			[
-				'label' => __('Cor do Texto', 'alpha-form'),
+				'label' => __('Cor do Texto', 'alpha-form-nested'),
 				'type' => Controls_Manager::COLOR,
 				'selectors' => [
 					'{{WRAPPER}} .alpha-select' => 'margin: 0; color: {{VALUE}};',
@@ -1624,7 +1624,7 @@ class Alpha_Inputs extends Widget_Base
 		$this->add_control(
 			'select_text_bg',
 			[
-				'label' => __('Background', 'alpha-form'),
+				'label' => __('Background', 'alpha-form-nested'),
 				'type' => Controls_Manager::COLOR,
 				'selectors' => [
 					'{{WRAPPER}} .alpha-select' => 'background: {{VALUE}};',
@@ -1665,7 +1665,7 @@ class Alpha_Inputs extends Widget_Base
 		$this->add_responsive_control(
 			'select_border_radius',
 			[
-				'label' => __('Arredondamento', 'alpha-form'),
+				'label' => __('Arredondamento', 'alpha-form-nested'),
 				'type' => Controls_Manager::DIMENSIONS,
 				'size_units' => ['px', '%', 'em', 'custom'],
 				'selectors' => [
@@ -1678,14 +1678,14 @@ class Alpha_Inputs extends Widget_Base
 		$this->start_controls_tab(
 			'tab_select_hover',
 			[
-				'label' => __('Hover', 'alpha-form'),
+				'label' => __('Hover', 'alpha-form-nested'),
 			]
 		);
 
 		$this->add_control(
 			'label_select_color_hover',
 			[
-				'label' => __('Cor do Texto', 'alpha-form'),
+				'label' => __('Cor do Texto', 'alpha-form-nested'),
 				'type' => Controls_Manager::COLOR,
 				'selectors' => [
 					'{{WRAPPER}} .alpha-select:hover' => 'margin: 0; color: {{VALUE}};',
@@ -1696,7 +1696,7 @@ class Alpha_Inputs extends Widget_Base
 		$this->add_control(
 			'select_text_bg_hover',
 			[
-				'label' => __('Background', 'alpha-form'),
+				'label' => __('Background', 'alpha-form-nested'),
 				'type' => Controls_Manager::COLOR,
 				'selectors' => [
 					'{{WRAPPER}} .alpha-select:hover' => 'background: {{VALUE}};',
@@ -1732,7 +1732,7 @@ class Alpha_Inputs extends Widget_Base
 		$this->add_responsive_control(
 			'select_padding',
 			[
-				'label' => __('Espaçamento Interno', 'alpha-form'),
+				'label' => __('Espaçamento Interno', 'alpha-form-nested'),
 				'type' => Controls_Manager::DIMENSIONS,
 				'size_units' => ['px', '%', 'em', 'custom'],
 				'selectors' => [
@@ -1762,7 +1762,7 @@ class Alpha_Inputs extends Widget_Base
 		$this->start_controls_section(
 			'style_acceptance_section',
 			[
-				'label' => __('Aceitação', 'alpha-form'),
+				'label' => __('Aceitação', 'alpha-form-nested'),
 				'tab' => Controls_Manager::TAB_STYLE,
 			]
 		);
@@ -1779,7 +1779,7 @@ class Alpha_Inputs extends Widget_Base
 		$this->add_control(
 			'acceptance_text_color',
 			[
-				'label' => __('Cor do Texto', 'alpha-form'),
+				'label' => __('Cor do Texto', 'alpha-form-nested'),
 				'type' => Controls_Manager::COLOR,
 				'selectors' => [
 					'{{WRAPPER}} label.acceptance' => 'color: {{VALUE}};',
@@ -1794,7 +1794,7 @@ class Alpha_Inputs extends Widget_Base
 		$this->add_responsive_control(
 			'acceptance_checkbox_size',
 			[
-				'label' => __('Tamanho do Checkbox', 'alpha-form'),
+				'label' => __('Tamanho do Checkbox', 'alpha-form-nested'),
 				'type' => Controls_Manager::SLIDER,
 				'size_units' => ['px'],
 				'range' => [
@@ -1816,7 +1816,7 @@ class Alpha_Inputs extends Widget_Base
 		$this->add_control(
 			'acceptance_checkbox_color',
 			[
-				'label' => __('Cor do Checkbox', 'alpha-form'),
+				'label' => __('Cor do Checkbox', 'alpha-form-nested'),
 				'type' => Controls_Manager::COLOR,
 				'selectors' => [
 					'{{WRAPPER}} input.acceptance' => 'accent-color: {{VALUE}};',
@@ -1827,7 +1827,7 @@ class Alpha_Inputs extends Widget_Base
 		$this->add_responsive_control(
 			'acceptance_gap',
 			[
-				'label' => __('Espaçamento entre Checkbox e Texto', 'alpha-form'),
+				'label' => __('Espaçamento entre Checkbox e Texto', 'alpha-form-nested'),
 				'type' => Controls_Manager::SLIDER,
 				'size_units' => ['px'],
 				'default' => [
@@ -1939,7 +1939,7 @@ class Alpha_Inputs extends Widget_Base
 				$input_type = $type;
 				echo '<div class="alpha-inputs-options">';
 				if ($type === 'select') {
-					echo '<select name="' . esc_attr($name) . '" ' . $required . ' class="alpha-select" id="' . esc_attr($id) . '">';
+					echo '<select name="' . esc_attr($name) . '" ' . esc_attr($required) . ' class="alpha-select" id="' . esc_attr($id) . '">';
 
 					foreach ($options as $choice) {
 						$label = trim($choice['label'] ?? '');
@@ -1951,7 +1951,7 @@ class Alpha_Inputs extends Widget_Base
 							$attrs .= ' data-next="' . esc_attr($next) . '"';
 						}
 
-						echo '<option ' . $attrs . '>' . esc_html($label) . '</option>';
+						echo '<option ' . esc_attr($attrs) . '>' . esc_html($label) . '</option>';
 					}
 
 					echo '</select>';
@@ -1974,14 +1974,14 @@ class Alpha_Inputs extends Widget_Base
 							$label_attrs .= ' data-letter="' . $letter . '"';
 							$label_attrs .= ' data-icon="✓"';
 						}
-						echo '<label for="' . $input_id . '" class="alpha-option" ' . $label_attrs . '>';
+						echo '<label for="' . esc_attr($input_id) . '" class="alpha-option" ' . esc_attr($label_attrs) . '>';
 
 						if ($icon) {
 							$icon_url = strpos($icon, 'http') === 0 ? $icon : ALPHA_FORM_URL . 'assets/elements/icones/' . $icon . '.svg';
 							echo '<img src="' . esc_url($icon_url) . '" class="alpha-option-icon" />';
 						}
 						echo esc_html($label);
-						echo '<input ' . $attrs . '> ';
+						echo '<input ' . esc_attr($attrs) . '> ';
 						echo '</label>';
 					}
 					echo '</div>';
@@ -2002,7 +2002,11 @@ class Alpha_Inputs extends Widget_Base
 				break;
 
 			default:
-				echo '<input  class="' . esc_attr($class) . '" type="' . esc_attr($type) . '" name="' . esc_attr($name) . '" id="' . esc_attr($id) . '" placeholder="' . esc_attr($placeholder) . '" value="' .  esc_attr($value) . '" ' . $pattern . ' ' . esc_attr($required) . esc_attr($mask) . ' autofocus />';
+				echo '<input  class="' . esc_attr($class) . '" type="' . esc_attr($type) . '" 
+				name="' . esc_attr($name) . '" id="' . esc_attr($id) . '" 
+				placeholder="' . esc_attr($placeholder) . '" 
+				value="' .  esc_attr($value) . '" ' . esc_attr($pattern) . ' 
+				' . esc_attr($required) . esc_attr($mask) . ' autofocus />';
 				break;
 		}
 
@@ -2063,7 +2067,7 @@ class Alpha_Inputs extends Widget_Base
 			// Botão
 			echo '<div class="alpha-aux">';
 			if (!in_array($type, ['hidden'], true) && $next_button_text) {
-				echo '<button ' . $this->get_render_attribute_string('button') . '>';
+				echo '<button ' . esc_attr($this->get_render_attribute_string('button')) . '>';
 
 				// Abre o wrapper do conteúdo do botão
 				echo '<span class="alpha-form-button-inner" data-alpha="next">';

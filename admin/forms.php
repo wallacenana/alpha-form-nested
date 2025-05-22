@@ -59,7 +59,7 @@ $results = alpha_form_get_widget_totals_nested();
                     $form_id = esc_html($row['form_id']);
                 ?>
                     <tr>
-                        <td><code><?php echo $form_id; ?></code></td>
+                        <td><code><?php echo esc_html($form_id); ?></code></td>
                         <td><?php echo esc_html($row['form_name']) ?: '<em>Sem nome</em>'; ?></td>
                         <td>
                             <?php if ($post_title && $post_url) : ?>

@@ -24,7 +24,7 @@ class Alpha_Complete extends Widget_Base
 
 	public function get_title()
 	{
-		return esc_html__('Alpha Completo', 'alpha-form');
+		return esc_html__('Alpha Completo', 'alpha-form-nested');
 	}
 
 	public function get_icon()
@@ -39,7 +39,7 @@ class Alpha_Complete extends Widget_Base
 
 	public function get_categories()
 	{
-		return ['alpha-form'];
+		return ['alpha-form-nested'];
 	}
 
 	public function register_controls()
@@ -47,7 +47,7 @@ class Alpha_Complete extends Widget_Base
 		$this->start_controls_section(
 			'section_form_fields',
 			[
-				'label' => __('Campos do Formulário', 'alpha-form'),
+				'label' => __('Campos do Formulário', 'alpha-form-nested'),
 				'tab' => Controls_Manager::TAB_CONTENT,
 			]
 		);
@@ -55,7 +55,7 @@ class Alpha_Complete extends Widget_Base
 		$this->add_control(
 			'field_label_complete',
 			[
-				'label' => __('Título', 'alpha-form'),
+				'label' => __('Título', 'alpha-form-nested'),
 				'type' => Controls_Manager::TEXT,
 				'default' => 'Concluido com sucesso',
 				'label_block' => true,
@@ -64,7 +64,7 @@ class Alpha_Complete extends Widget_Base
 		$this->add_control(
 			'field_descricao_complete',
 			[
-				'label' => __('Descrição', 'alpha-form'),
+				'label' => __('Descrição', 'alpha-form-nested'),
 				'type' => Controls_Manager::WYSIWYG,
 				'default' => 'Clique no botão abaixo para enviar'
 			]
@@ -74,7 +74,7 @@ class Alpha_Complete extends Widget_Base
 		$this->add_control(
 			'complete_button_text',
 			[
-				'label' => __('Texto do botão', 'alpha-form'),
+				'label' => __('Texto do botão', 'alpha-form-nested'),
 				'type' => Controls_Manager::TEXT,
 				'default' => 'Enviar',
 				'placeholder' => 'ex: Enviar',
@@ -82,7 +82,7 @@ class Alpha_Complete extends Widget_Base
 		);
 
 		$this->add_control('icon_complete', [
-			'label' => esc_html__('Ícone', 'alpha-form'),
+			'label' => esc_html__('Ícone', 'alpha-form-nested'),
 			'type' => Controls_Manager::ICONS,
 			'skin' => 'inline',
 			'label_block' => false,
@@ -111,15 +111,15 @@ class Alpha_Complete extends Widget_Base
 		]);
 
 		$this->add_control('btn_icon_position_complete', [
-			'label' => esc_html__('Posição do Ícone', 'alpha-form'),
+			'label' => esc_html__('Posição do Ícone', 'alpha-form-nested'),
 			'type' => Controls_Manager::CHOOSE,
 			'options' => [
 				'before' => [
-					'title' => esc_html__('Antes', 'alpha-form'),
+					'title' => esc_html__('Antes', 'alpha-form-nested'),
 					'icon' => 'eicon-arrow-left',
 				],
 				'after' => [
-					'title' => esc_html__('Depois', 'alpha-form'),
+					'title' => esc_html__('Depois', 'alpha-form-nested'),
 					'icon' => 'eicon-arrow-right',
 				],
 			],
@@ -132,7 +132,7 @@ class Alpha_Complete extends Widget_Base
 		$this->start_controls_section(
 			'style_input_section_complete',
 			[
-				'label' => __('Caixa geral', 'alpha-form'),
+				'label' => __('Caixa geral', 'alpha-form-nested'),
 				'tab' => Controls_Manager::TAB_STYLE,
 			]
 		);
@@ -140,7 +140,7 @@ class Alpha_Complete extends Widget_Base
 		$this->add_responsive_control(
 			'box_gap_complete',
 			[
-				'label' => __('Espaço entre itens', 'alpha-form'),
+				'label' => __('Espaço entre itens', 'alpha-form-nested'),
 				'type' => Controls_Manager::SLIDER,
 				'size_units' => ['px', '%', 'em'],
 				'range' => [
@@ -164,7 +164,7 @@ class Alpha_Complete extends Widget_Base
 		$this->start_controls_section(
 			'style_label_section_complete',
 			[
-				'label' => __('Título', 'alpha-form'),
+				'label' => __('Título', 'alpha-form-nested'),
 				'tab' => Controls_Manager::TAB_STYLE,
 			]
 		);
@@ -182,7 +182,7 @@ class Alpha_Complete extends Widget_Base
 		$this->add_control(
 			'label_text_color_complete',
 			[
-				'label' => __('Cor do Texto', 'alpha-form'),
+				'label' => __('Cor do Texto', 'alpha-form-nested'),
 				'type' => Controls_Manager::COLOR,
 				'selectors' => [
 					'{{WRAPPER}} .alpha-form-titulo' => 'color: {{VALUE}};',
@@ -196,19 +196,19 @@ class Alpha_Complete extends Widget_Base
 		$this->add_responsive_control(
 			'label_text_alinhamento_complete',
 			[
-				'label' => esc_html__('Alinhamento', 'alpha-form'),
+				'label' => esc_html__('Alinhamento', 'alpha-form-nested'),
 				'type' => Controls_Manager::CHOOSE,
 				'options' => [
 					'left' => [
-						'title' => esc_html__('Left', 'alpha-form'),
+						'title' => esc_html__('Left', 'alpha-form-nested'),
 						'icon' => 'eicon-text-align-left',
 					],
 					'center' => [
-						'title' => esc_html__('Center', 'alpha-form'),
+						'title' => esc_html__('Center', 'alpha-form-nested'),
 						'icon' => 'eicon-text-align-center',
 					],
 					'right' => [
-						'title' => esc_html__('Right', 'alpha-form'),
+						'title' => esc_html__('Right', 'alpha-form-nested'),
 						'icon' => 'eicon-text-align-right',
 					],
 				],
@@ -223,7 +223,7 @@ class Alpha_Complete extends Widget_Base
 		$this->start_controls_section(
 			'style_descricao_section_complete',
 			[
-				'label' => __('Descrição', 'alpha-form'),
+				'label' => __('Descrição', 'alpha-form-nested'),
 				'tab' => Controls_Manager::TAB_STYLE,
 			]
 		);
@@ -240,7 +240,7 @@ class Alpha_Complete extends Widget_Base
 		$this->add_control(
 			'descricao_text_color_complete',
 			[
-				'label' => __('Cor do Texto', 'alpha-form'),
+				'label' => __('Cor do Texto', 'alpha-form-nested'),
 				'type' => Controls_Manager::COLOR,
 				'selectors' => [
 					'{{WRAPPER}} .alpha-form-description p' => 'color: {{VALUE}};',
@@ -254,19 +254,19 @@ class Alpha_Complete extends Widget_Base
 		$this->add_responsive_control(
 			'descricao_text_alinhamento_complete',
 			[
-				'label' => esc_html__('Alinhamento', 'alpha-form'),
+				'label' => esc_html__('Alinhamento', 'alpha-form-nested'),
 				'type' => Controls_Manager::CHOOSE,
 				'options' => [
 					'left' => [
-						'title' => esc_html__('Left', 'alpha-form'),
+						'title' => esc_html__('Left', 'alpha-form-nested'),
 						'icon' => 'eicon-text-align-left',
 					],
 					'center' => [
-						'title' => esc_html__('Center', 'alpha-form'),
+						'title' => esc_html__('Center', 'alpha-form-nested'),
 						'icon' => 'eicon-text-align-center',
 					],
 					'right' => [
-						'title' => esc_html__('Right', 'alpha-form'),
+						'title' => esc_html__('Right', 'alpha-form-nested'),
 						'icon' => 'eicon-text-align-right',
 					],
 				],
@@ -281,7 +281,7 @@ class Alpha_Complete extends Widget_Base
 		$this->start_controls_section(
 			'style_buttons_section_complete',
 			[
-				'label' => __('Botão', 'alpha-form'),
+				'label' => __('Botão', 'alpha-form-nested'),
 				'tab' => Controls_Manager::TAB_STYLE,
 			]
 		);
@@ -303,13 +303,13 @@ class Alpha_Complete extends Widget_Base
 		$this->start_controls_tab(
 			'tab_button_normal_complete',
 			[
-				'label' => __('Normal', 'alpha-form'),
+				'label' => __('Normal', 'alpha-form-nested'),
 			]
 		);
 		$this->add_control(
 			'btn_text_color_complete',
 			[
-				'label' => __('Cor do Texto', 'alpha-form'),
+				'label' => __('Cor do Texto', 'alpha-form-nested'),
 				'type' => Controls_Manager::COLOR,
 				'global' => [
 					'default' => Global_Colors::COLOR_SECONDARY,
@@ -322,7 +322,7 @@ class Alpha_Complete extends Widget_Base
 		$this->add_control(
 			'btn_text_bg_complete',
 			[
-				'label' => __('Background', 'alpha-form'),
+				'label' => __('Background', 'alpha-form-nested'),
 				'type' => Controls_Manager::COLOR,
 				'global' => [
 					'default' => Global_Colors::COLOR_ACCENT,
@@ -344,7 +344,7 @@ class Alpha_Complete extends Widget_Base
 		$this->add_responsive_control(
 			'button_border_radius_complete',
 			[
-				'label' => __('Arredondamento', 'alpha-form'),
+				'label' => __('Arredondamento', 'alpha-form-nested'),
 				'type' => Controls_Manager::DIMENSIONS,
 				'size_units' => ['px', '%', 'em', 'custom'],
 				'selectors' => [
@@ -356,7 +356,7 @@ class Alpha_Complete extends Widget_Base
 		$this->add_responsive_control(
 			'btn_padding_complete',
 			[
-				'label' => __('Espaçamento Interno', 'alpha-form'),
+				'label' => __('Espaçamento Interno', 'alpha-form-nested'),
 				'type' => Controls_Manager::DIMENSIONS,
 				'size_units' => ['px', '%', 'em', 'custom'],
 				'selectors' => [
@@ -384,13 +384,13 @@ class Alpha_Complete extends Widget_Base
 		$this->start_controls_tab(
 			'tab_button_hover_complete',
 			[
-				'label' => esc_html('Hover', 'alpha-form'),
+				'label' => esc_html('Hover', 'alpha-form-nested'),
 			]
 		);
 		$this->add_control(
 			'btn_text_color_hover_complete',
 			[
-				'label' => __('Cor do Texto', 'alpha-form'),
+				'label' => __('Cor do Texto', 'alpha-form-nested'),
 				'type' => Controls_Manager::COLOR,
 				'global' => [
 					'default' => Global_Colors::COLOR_SECONDARY,
@@ -403,7 +403,7 @@ class Alpha_Complete extends Widget_Base
 		$this->add_control(
 			'btn_text_bg_hover_complete',
 			[
-				'label' => __('Background', 'alpha-form'),
+				'label' => __('Background', 'alpha-form-nested'),
 				'type' => Controls_Manager::COLOR,
 				'global' => [
 					'default' => Global_Colors::COLOR_ACCENT,
@@ -426,7 +426,7 @@ class Alpha_Complete extends Widget_Base
 			Group_Control_Box_Shadow::get_type(),
 			[
 				'name'     => 'button_box_shadow_hover_complete',
-				'label'    => __('Sombra do Input', 'alpha-form'),
+				'label'    => __('Sombra do Input', 'alpha-form-nested'),
 				'selector' => '{{WRAPPER}} .alpha-form-submit.form:hover',
 			]
 		);
@@ -434,7 +434,7 @@ class Alpha_Complete extends Widget_Base
 		$this->end_controls_tabs();
 
 		$this->add_control('icon_size_complete', [
-			'label' => esc_html__('Tamanho do Ícone', 'alpha-form'),
+			'label' => esc_html__('Tamanho do Ícone', 'alpha-form-nested'),
 			'type' => Controls_Manager::SLIDER,
 			'default' => [
 				'size' => 8,
@@ -452,7 +452,7 @@ class Alpha_Complete extends Widget_Base
 		]);
 
 		$this->add_control('icon_spacing_complete', [
-			'label' => esc_html__('Espaçamento entre Ícone e Texto', 'alpha-form'),
+			'label' => esc_html__('Espaçamento entre Ícone e Texto', 'alpha-form-nested'),
 			'type' => Controls_Manager::SLIDER,
 			'default' => [
 				'size' => 10,
@@ -538,7 +538,7 @@ class Alpha_Complete extends Widget_Base
 
 		// Só renderiza se houver texto ou ícone
 		if (!empty($submit_button_text) || !empty($settings['icon_complete']['value'])) {
-			echo '<button ' . $this->get_render_attribute_string('button') . '>';
+			echo '<button ' . esc_attr($this->get_render_attribute_string('button')) . '>';
 
 			// Wrapper do conteúdo do botão
 			echo '<span class="alpha-form-button-inner" data-alpha="submit">';

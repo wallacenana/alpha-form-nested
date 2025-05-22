@@ -31,12 +31,12 @@ class Alpha_Form_Minimal extends Widget_Nested_Base
 
     public function get_name()
     {
-        return 'alpha-form';
+        return 'alpha-form-nested';
     }
 
     public function get_title()
     {
-        return esc_html__('Alpha Form Base', 'alpha-form');
+        return esc_html__('Alpha Form Base', 'alpha-form-nested');
     }
 
     public function get_icon()
@@ -61,7 +61,7 @@ class Alpha_Form_Minimal extends Widget_Nested_Base
 
     public function get_categories()
     {
-        return ['alpha-form'];
+        return ['alpha-form-nested'];
     }
 
     protected function item_content_container(int $index)
@@ -69,11 +69,13 @@ class Alpha_Form_Minimal extends Widget_Nested_Base
         return [
             'elType' => 'container',
             'settings' => [
-                '_title' => sprintf(__('item #%s', 'alpha-form'), $index),
+                // translators: %s is the item index number (e.g., item #1)
+                '_title' => sprintf(__('item #%s', 'alpha-form-nested'), $index),
                 'content_width' => 'full',
             ],
         ];
     }
+
 
     protected function get_default_children_elements()
     {
@@ -91,8 +93,10 @@ class Alpha_Form_Minimal extends Widget_Nested_Base
 
     protected function get_default_children_title()
     {
-        return esc_html__('Item #%d', 'alpha-form');
+        // translators: %d is the number of the item (e.g., Item #1)
+        return esc_html__('Item #%d', 'alpha-form-nested');
     }
+
 
     protected function get_default_children_placeholder_selector()
     {
@@ -117,12 +121,12 @@ class Alpha_Form_Minimal extends Widget_Nested_Base
         }
 
         $this->start_controls_section('section_items_alpha', [
-            'label' => esc_html__('Estrutura do Formulário', 'alpha-form'),
+            'label' => esc_html__('Estrutura do Formulário', 'alpha-form-nested'),
         ]);
         $this->add_control(
             'form_name_alpha',
             [
-                'label' => esc_html__('Nome do Formulário', 'alpha-form'),
+                'label' => esc_html__('Nome do Formulário', 'alpha-form-nested'),
                 'type' => Controls_Manager::TEXT,
                 'placeholder' => 'Alpha Form',
                 'default' => 'Alpha Form',
@@ -135,10 +139,10 @@ class Alpha_Form_Minimal extends Widget_Nested_Base
         $repeater->add_control(
             'item_title_alpha',
             [
-                'label' => esc_html__('Title', 'alpha-form'),
+                'label' => esc_html__('Title', 'alpha-form-nested'),
                 'type' => Controls_Manager::TEXT,
-                'default' => esc_html__('Item Title', 'alpha-form'),
-                'placeholder' => esc_html__('Item Title', 'alpha-form'),
+                'default' => esc_html__('Item Title', 'alpha-form-nested'),
+                'placeholder' => esc_html__('Item Title', 'alpha-form-nested'),
                 'label_block' => true,
                 'dynamic' => [
                     'active' => true,
@@ -153,7 +157,7 @@ class Alpha_Form_Minimal extends Widget_Nested_Base
         $repeater->add_control(
             'element_css_id_alpha',
             [
-                'label' => esc_html__('CSS ID', 'alpha-form'),
+                'label' => esc_html__('CSS ID', 'alpha-form-nested'),
                 'type' => Controls_Manager::TEXT,
                 'default' => '',
                 'dynamic' => [
@@ -162,7 +166,7 @@ class Alpha_Form_Minimal extends Widget_Nested_Base
                 'ai' => [
                     'active' => false,
                 ],
-                'title' => esc_html__('Add your custom id WITHOUT the Pound key. e.g: my-id', 'alpha-form'),
+                'title' => esc_html__('Add your custom id WITHOUT the Pound key. e.g: my-id', 'alpha-form-nested'),
                 'style_transfer' => false,
             ]
         );
@@ -170,22 +174,22 @@ class Alpha_Form_Minimal extends Widget_Nested_Base
         $this->add_control(
             'items_alpha',
             [
-                'label' => esc_html__('Items', 'alpha-form'),
+                'label' => esc_html__('Items', 'alpha-form-nested'),
                 'type' => Control_Nested_Repeater::CONTROL_TYPE,
                 'fields' => $repeater->get_controls(),
                 'default' => [
                     [
-                        'item_title_alpha' => esc_html__('Item #1', 'alpha-form'),
+                        'item_title_alpha' => esc_html__('Item #1', 'alpha-form-nested'),
                     ],
                     [
-                        'item_title_alpha' => esc_html__('Item #2', 'alpha-form'),
+                        'item_title_alpha' => esc_html__('Item #2', 'alpha-form-nested'),
                     ],
                     [
-                        'item_title_alpha' => esc_html__('Item #3', 'alpha-form'),
+                        'item_title_alpha' => esc_html__('Item #3', 'alpha-form-nested'),
                     ],
                 ],
                 'title_field' => '{{{ item_title_alpha }}}',
-                'button_text' => esc_html__('Adicionar questão', 'alpha-form'),
+                'button_text' => esc_html__('Adicionar questão', 'alpha-form-nested'),
             ]
         );
         $this->end_controls_section();
@@ -193,7 +197,7 @@ class Alpha_Form_Minimal extends Widget_Nested_Base
         $this->start_controls_section(
             'section_editor_alpha',
             [
-                'label' => esc_html__('Itens do editor', 'alpha-form'),
+                'label' => esc_html__('Itens do editor', 'alpha-form-nested'),
             ]
         );
 
@@ -201,7 +205,7 @@ class Alpha_Form_Minimal extends Widget_Nested_Base
             'heading_form_item_title_icon_alpha',
             [
                 'type' => Controls_Manager::HEADING,
-                'label' => esc_html__('Icone', 'alpha-form'),
+                'label' => esc_html__('Icone', 'alpha-form-nested'),
                 'separator' => 'before',
             ]
         );
@@ -210,7 +214,7 @@ class Alpha_Form_Minimal extends Widget_Nested_Base
         $this->add_control(
             'form_item_title_icon_alpha',
             [
-                'label' => esc_html__('Expand', 'alpha-form'),
+                'label' => esc_html__('Expand', 'alpha-form-nested'),
                 'type' => Controls_Manager::ICONS,
                 'default' => [
                     'value' => 'fas fa-plus',
@@ -224,7 +228,7 @@ class Alpha_Form_Minimal extends Widget_Nested_Base
         $this->add_control(
             'form_item_title_icon_active_alpha',
             [
-                'label' => esc_html__('Collapse', 'alpha-form'),
+                'label' => esc_html__('Collapse', 'alpha-form-nested'),
                 'type' => Controls_Manager::ICONS,
                 'fa4compatibility' => 'icon_active',
                 'default' => [
@@ -242,7 +246,7 @@ class Alpha_Form_Minimal extends Widget_Nested_Base
         $this->add_control(
             'title_tag_alpha',
             [
-                'label' => esc_html__('Title HTML Tag', 'alpha-form'),
+                'label' => esc_html__('Title HTML Tag', 'alpha-form-nested'),
                 'type' => Controls_Manager::SELECT,
                 'options' => [
                     'h1' => 'H1',
@@ -282,7 +286,7 @@ class Alpha_Form_Minimal extends Widget_Nested_Base
         $this->start_controls_section(
             'section_form_view_alpha',
             [
-                'label' => esc_html__('Vizualizações nos formulários', 'alpha-form-premium'),
+                'label' => esc_html__('Vizualizações nos formulários', 'alpha-form-nested'),
                 'tab' => Controls_Manager::TAB_CONTENT,
             ]
         );
@@ -291,10 +295,10 @@ class Alpha_Form_Minimal extends Widget_Nested_Base
         $this->add_control(
             'enable_geolocation_alpha',
             [
-                'label' => esc_html__('Ativar geolocalização', 'alpha-form-premium'),
+                'label' => esc_html__('Ativar geolocalização', 'alpha-form-nested'),
                 'type' => Controls_Manager::SWITCHER,
-                'label_on' => esc_html__('Sim', 'alpha-form-premium'),
-                'label_off' => esc_html__('Não', 'alpha-form-premium'),
+                'label_on' => esc_html__('Sim', 'alpha-form-nested'),
+                'label_off' => esc_html__('Não', 'alpha-form-nested'),
                 'return_value' => 'yes',
                 'default' => 'yes',
                 'description' => 'Pega dados de geolocalização (não é uma informação totalmente precisa, mas dá uma região próxima)',
@@ -305,10 +309,10 @@ class Alpha_Form_Minimal extends Widget_Nested_Base
         $this->add_control(
             'enable_msg_to_exit_alpha',
             [
-                'label' => esc_html__('Ativar Mensagem ao sair', 'alpha-form-premium'),
+                'label' => esc_html__('Ativar Mensagem ao sair', 'alpha-form-nested'),
                 'type' => Controls_Manager::SWITCHER,
-                'label_on' => esc_html__('Sim', 'alpha-form-premium'),
-                'label_off' => esc_html__('Não', 'alpha-form-premium'),
+                'label_on' => esc_html__('Sim', 'alpha-form-nested'),
+                'label_off' => esc_html__('Não', 'alpha-form-nested'),
                 'return_value' => 'yes',
                 'default' => 'yes',
                 'description' => 'Quando o usuário tentar sair da página que iniciou o preenchimento, exibe uma mensagem de confirmação de saída',
@@ -319,10 +323,10 @@ class Alpha_Form_Minimal extends Widget_Nested_Base
         $this->add_control(
             'enable_retornar_dados_alpha',
             [
-                'label' => esc_html__('Retornar dados ao sair', 'alpha-form-premium'),
+                'label' => esc_html__('Retornar dados ao sair', 'alpha-form-nested'),
                 'type' => Controls_Manager::SWITCHER,
-                'label_on' => esc_html__('Sim', 'alpha-form-premium'),
-                'label_off' => esc_html__('Não', 'alpha-form-premium'),
+                'label_on' => esc_html__('Sim', 'alpha-form-nested'),
+                'label_off' => esc_html__('Não', 'alpha-form-nested'),
                 'return_value' => 'yes',
                 'default' => 'yes',
                 'description' => 'Quando o usuário retornar a página, continuara o preenchimento de onde parou',
@@ -332,10 +336,10 @@ class Alpha_Form_Minimal extends Widget_Nested_Base
         $this->add_control(
             'show_required_mark_alpha',
             [
-                'label' => esc_html__('Marcar obrigatórios', 'alpha-form'),
+                'label' => esc_html__('Marcar obrigatórios', 'alpha-form-nested'),
                 'type' => Controls_Manager::SWITCHER,
-                'label_on' => esc_html__('Sim', 'alpha-form'),
-                'label_off' => esc_html__('Não', 'alpha-form'),
+                'label_on' => esc_html__('Sim', 'alpha-form-nested'),
+                'label_off' => esc_html__('Não', 'alpha-form-nested'),
                 'return_value' => 'yes',
                 'default' => 'yes',
                 'description' => 'Insere um asterisco nas perguntas obrigatórias',
@@ -348,7 +352,7 @@ class Alpha_Form_Minimal extends Widget_Nested_Base
         $this->start_controls_section(
             'section_overlay',
             [
-                'label' => esc_html__('Overlay de Envio', 'alpha-form'),
+                'label' => esc_html__('Overlay de Envio', 'alpha-form-nested'),
                 'tab'   => Controls_Manager::TAB_CONTENT,
             ]
         );
@@ -356,20 +360,20 @@ class Alpha_Form_Minimal extends Widget_Nested_Base
         $this->add_control(
             'show_overlay',
             [
-                'label'        => esc_html__('Exibir overlay durante envio', 'alpha-form'),
+                'label'        => esc_html__('Exibir overlay durante envio', 'alpha-form-nested'),
                 'type'         => Controls_Manager::SWITCHER,
-                'label_on'     => esc_html__('Sim', 'alpha-form'),
-                'label_off'    => esc_html__('Não', 'alpha-form'),
-                'default'      => 'yes',
+                'label_on'     => esc_html__('Sim', 'alpha-form-nested'),
+                'label_off'    => esc_html__('Não', 'alpha-form-nested'),
+                'default'      => 'no',
             ]
         );
         $this->add_control(
             'show_editor',
             [
-                'label'        => esc_html__('Exibir no editor', 'alpha-form'),
+                'label'        => esc_html__('Exibir no editor', 'alpha-form-nested'),
                 'type'         => Controls_Manager::SWITCHER,
-                'label_on'     => esc_html__('Sim', 'alpha-form'),
-                'label_off'    => esc_html__('Não', 'alpha-form'),
+                'label_on'     => esc_html__('Sim', 'alpha-form-nested'),
+                'label_off'    => esc_html__('Não', 'alpha-form-nested'),
                 'default'      => 'yes',
             ]
         );
@@ -377,7 +381,7 @@ class Alpha_Form_Minimal extends Widget_Nested_Base
         $this->add_control(
             'overlay_loader_image',
             [
-                'label' => esc_html__('GIF de carregamento', 'alpha-form'),
+                'label' => esc_html__('GIF de carregamento', 'alpha-form-nested'),
                 'type' => Controls_Manager::MEDIA,
                 'default' => [
                     'url' => \Elementor\Utils::get_placeholder_image_src(),
@@ -396,7 +400,7 @@ class Alpha_Form_Minimal extends Widget_Nested_Base
         $this->start_controls_section(
             'section_post_submit_alpha',
             [
-                'label' => esc_html__('Ações após envio', 'alpha-form'),
+                'label' => esc_html__('Ações após envio', 'alpha-form-nested'),
                 'tab' => Controls_Manager::TAB_CONTENT,
             ]
         );
@@ -404,7 +408,7 @@ class Alpha_Form_Minimal extends Widget_Nested_Base
         $this->add_control(
             'post_submit_actions_alpha',
             [
-                'label' => esc_html__('Ações após envio', 'alpha-form'),
+                'label' => esc_html__('Ações após envio', 'alpha-form-nested'),
                 'type' => Controls_Manager::SELECT2,
                 'multiple' => true,
                 'label_block' => true,
@@ -433,7 +437,7 @@ class Alpha_Form_Minimal extends Widget_Nested_Base
         $this->start_controls_section(
             'section_redirect_alpha',
             [
-                'label' => esc_html__('[Ação] Redirecionamento', 'alpha-form'),
+                'label' => esc_html__('[Ação] Redirecionamento', 'alpha-form-nested'),
                 'condition' => [
                     'post_submit_actions_alpha' => 'redirect',
                 ],
@@ -444,7 +448,7 @@ class Alpha_Form_Minimal extends Widget_Nested_Base
         $this->add_control(
             'redirect_url_alpha',
             [
-                'label' => esc_html__('URL de redirecionamento', 'alpha-form'),
+                'label' => esc_html__('URL de redirecionamento', 'alpha-form-nested'),
                 'type' => Controls_Manager::TEXT,
                 'placeholder' => 'https://seusite.com/obrigado',
                 'description' => 'Você pode usar shortcodes como [field-nome] na URL.',
@@ -458,7 +462,7 @@ class Alpha_Form_Minimal extends Widget_Nested_Base
         $this->start_controls_section(
             'section_webhook_alpha',
             [
-                'label' => esc_html__('[Ação] Webhook', 'alpha-form'),
+                'label' => esc_html__('[Ação] Webhook', 'alpha-form-nested'),
                 'condition' => [
                     'post_submit_actions_alpha' => 'webhook',
                 ],
@@ -469,7 +473,7 @@ class Alpha_Form_Minimal extends Widget_Nested_Base
         $this->add_control(
             'webhook_url',
             [
-                'label' => esc_html__('URL do Webhook', 'alpha-form'),
+                'label' => esc_html__('URL do Webhook', 'alpha-form-nested'),
                 'type' => Controls_Manager::TEXT,
                 'placeholder' => 'https://api.exemplo.com/webhook',
                 'ai' => [
@@ -485,7 +489,7 @@ class Alpha_Form_Minimal extends Widget_Nested_Base
         $this->start_controls_section(
             'section_email_alpha',
             [
-                'label' => __('[Ação] Enviar por Email', 'alpha-form'),
+                'label' => __('[Ação] Enviar por Email', 'alpha-form-nested'),
                 'condition' => [
                     'post_submit_actions_alpha' => 'email',
                 ],
@@ -494,7 +498,7 @@ class Alpha_Form_Minimal extends Widget_Nested_Base
 
         // Tipo de envio
         $this->add_control('email_to', [
-            'label' => __('Destino', 'alpha-form'),
+            'label' => __('Destino', 'alpha-form-nested'),
             'type' => Controls_Manager::SELECT,
             'default' => 'default',
             'options' => [
@@ -505,7 +509,7 @@ class Alpha_Form_Minimal extends Widget_Nested_Base
 
         // Campo para emails personalizados
         $this->add_control('custom_emails', [
-            'label' => __('Emails', 'alpha-form'),
+            'label' => __('Emails', 'alpha-form-nested'),
             'type' => Controls_Manager::TEXT,
             'placeholder' => 'exemplo@email.com, outro@email.com',
             'description' => 'Separe múltiplos emails com vírgula',
@@ -516,7 +520,7 @@ class Alpha_Form_Minimal extends Widget_Nested_Base
 
         // Assunto do email
         $this->add_control('email_subject', [
-            'label' => __('Assunto', 'alpha-form'),
+            'label' => __('Assunto', 'alpha-form-nested'),
             'type' => Controls_Manager::TEXT,
             'default' => 'Nova submissão recebida',
         ]);
@@ -527,7 +531,7 @@ class Alpha_Form_Minimal extends Widget_Nested_Base
         $this->start_controls_section(
             'section_mailchimp',
             [
-                'label' => esc_html__('[Ação] Mailchimp', 'alpha-form'),
+                'label' => esc_html__('[Ação] Mailchimp', 'alpha-form-nested'),
                 'condition' => [
                     'post_submit_actions_alpha' => 'mailchimp',
                 ],
@@ -535,10 +539,10 @@ class Alpha_Form_Minimal extends Widget_Nested_Base
         );
 
         $this->add_control('mailchimp_load_lists', [
-            'label' => esc_html__('Receber dados', 'alpha-form-premium'),
+            'label' => esc_html__('Receber dados', 'alpha-form-nested'),
             'type' => Controls_Manager::BUTTON,
             'button_type' => 'success',
-            'text' => esc_html__('Receber', 'alpha-form-premium'),
+            'text' => esc_html__('Receber', 'alpha-form-nested'),
             'event' => 'alphaform:editor:load_data_mailchimp',
             'description' => 'Clique para popular os campos abaixo',
         ]);
@@ -609,7 +613,7 @@ class Alpha_Form_Minimal extends Widget_Nested_Base
         $this->start_controls_section(
             'section_active',
             [
-                'label' => esc_html__('[Ação] ActiveCampaign', 'alpha-form'),
+                'label' => esc_html__('[Ação] ActiveCampaign', 'alpha-form-nested'),
                 'condition' => [
                     'post_submit_actions_alpha' => 'active-campaign',
                 ],
@@ -617,10 +621,10 @@ class Alpha_Form_Minimal extends Widget_Nested_Base
         );
 
         $this->add_control('active-campaign_load_lists', [
-            'label' => esc_html__('Receber dados', 'alpha-form-premium'),
+            'label' => esc_html__('Receber dados', 'alpha-form-nested'),
             'type' => Controls_Manager::BUTTON,
             'button_type' => 'success',
-            'text' => esc_html__('Receber', 'alpha-form-premium'),
+            'text' => esc_html__('Receber', 'alpha-form-nested'),
             'event' => 'alphaform:editor:load_data_active-campaign',
             'description' => 'Clique para popular os campos abaixo',
         ]);
@@ -690,7 +694,7 @@ class Alpha_Form_Minimal extends Widget_Nested_Base
         $this->start_controls_section(
             'section_getresponse',
             [
-                'label' => esc_html__('[Ação] GetResponse', 'alpha-form'),
+                'label' => esc_html__('[Ação] GetResponse', 'alpha-form-nested'),
                 'condition' => [
                     'post_submit_actions_alpha' => 'getresponse',
                 ],
@@ -698,10 +702,10 @@ class Alpha_Form_Minimal extends Widget_Nested_Base
         );
 
         $this->add_control('getresponse_load_lists', [
-            'label' => esc_html__('Receber dados', 'alpha-form-premium'),
+            'label' => esc_html__('Receber dados', 'alpha-form-nested'),
             'type' => Controls_Manager::BUTTON,
             'button_type' => 'success',
-            'text' => esc_html__('Receber', 'alpha-form-premium'),
+            'text' => esc_html__('Receber', 'alpha-form-nested'),
             'event' => 'alphaform:editor:load_data_getresponse',
             'description' => 'Clique para popular os campos abaixo',
         ]);
@@ -757,7 +761,7 @@ class Alpha_Form_Minimal extends Widget_Nested_Base
         $this->start_controls_section(
             'section_convertkit',
             [
-                'label' => esc_html__('[Ação] Convertkit', 'alpha-form'),
+                'label' => esc_html__('[Ação] Convertkit', 'alpha-form-nested'),
                 'condition' => [
                     'post_submit_actions_alpha' => 'convertkit',
                 ],
@@ -765,10 +769,10 @@ class Alpha_Form_Minimal extends Widget_Nested_Base
         );
 
         $this->add_control('convertkit_load_lists', [
-            'label' => esc_html__('Receber dados', 'alpha-form-premium'),
+            'label' => esc_html__('Receber dados', 'alpha-form-nested'),
             'type' => Controls_Manager::BUTTON,
             'button_type' => 'success',
-            'text' => esc_html__('Receber', 'alpha-form-premium'),
+            'text' => esc_html__('Receber', 'alpha-form-nested'),
             'event' => 'alphaform:editor:load_data_convertkit',
             'description' => 'Clique para popular os campos abaixo',
         ]);
@@ -824,7 +828,7 @@ class Alpha_Form_Minimal extends Widget_Nested_Base
         $this->start_controls_section(
             'section_mailerlite',
             [
-                'label' => esc_html__('[Ação] MailerLite', 'alpha-form'),
+                'label' => esc_html__('[Ação] MailerLite', 'alpha-form-nested'),
                 'condition' => [
                     'post_submit_actions_alpha' => 'mailerlite',
                 ],
@@ -832,10 +836,10 @@ class Alpha_Form_Minimal extends Widget_Nested_Base
         );
 
         $this->add_control('mailerlite_load_lists', [
-            'label' => esc_html__('Receber dados', 'alpha-form-premium'),
+            'label' => esc_html__('Receber dados', 'alpha-form-nested'),
             'type' => Controls_Manager::BUTTON,
             'button_type' => 'success',
-            'text' => esc_html__('Receber', 'alpha-form-premium'),
+            'text' => esc_html__('Receber', 'alpha-form-nested'),
             'event' => 'alphaform:editor:load_data_mailerlite',
             'description' => 'Clique para popular os campos abaixo',
         ]);
@@ -891,7 +895,7 @@ class Alpha_Form_Minimal extends Widget_Nested_Base
         $this->start_controls_section(
             'section_drip',
             [
-                'label' => esc_html__('[Ação] Drip', 'alpha-form'),
+                'label' => esc_html__('[Ação] Drip', 'alpha-form-nested'),
                 'condition' => [
                     'post_submit_actions_alpha' => 'drip',
                 ],
@@ -899,10 +903,10 @@ class Alpha_Form_Minimal extends Widget_Nested_Base
         );
 
         $this->add_control('drip_load_lists', [
-            'label' => esc_html__('Receber dados', 'alpha-form-premium'),
+            'label' => esc_html__('Receber dados', 'alpha-form-nested'),
             'type' => Controls_Manager::BUTTON,
             'button_type' => 'success',
-            'text' => esc_html__('Receber', 'alpha-form-premium'),
+            'text' => esc_html__('Receber', 'alpha-form-nested'),
             'event' => 'alphaform:editor:load_data_drip',
             'description' => 'Clique para popular os campos abaixo',
         ]);
@@ -958,7 +962,7 @@ class Alpha_Form_Minimal extends Widget_Nested_Base
         $this->start_controls_section(
             'section_clicksend',
             [
-                'label' => esc_html__('[Ação] ClickSend', 'alpha-form'),
+                'label' => esc_html__('[Ação] ClickSend', 'alpha-form-nested'),
                 'condition' => [
                     'post_submit_actions_alpha' => 'clicksend',
                 ],
@@ -966,10 +970,10 @@ class Alpha_Form_Minimal extends Widget_Nested_Base
         );
 
         $this->add_control('clicksend_load_lists', [
-            'label' => esc_html__('Receber dados', 'alpha-form-premium'),
+            'label' => esc_html__('Receber dados', 'alpha-form-nested'),
             'type' => Controls_Manager::BUTTON,
             'button_type' => 'success',
-            'text' => esc_html__('Receber', 'alpha-form-premium'),
+            'text' => esc_html__('Receber', 'alpha-form-nested'),
             'event' => 'alphaform:editor:load_data_clicksend',
             'description' => 'Clique para popular os campos abaixo',
         ]);
@@ -1024,7 +1028,7 @@ class Alpha_Form_Minimal extends Widget_Nested_Base
         $low_specificity_form_item_selector = ":where( {{WRAPPER}}{$this->widget_container_selector} > .alpha-f-n > .alpha-f-n-item ) > .e-con";
 
         $this->start_controls_section('section_style_alpha', [
-            'label' => esc_html__('Estilo do editor', 'alpha-form'),
+            'label' => esc_html__('Estilo do editor', 'alpha-form-nested'),
             'tab' => Controls_Manager::TAB_STYLE,
         ]);
 
@@ -1032,7 +1036,7 @@ class Alpha_Form_Minimal extends Widget_Nested_Base
             'heading_header_style_title_alpha',
             [
                 'type' => Controls_Manager::HEADING,
-                'label' => esc_html__('Title', 'alpha-form'),
+                'label' => esc_html__('Title', 'alpha-form-nested'),
 
             ]
         );
@@ -1055,7 +1059,7 @@ class Alpha_Form_Minimal extends Widget_Nested_Base
             'editor_header_style_title_alpha',
             [
                 'type' => Controls_Manager::HEADING,
-                'label' => esc_html__('Ítens do editor', 'alpha-form'),
+                'label' => esc_html__('Ítens do editor', 'alpha-form-nested'),
                 'separator' => 'before'
 
             ]
@@ -1063,7 +1067,7 @@ class Alpha_Form_Minimal extends Widget_Nested_Base
         $this->add_responsive_control(
             'form_item_title_space_between_alpha',
             [
-                'label' => esc_html__('Espaço entre itens', 'alpha-form'),
+                'label' => esc_html__('Espaço entre itens', 'alpha-form-nested'),
                 'type' => Controls_Manager::SLIDER,
                 'size_units' => ['px', 'em', 'rem', 'custom'],
                 'range' => [
@@ -1098,7 +1102,7 @@ class Alpha_Form_Minimal extends Widget_Nested_Base
             'conteudo_header_style_title_alpha',
             [
                 'type' => Controls_Manager::HEADING,
-                'label' => esc_html__('Conteúdo', 'alpha-form'),
+                'label' => esc_html__('Conteúdo', 'alpha-form-nested'),
                 'separator' => 'before'
 
             ]
@@ -1121,10 +1125,10 @@ class Alpha_Form_Minimal extends Widget_Nested_Base
                 'selector' => $low_specificity_form_item_selector,
                 'fields_options' => [
                     'color' => [
-                        'label' => esc_html__('Border Color', 'alpha-form'),
+                        'label' => esc_html__('Border Color', 'alpha-form-nested'),
                     ],
                     'width' => [
-                        'label' => esc_html__('Border Width', 'alpha-form'),
+                        'label' => esc_html__('Border Width', 'alpha-form-nested'),
                     ],
                 ],
             ]
@@ -1133,7 +1137,7 @@ class Alpha_Form_Minimal extends Widget_Nested_Base
         $this->add_responsive_control(
             'content_border_radius_alpha',
             [
-                'label' => esc_html__('Border Radius', 'alpha-form'),
+                'label' => esc_html__('Border Radius', 'alpha-form-nested'),
                 'type' => Controls_Manager::DIMENSIONS,
                 'size_units' => ['px', '%', 'em', 'rem', 'vw', 'custom'],
                 'selectors' => [
@@ -1145,7 +1149,7 @@ class Alpha_Form_Minimal extends Widget_Nested_Base
         $this->add_responsive_control(
             'content_padding_alpha',
             [
-                'label' => esc_html__('Padding', 'alpha-form'),
+                'label' => esc_html__('Padding', 'alpha-form-nested'),
                 'type' => Controls_Manager::DIMENSIONS,
                 'size_units' => ['px', '%', 'em', 'rem', 'custom'],
                 'selectors' => [
@@ -1159,7 +1163,7 @@ class Alpha_Form_Minimal extends Widget_Nested_Base
         $this->start_controls_section(
             'section_overlay_style',
             [
-                'label' => esc_html__('Estilo do Overlay', 'alpha-form'),
+                'label' => esc_html__('Estilo do Overlay', 'alpha-form-nested'),
                 'tab'   => Controls_Manager::TAB_STYLE,
                 'condition' => [
                     'show_overlay' => 'yes',
@@ -1170,7 +1174,7 @@ class Alpha_Form_Minimal extends Widget_Nested_Base
         $this->add_control(
             'overlay_background',
             [
-                'label'     => esc_html__('Cor de fundo', 'alpha-form'),
+                'label'     => esc_html__('Cor de fundo', 'alpha-form-nested'),
                 'type'      => Controls_Manager::COLOR,
                 'default'   => 'rgba(0, 0, 0, 0.6)',
                 'selectors' => [
@@ -1184,7 +1188,7 @@ class Alpha_Form_Minimal extends Widget_Nested_Base
         $this->add_control(
             'overlay_image_size',
             [
-                'label' => esc_html__('Tamanho do GIF', 'alpha-form'),
+                'label' => esc_html__('Tamanho do GIF', 'alpha-form-nested'),
                 'type' => Controls_Manager::SLIDER,
                 'size_units' => ['px'],
                 'range' => [
@@ -1215,16 +1219,16 @@ class Alpha_Form_Minimal extends Widget_Nested_Base
     {
         $selector = "{{WRAPPER}}{$this->widget_container_selector} > .alpha-f-n > .alpha-f-n-item > .alpha-f-n-item-title";
 
-        $translated_tab_text = esc_html__('Normal', 'alpha-form');
+        $translated_tab_text = esc_html__('Normal', 'alpha-form-nested');
 
         switch ($state) {
             case 'hover':
                 $selector .= ':hover';
-                $translated_tab_text = esc_html__('Hover', 'alpha-form');
+                $translated_tab_text = esc_html__('Hover', 'alpha-form-nested');
                 break;
             case 'active':
                 $selector = "{{WRAPPER}}{$this->widget_container_selector} > .alpha-f-n > .alpha-f-n-item[open] > .alpha-f-n-item-title";
-                $translated_tab_text = esc_html__('Active', 'alpha-form');
+                $translated_tab_text = esc_html__('Active', 'alpha-form-nested');
                 break;
         }
 
@@ -1243,7 +1247,7 @@ class Alpha_Form_Minimal extends Widget_Nested_Base
                 'exclude' => ['image'],
                 'fields_options' => [
                     'color' => [
-                        'label' => esc_html__('Color', 'alpha-form'),
+                        'label' => esc_html__('Color', 'alpha-form-nested'),
                     ],
                 ],
                 'selector' => $selector,
@@ -1362,8 +1366,8 @@ class Alpha_Form_Minimal extends Widget_Nested_Base
         $show_required_mark = 'data-show-required=' . $settings["show_required_mark_alpha"] . '' ?? '';
         $id_int = substr($this->get_id_int(), 0, 3);
         $items_title_html = '';
-        $this->add_render_attribute('alpha-form', 'class', 'alpha-f-n');
-        $this->add_render_attribute('alpha-form', 'aria-label', 'Alpha Form. Open links with Enter or Space, close with Escape, and navigate with Arrow Keys');
+        $this->add_render_attribute('alpha-form-nested', 'class', 'alpha-f-n');
+        $this->add_render_attribute('alpha-form-nested', 'aria-label', 'Alpha Form. Open links with Enter or Space, close with Escape, and navigate with Arrow Keys');
         $default_state = $settings['default_state_alpha'] ?? 'expanded';
         $form_id = $this->get_id();
         $form_name = $settings['form_name_alpha'] ?? $form_id;
@@ -1411,7 +1415,7 @@ class Alpha_Form_Minimal extends Widget_Nested_Base
         }
 
         ?>
-        <div <?php $this->print_render_attribute_string('alpha-form'); ?>>
+        <div <?php $this->print_render_attribute_string('alpha-form-nested'); ?>>
             <?php echo $items_title_html; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped 
             ?>
         </div>
@@ -1511,7 +1515,7 @@ class Alpha_Form_Minimal extends Widget_Nested_Base
                 false,
                 [
                     'class' => 'alpha-form-overlay-gif',
-                    'alt'   => esc_attr__('Carregando...', 'alpha-form'),
+                    'alt'   => esc_attr__('Carregando...', 'alpha-form-nested'),
                 ]
             );
             echo '</div>';

@@ -22,7 +22,7 @@ $expires = esc_html($data['expires'] ?? '');
         <?php wp_nonce_field('alpha_form_nonce', 'alpha_form_nonce_field'); ?>
 
         <p>
-            <input type="password" name="license" id="alpha_form_license_key" value="<?= $license ?>" placeholder="Digite sua chave" style="width: 350px;" <?= $license ? 'disabled' : '' ?> />
+            <input type="password" name="license" id="alpha_form_license_key" value="<?php esc_attr($license); ?>" placeholder="Digite sua chave" style="width: 350px;" <?php $license ? 'disabled' : '' ?> />
             <button type="button" id="toggle-edit-license" title="Editar licença">✏️</button>
         </p>
 
@@ -30,8 +30,8 @@ $expires = esc_html($data['expires'] ?? '');
 
         <div id="alpha_form_status_message" style="margin-top: 15px; font-weight: bold;">
             <?php if ($license): ?>
-                <?= $status ? '✅ Licença ativa' : '❌ Licença inválida' ?>
-                <?php if ($expires): ?><br><small>Expira em: <?= $expires ?></small><?php endif; ?>
+                <?php $status ? '✅ Licença ativa' : '❌ Licença inválida' ?>
+                <?php if ($expires): ?><br><small>Expira em: <?php esc_html($expires); ?></small><?php endif; ?>
             <?php endif; ?>
         </div>
     </form>

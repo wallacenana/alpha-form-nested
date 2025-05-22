@@ -136,10 +136,10 @@ $services = [
             $status_msg = $status ? '✅ Ativa' : '❌ Inativa';
         ?>
 
-            <h2><?= esc_html($config['title']) ?> </h2>
+            <h2><?php esc_html($config['title']) ?> </h2>
             <?php if (!empty($config['help'])): ?>
                 <span>
-                    <a href="<?= esc_url($config['help']) ?>" target="_blank" style="text-decoration: none;">
+                    <a href="<?php esc_url($config['help']) ?>" target="_blank" style="text-decoration: none;">
                         🔗 Ajuda
                     </a>
                 </span>
@@ -152,15 +152,15 @@ $services = [
                         $id = $name . '_' . $field;
                     ?>
                         <tr>
-                            <th scope="row"><?= esc_html($field_config['label']) ?></th>
+                            <th scope="row"><?php esc_html($field_config['label']) ?></th>
                             <td>
                                 <input
-                                    type="<?= esc_attr($type) ?>"
-                                    id="<?= esc_attr($id) ?>"
-                                    data-name="<?= esc_attr($name) ?>"
-                                    name="<?= esc_attr($field) ?>"
-                                    value="<?= $value ?>"
-                                    placeholder="<?= esc_attr($field_config['placeholder']) ?>" style="min-width: 350px;" />
+                                    type="<?php esc_attr($type) ?>"
+                                    id="<?php esc_attr($id) ?>"
+                                    data-name="<?php esc_attr($name) ?>"
+                                    name="<?php esc_attr($field) ?>"
+                                    value="<?php esc_html($value) ?>"
+                                    placeholder="<?php esc_attr($field_config['placeholder']) ?>" style="min-width: 350px;" />
 
                             </td>
                         </tr>
@@ -170,12 +170,12 @@ $services = [
                         <th scope="row">Status</th>
                         <td>
                             <button type="button"
-                                id="validate_<?= $name ?>_btn"
+                                id="validate_<?php esc_attr($name) ?>_btn"
                                 class="button validate-integration"
-                                data-name="<?= $name ?>">
+                                data-name="<?php esc_attr($name) ?>">
                                 Validar Conexão
                             </button>
-                            <span id="<?= $name ?>_status_msg"><?= $status_msg ?></span>
+                            <span id="<?php esc_attr($name) ?>_status_msg"><?php esc_html($status_msg) ?></span>
                         </td>
                     </tr>
                 </table>

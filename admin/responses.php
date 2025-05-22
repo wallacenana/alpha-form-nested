@@ -3,7 +3,10 @@ if (!current_user_can('manage_options')) {
     wp_die('Acesso negado.');
 }
 
-if (!isset($_GET['_wpnonce']) || !wp_verify_nonce(sanitize_text_field(wp_unslash($_GET['_wpnonce'])), 'alpha_form_responses_list')) {
+if (
+    !isset($_GET['_wpnonce']) ||
+    !wp_verify_nonce(sanitize_text_field(wp_unslash($_GET['_wpnonce'])), 'alpha_form_responses_list')
+) {
     wp_die('Acesso negado (nonce inválido).');
 }
 
@@ -11,21 +14,23 @@ global $wpdb;
 $table = $wpdb->prefix . 'alpha_form_nested_responses';
 
 $per_page = 20;
-$current_page = isset($_GET['paged']) ? max(1, intval($_GET['paged'])) : 1;
+$current_page = isset($_GET['paged']) ? max(1, intval(wp_unslash($_GET['paged']))) : 1;
 $offset = ($current_page - 1) * $per_page;
 
-// Filtro por form_id
-$form_id = isset($_GET['form_id']) ? sanitize_text_field($_GET['form_id']) : '';
+$form_id = isset($_GET['form_id']) ? sanitize_text_field(wp_unslash($_GET['form_id'])) : '';
 
 // Total de registros
 $cache_key_total = 'alpha_nested_total_' . ($form_id ?: 'all');
 $total = wp_cache_get($cache_key_total, 'alpha_form');
 
+// phpcs:disable WordPress.DB.PreparedSQL.NotPrepared
 if (false === $total) {
-    $total = $form_id
-        ? $wpdb->get_var($wpdb->prepare("SELECT COUNT(*) FROM $table WHERE form_id = %s", $form_id))
-        : $wpdb->get_var("SELECT COUNT(*) FROM $table");
-
+    if ($form_id) {
+        $sql_total = $wpdb->prepare("SELECT COUNT(*) FROM {$wpdb->prefix}alpha_form_nested_responses WHERE form_id = %s", $form_id);
+    } else {
+        $sql_total = "SELECT COUNT(*) FROM {$wpdb->prefix}alpha_form_nested_responses";
+    }
+    $total = $wpdb->get_var($sql_total);
     wp_cache_set($cache_key_total, $total, 'alpha_form', 600);
 }
 
@@ -34,14 +39,31 @@ $cache_key_results = 'alpha_nested_results_' . ($form_id ?: 'all') . "_page_$cur
 $results = wp_cache_get($cache_key_results, 'alpha_form');
 
 if (false === $results) {
-    $sql = $form_id
-        ? $wpdb->prepare("SELECT id, form_id, form_name, session_id, post_id, created_at FROM $table WHERE form_id = %s ORDER BY created_at DESC LIMIT %d OFFSET %d", $form_id, $per_page, $offset)
-        : $wpdb->prepare("SELECT id, form_id, form_name, session_id, post_id, created_at FROM $table ORDER BY created_at DESC LIMIT %d OFFSET %d", $per_page, $offset);
+    if ($form_id) {
+        $sql_results = $wpdb->prepare(
+            "SELECT id, form_id, form_name, session_id, post_id, created_at
+             FROM {$wpdb->prefix}alpha_form_nested_responses
+             WHERE form_id = %s
+             ORDER BY created_at DESC
+             LIMIT %d OFFSET %d",
+            $form_id, $per_page, $offset
+        );
 
-    $results = $wpdb->get_results($sql);
+    } else {
+        $sql_results = $wpdb->prepare(
+            "SELECT id, form_id, form_name, session_id, post_id, created_at
+             FROM {$wpdb->prefix}alpha_form_nested_responses
+             ORDER BY created_at DESC
+             LIMIT %d OFFSET %d",
+            $per_page, $offset
+        );
 
+    }
+
+    $results = $wpdb->get_results($sql_results);
     wp_cache_set($cache_key_results, $results, 'alpha_form', 300);
 }
+// phpcs:enable WordPress.DB.PreparedSQL.NotPrepared
 ?>
 
 <div class="wrap alpha-form-wrap">
@@ -100,14 +122,15 @@ if (false === $results) {
         $base_url = admin_url('admin.php?page=alpha-form-responses');
         if ($form_id) $base_url .= '&form_id=' . urlencode($form_id);
         echo '<div class="tablenav"><div class="tablenav-pages">';
-        echo paginate_links([
+        echo wp_kses_post(paginate_links([
             'base' => $base_url . '&paged=%#%',
             'format' => '',
             'current' => $current_page,
             'total' => $total_pages,
             'prev_text' => '<i class="dashicons dashicons-arrow-left-alt2"></i>',
             'next_text' => '<i class="dashicons dashicons-arrow-right-alt2"></i>',
-        ]);
+        ]));
+
         echo '</div></div>';
     endif;
     ?>

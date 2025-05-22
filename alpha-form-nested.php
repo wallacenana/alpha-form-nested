@@ -1,10 +1,14 @@
-<?php
+<?php 
 
 /**
- * Plugin Name: Alpha Form
- * Description: Widget customizado com elementos aninhados para o Alpha Form.
+ * Plugin Name: Alpha Form Nested
+ * Plugin URI: https://alphaform.com.br
+ * Description: Ilimitados formulários, quizzes e leads. Plugin integrado ao elementor
  * Version: 2.0.0
  * Author: Wallace Tavares
+ * Author URI: https://wallacetavares.com
+ * License: GPLv2 or later
+ * License URI: https://www.gnu.org/licenses/gpl-2.0.html
  */
 
 if (!defined('ABSPATH')) {
@@ -69,3 +73,8 @@ add_action('plugins_loaded', function () {
 });
 // Includes principais
 require_once ALPHA_FORM_PATH . 'includes/plugin.php';
+
+
+// This file is part of Alpha Form Premium.
+// Unauthorized redistribution or resale is prohibited.
+// © 2025 Wallace Tavares - All Rights Reserved.

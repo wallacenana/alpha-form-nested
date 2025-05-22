@@ -21,7 +21,7 @@ class Alpha_Progress extends Widget_Base
 
     public function get_title()
     {
-        return esc_html__('Alpha Progress', 'alpha-form');
+        return esc_html__('Alpha Progress', 'alpha-form-nested');
     }
 
     public function get_icon()
@@ -31,7 +31,7 @@ class Alpha_Progress extends Widget_Base
 
     public function get_categories()
     {
-        return ['alpha-form'];
+        return ['alpha-form-nested'];
     }
 
     public function get_keywords()
@@ -41,20 +41,20 @@ class Alpha_Progress extends Widget_Base
     protected function register_controls()
     {
         $this->start_controls_section('section_content', [
-            'label' => esc_html__('Configurações', 'alpha-form'),
+            'label' => esc_html__('Configurações', 'alpha-form-nested'),
         ]);
 
         $this->add_control('show_percentage', [
-            'label' => esc_html__('Exibir Porcentagem', 'alpha-form'),
+            'label' => esc_html__('Exibir Porcentagem', 'alpha-form-nested'),
             'type' => Controls_Manager::SWITCHER,
-            'label_on' => esc_html__('Sim', 'alpha-form'),
-            'label_off' => esc_html__('Não', 'alpha-form'),
+            'label_on' => esc_html__('Sim', 'alpha-form-nested'),
+            'label_off' => esc_html__('Não', 'alpha-form-nested'),
             'return_value' => 'yes',
             'default' => 'yes',
         ]);
 
         $this->add_control('percentage_text_prefix', [
-            'label' => esc_html__('Texto antes da porcentagem', 'alpha-form'),
+            'label' => esc_html__('Texto antes da porcentagem', 'alpha-form-nested'),
             'type' => Controls_Manager::TEXT,
             'default' => 'Completo',
             'placeholder' => 'Completo',
@@ -64,20 +64,20 @@ class Alpha_Progress extends Widget_Base
         ]);
 
         $this->add_control('percentage_text_align', [
-            'label' => esc_html__('Alinhamento do Texto', 'alpha-form'),
+            'label' => esc_html__('Alinhamento do Texto', 'alpha-form-nested'),
             'type' => Controls_Manager::CHOOSE,
             'label_block' => false,
             'options' => [
                 'left' => [
-                    'title' => esc_html__('Esquerda', 'alpha-form'),
+                    'title' => esc_html__('Esquerda', 'alpha-form-nested'),
                     'icon' => 'eicon-text-align-left',
                 ],
                 'center' => [
-                    'title' => esc_html__('Centro', 'alpha-form'),
+                    'title' => esc_html__('Centro', 'alpha-form-nested'),
                     'icon' => 'eicon-text-align-center',
                 ],
                 'right' => [
-                    'title' => esc_html__('Direita', 'alpha-form'),
+                    'title' => esc_html__('Direita', 'alpha-form-nested'),
                     'icon' => 'eicon-text-align-right',
                 ],
             ],
@@ -92,15 +92,15 @@ class Alpha_Progress extends Widget_Base
 
 
         $this->add_control('percentage_position', [
-            'label' => esc_html__('Posição do Texto', 'alpha-form'),
+            'label' => esc_html__('Posição do Texto', 'alpha-form-nested'),
             'type' => Controls_Manager::CHOOSE,
             'options' => [
                 'column-reverse' => [
-                    'title' => esc_html__('Acima', 'alpha-form'),
+                    'title' => esc_html__('Acima', 'alpha-form-nested'),
                     'icon' => 'eicon-arrow-up',
                 ],
                 'column' => [
-                    'title' => esc_html__('Abaixo', 'alpha-form'),
+                    'title' => esc_html__('Abaixo', 'alpha-form-nested'),
                     'icon' => 'eicon-arrow-down',
                 ],
             ],
@@ -115,15 +115,15 @@ class Alpha_Progress extends Widget_Base
         ]);
 
         $this->add_control('ajax_button', [
-            'label'       => __('Atualizar lista de formulários', 'alpha-form'),
+            'label'       => __('Atualizar lista de formulários', 'alpha-form-nested'),
             'type'        => Controls_Manager::BUTTON,
-            'text'        => __('Atualizar', 'alpha-form'),
+            'text'        => __('Atualizar', 'alpha-form-nested'),
             'button_type' => 'success',
             'event'       => 'alphaform:editor:load_widget_id',
         ]);
 
         $this->add_control('form_target', [
-            'label' => esc_html__('Formulário Alvo', 'alpha-form'),
+            'label' => esc_html__('Formulário Alvo', 'alpha-form-nested'),
             'type' => Controls_Manager::SELECT,
             'default' => '',
             'options' => [],
@@ -133,12 +133,12 @@ class Alpha_Progress extends Widget_Base
 
         // sessão de estilo
         $this->start_controls_section('section_style', [
-            'label' => esc_html__('Estilo', 'alpha-form'),
+            'label' => esc_html__('Estilo', 'alpha-form-nested'),
             'tab' => Controls_Manager::TAB_STYLE,
         ]);
 
         $this->add_control('percentage_text_color', [
-            'label' => esc_html__('Cor do Texto da Porcentagem', 'alpha-form'),
+            'label' => esc_html__('Cor do Texto da Porcentagem', 'alpha-form-nested'),
             'type' => Controls_Manager::COLOR,
             'global' => ['default' => Global_Colors::COLOR_PRIMARY],
             'selectors' => [
@@ -148,13 +148,13 @@ class Alpha_Progress extends Widget_Base
 
         $this->add_group_control(Group_Control_Typography::get_type(), [
             'name' => 'percentage_text_typography',
-            'label' => esc_html__('Tipografia do Texto', 'alpha-form'),
+            'label' => esc_html__('Tipografia do Texto', 'alpha-form-nested'),
             'selector' => '{{WRAPPER}} .alpha-form-progress-text',
             'global' => ['default' => Global_Typography::TYPOGRAPHY_PRIMARY],
         ]);
 
         $this->add_control('bar_bg_color', [
-            'label' => esc_html__('Cor de Fundo da Barra', 'alpha-form'),
+            'label' => esc_html__('Cor de Fundo da Barra', 'alpha-form-nested'),
             'type' => Controls_Manager::COLOR,
             'global' => ['default' => Global_Colors::COLOR_SECONDARY],
             'selectors' => [
@@ -163,7 +163,7 @@ class Alpha_Progress extends Widget_Base
         ]);
 
         $this->add_control('bar_fill_color', [
-            'label' => esc_html__('Cor da Barra Preenchida', 'alpha-form'),
+            'label' => esc_html__('Cor da Barra Preenchida', 'alpha-form-nested'),
             'type' => Controls_Manager::COLOR,
             'global' => ['default' => Global_Colors::COLOR_PRIMARY],
             'selectors' => [
@@ -172,7 +172,7 @@ class Alpha_Progress extends Widget_Base
         ]);
 
         $this->add_control('bar_border_radius', [
-            'label' => esc_html__('Borda Arredondada', 'alpha-form'),
+            'label' => esc_html__('Borda Arredondada', 'alpha-form-nested'),
             'type' => Controls_Manager::SLIDER,
             'range' => [
                 'px' => [
@@ -192,7 +192,7 @@ class Alpha_Progress extends Widget_Base
 
 
         $this->add_responsive_control('bar_height', [
-            'label' => esc_html__('Altura da Barra', 'alpha-form'),
+            'label' => esc_html__('Altura da Barra', 'alpha-form-nested'),
             'type' => Controls_Manager::SLIDER,
             'size_units' => ['px', 'em', '%'],
             'default' => [
@@ -212,7 +212,7 @@ class Alpha_Progress extends Widget_Base
         ]);
 
         $this->add_control('progress_gap', [
-            'label' => esc_html__('Espaçamento', 'alpha-form'),
+            'label' => esc_html__('Espaçamento', 'alpha-form-nested'),
             'type' => Controls_Manager::SLIDER,
             'default' => [
                 'size' => 10,
@@ -238,7 +238,7 @@ class Alpha_Progress extends Widget_Base
     {
         $settings = $this->get_settings_for_display();
 
-        echo '<div class="alpha-form-progress-wrapper" data-target="' . $settings['form_target'] . '">';
+        echo '<div class="alpha-form-progress-wrapper" data-target="' . esc_attr($settings['form_target']) . '">';
         echo '<div class="alpha-form-progress-bar-bg">';
         echo '<div class="alpha-form-progress-bar-fill" style="width: 0%;"></div>';
         echo '</div>';

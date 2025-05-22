@@ -22,7 +22,7 @@ class Alpha_Prev extends Widget_Base
 
 	public function get_title()
 	{
-		return esc_html__('Botão Anterior', 'alpha-form');
+		return esc_html__('Botão Anterior', 'alpha-form-nested');
 	}
 
 	public function get_icon()
@@ -32,7 +32,7 @@ class Alpha_Prev extends Widget_Base
 
 	public function get_categories()
 	{
-		return ['alpha-form'];
+		return ['alpha-form-nested'];
 	}
 
 	public function get_keywords()
@@ -43,11 +43,11 @@ class Alpha_Prev extends Widget_Base
 	protected function register_controls()
 	{
 		$this->start_controls_section('section_content', [
-			'label' => esc_html__('Configurações', 'alpha-form'),
+			'label' => esc_html__('Configurações', 'alpha-form-nested'),
 		]);
 
 		$this->add_control('text', [
-			'label' => esc_html__('Texto do Botão', 'alpha-form'),
+			'label' => esc_html__('Texto do Botão', 'alpha-form-nested'),
 			'type' => Controls_Manager::TEXT,
 			'default' => 'Anterior',
 			'render_type' => 'template',
@@ -60,7 +60,7 @@ class Alpha_Prev extends Widget_Base
 		]);
 
 		$this->add_control('icon', [
-			'label' => esc_html__('Ícone', 'alpha-form'),
+			'label' => esc_html__('Ícone', 'alpha-form-nested'),
 			'type' => Controls_Manager::ICONS,
 			'skin' => 'inline',
 			'label_block' => false,
@@ -89,15 +89,15 @@ class Alpha_Prev extends Widget_Base
 		]);
 
 		$this->add_control('icon_position', [
-			'label' => esc_html__('Posição do Ícone', 'alpha-form'),
+			'label' => esc_html__('Posição do Ícone', 'alpha-form-nested'),
 			'type' => Controls_Manager::CHOOSE,
 			'options' => [
 				'before' => [
-					'title' => esc_html__('Antes', 'alpha-form'),
+					'title' => esc_html__('Antes', 'alpha-form-nested'),
 					'icon' => 'eicon-arrow-left',
 				],
 				'after' => [
-					'title' => esc_html__('Depois', 'alpha-form'),
+					'title' => esc_html__('Depois', 'alpha-form-nested'),
 					'icon' => 'eicon-arrow-right',
 				],
 			],
@@ -109,15 +109,15 @@ class Alpha_Prev extends Widget_Base
 		]);
 
 		$this->add_control('ajax_button_prev', [
-			'label'       => __('Atualizar lista de formulários', 'alpha-form'),
+			'label'       => __('Atualizar lista de formulários', 'alpha-form-nested'),
 			'type'        => Controls_Manager::BUTTON,
-			'text'        => __('Atualizar', 'alpha-form'),
+			'text'        => __('Atualizar', 'alpha-form-nested'),
 			'button_type' => 'success',
 			'event'       => 'alphaform:editor:load_widget_id',
 		]);
 
 		$this->add_control('form_target', [
-			'label' => esc_html__('Formulário Alvo', 'alpha-form'),
+			'label' => esc_html__('Formulário Alvo', 'alpha-form-nested'),
 			'type' => Controls_Manager::SELECT,
 			'default' => '',
 			'options' => [],
@@ -129,18 +129,18 @@ class Alpha_Prev extends Widget_Base
 
 		// seção style
 		$this->start_controls_section('section_style', [
-			'label' => esc_html__('Estilo do Botão', 'alpha-form'),
+			'label' => esc_html__('Estilo do Botão', 'alpha-form-nested'),
 			'tab' => Controls_Manager::TAB_STYLE,
 		]);
 
 		$this->start_controls_tabs('style_tabs');
 
 		$this->start_controls_tab('style_normal_tab', [
-			'label' => esc_html__('Normal', 'alpha-form'),
+			'label' => esc_html__('Normal', 'alpha-form-nested'),
 		]);
 
 		$this->add_control('text_color', [
-			'label' => esc_html__('Cor do Texto', 'alpha-form'),
+			'label' => esc_html__('Cor do Texto', 'alpha-form-nested'),
 			'type' => Controls_Manager::COLOR,
 			'global' => ['default' => Global_Colors::COLOR_PRIMARY],
 			'selectors' => [
@@ -149,7 +149,7 @@ class Alpha_Prev extends Widget_Base
 		]);
 
 		$this->add_control('bg_color', [
-			'label' => esc_html__('Cor de Fundo', 'alpha-form'),
+			'label' => esc_html__('Cor de Fundo', 'alpha-form-nested'),
 			'type' => Controls_Manager::COLOR,
 			'global' => ['default' => Global_Colors::COLOR_SECONDARY],
 			'selectors' => [
@@ -160,11 +160,11 @@ class Alpha_Prev extends Widget_Base
 		$this->end_controls_tab();
 
 		$this->start_controls_tab('style_hover_tab', [
-			'label' => esc_html__('Hover', 'alpha-form'),
+			'label' => esc_html__('Hover', 'alpha-form-nested'),
 		]);
 
 		$this->add_control('text_color_hover', [
-			'label' => esc_html__('Texto (Hover)', 'alpha-form'),
+			'label' => esc_html__('Texto (Hover)', 'alpha-form-nested'),
 			'type' => Controls_Manager::COLOR,
 			'global' => ['default' => Global_Colors::COLOR_PRIMARY],
 			'selectors' => [
@@ -173,7 +173,7 @@ class Alpha_Prev extends Widget_Base
 		]);
 
 		$this->add_control('bg_color_hover', [
-			'label' => esc_html__('Fundo (Hover)', 'alpha-form'),
+			'label' => esc_html__('Fundo (Hover)', 'alpha-form-nested'),
 			'type' => Controls_Manager::COLOR,
 			'global' => ['default' => Global_Colors::COLOR_SECONDARY],
 			'selectors' => [
@@ -196,7 +196,7 @@ class Alpha_Prev extends Widget_Base
 		]);
 
 		$this->add_responsive_control('padding', [
-			'label' => esc_html__('Padding', 'alpha-form'),
+			'label' => esc_html__('Padding', 'alpha-form-nested'),
 			'type' => Controls_Manager::DIMENSIONS,
 			'size_units' => ['px', '%', 'em'],
 			'default' => [
@@ -215,13 +215,13 @@ class Alpha_Prev extends Widget_Base
 			'heading_form_item_title_icon_btn_n',
 			[
 				'type' => Controls_Manager::HEADING,
-				'label' => esc_html__('Icon', 'alpha-form'),
+				'label' => esc_html__('Icon', 'alpha-form-nested'),
 				'separator' => 'before',
 			]
 		);
 
 		$this->add_control('icon_size', [
-			'label' => esc_html__('Tamanho do Ícone', 'alpha-form'),
+			'label' => esc_html__('Tamanho do Ícone', 'alpha-form-nested'),
 			'type' => Controls_Manager::SLIDER,
 			'default' => [
 				'size' => 8,
@@ -239,7 +239,7 @@ class Alpha_Prev extends Widget_Base
 		]);
 
 		$this->add_control('icon_spacing', [
-			'label' => esc_html__('Espaçamento entre Ícone e Texto', 'alpha-form'),
+			'label' => esc_html__('Espaçamento entre Ícone e Texto', 'alpha-form-nested'),
 			'type' => Controls_Manager::SLIDER,
 			'default' => [
 				'size' => 10,
@@ -272,7 +272,7 @@ class Alpha_Prev extends Widget_Base
 			'data-a-f-target' => esc_attr($form_target),
 		]);
 
-		echo '<button ' . $this->get_render_attribute_string('button') . '>';
+		echo '<button ' . esc_attr($this->get_render_attribute_string('button')) . '>';
 
 		// Abre o wrapper do conteúdo do botão
 		echo '<span class="alpha-form-button-inner">';

@@ -1,5 +1,5 @@
 elementorCommon.elements.$window.on('elementor/nested-element-type-loaded', function () {
-	const type = 'alpha-form';
+	const type = 'alpha-form-nested';
 
 	// Evita registrar se já existir
 	if (elementor.elementsManager.getElementTypes && elementor.elementsManager.getElementTypes(type)) {
