@@ -9,15 +9,18 @@ function alpha_form_save_step()
     global $wpdb;
     $table = $wpdb->prefix . 'alpha_form_nested_responses';
 
-    $form_id    = sanitize_text_field($_POST['form_id']);
-    $session_id = sanitize_text_field($_POST['session_id']);
-    $field_key  = sanitize_text_field($_POST['field_key']);
-    $value = json_decode(stripslashes($_POST['value']), true);
-    $last_quest = intval($_POST['last_quest'] ?? 0);
-    $post_id    = intval($_POST['post_id'] ?? 0);
-    $status     = json_decode(stripslashes($_POST['status']), true);
+    $form_id       = sanitize_text_field($_POST['form_id']);
+    $session_id    = sanitize_text_field($_POST['session_id']);
+    $field_key     = sanitize_text_field($_POST['field_key']);
+    $device_type   = sanitize_text_field($_POST['device_type']);
+    $browser_info  = sanitize_text_field($_POST['browser_info']);
+    $formName      = sanitize_text_field($_POST['formName']);
+    $value         = json_decode(stripslashes($_POST['value']), true);
+    $last_quest    = intval($_POST['last_quest'] ?? 0);
+    $post_id       = intval($_POST['post_id'] ?? 0);
+    $status        = json_decode(stripslashes($_POST['status']), true);
     $tempo_json_raw = stripslashes($_POST['tempo_json'] ?? '');
-    $tempo_data = json_decode($tempo_json_raw, true);
+    $tempo_data    = json_decode($tempo_json_raw, true);
 
     $ip      = sanitize_text_field($_POST['ip'] ?? '');
     $city    = sanitize_text_field($_POST['city'] ?? '');
@@ -45,6 +48,9 @@ function alpha_form_save_step()
         'city'           => $city,
         'region'         => $region,
         'country'        => $country,
+        'browser_info'   => $browser_info,
+        'device_type'    => $device_type,
+        'form_name'      => $formName,
         'page_view'      => intval($status['pageView'] ?? 0),
         'start_form'     => intval($status['startForm'] ?? 0),
         'complete'       => intval($status['complete'] ?? 0),

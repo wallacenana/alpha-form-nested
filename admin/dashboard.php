@@ -9,7 +9,13 @@ $status  = intval($row->status ?? 0);
 $expires = esc_html($data['expires'] ?? '');
 ?>
 
-<div class="wrap">
+<div class="alpha-topbar">
+    <p class="alpha-description">Eleve o padrão dos seus formulários com o Alpha Form Premium. </p>
+    <p class="alpha-description"><b>Tenha controle total,
+            recursos avançados e uma experiência à altura do que você entrega</b>. Ative agora mesmo sua versão PRO.</p>
+    <a href="https://alphaform.com.br/investimento" target="_blank" class="alpha-btn-cta">Seja pro 👑</a>
+</div>
+<div class="alpha-form-wrap">
     <h1>Validação da Licença Alpha Form</h1>
 
     <form method="post" id="alpha-form-license-form">
@@ -29,6 +35,54 @@ $expires = esc_html($data['expires'] ?? '');
             <?php endif; ?>
         </div>
     </form>
+    <div class="alpha-form-dashboard">
+        <h2>Overview</h2>
+        <div class="alpha-form-cards">
+            <a href="admin.php?page=alpha-form-forms" class="alpha-form-card alpha-skeleton card">
+                <div class="alpha-cima">
+                    <span class="label">Total de Formulários</span>
+                    <div class="icon"><i class="dashicons dashicons-forms"></i></div>
+                </div>
+                <h3 class="alpha-result" id="alpha-form-count">x</h3>
+                <div class="alpha-base">
+
+                    <span class="percent">Ver mais</span>
+                </div>
+            </a>
+
+            <a href="admin.php?page=alpha-form-forms" class="alpha-form-card alpha-skeleton card">
+                <div class="alpha-cima">
+                    <span class="label">Total de Respostas</span>
+                    <div class="icon"><i class="dashicons dashicons-chart-line"></i></div>
+                </div>
+                <h3 class="alpha-result" id="alpha-response-count">x</h3>
+                <div class="alpha-base">
+                    <span class="percent">Ver mais</span>
+                </div>
+            </a>
+
+            <a href="admin.php?page=alpha-form-integrations" class="alpha-form-card alpha-skeleton card">
+                <div class="alpha-cima">
+                    <span class="label">Integrações Ativas</span>
+                    <div class="icon"><i class="dashicons dashicons-share-alt2"></i></div>
+                </div>
+                <h3 class="alpha-result" id="alpha-integrations-count">x</h3>
+                <div class="alpha-base">
+
+                    <span class="percent">Ver mais</span>
+                </div>
+            </a>
+
+            <a href="#" target="_blank" class="alpha-form-card alpha-card-promo alpha-skeleton card" id="alpha-promo-card" style="display: none;">
+                <div class="alpha-promo-content">
+                    <h3 class="alpha-promo-title">Título</h3>
+                    <p class="alpha-promo-text">Texto da promoção</p>
+                    <span class="alpha-promo-cta">CTA</span>
+                </div>
+            </a>
+
+        </div>
+    </div>
 </div>
 
 

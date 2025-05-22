@@ -100,39 +100,6 @@ elementor.hooks.addAction('panel/open_editor/widget', function (panel, model) {
 	}
 });
 
-// elementor.hooks.addAction('panel/open_editor/widget', function () {
-// 	const pageModel = elementor.getPreviewView().model;
-
-// 	function traverse(element) {
-// 		if (!element) return;
-
-// 		if (element.get('elType') === 'widget' && element.get('widgetType') === 'alpha-inputs') {
-// 			if (element.attributes.settings.attributes.field_name)
-// 				console.log("Field-" + element.attributes.settings.attributes.field_name)
-// 			else
-// 				console.log("Field-" + element.get('id'));
-// 		}
-
-// 		const children = element.get('elements');
-// 		if (children && children.length) {
-// 			children.forEach(traverse);
-// 		}
-// 	}
-
-// 	pageModel.get('elements').models.forEach(traverse);
-
-// });
-
-// elementor.hooks.addAction('panel/open_editor/widget', function () {
-// 	const $select = jQuery('select[data-setting="mailchimp_list_id_custom"]');
-// 	const selectedText = $select.find('option:selected').text();
-// 	const selectedValue = $select.val();
-
-// 	console.log('Lista selecionada:', selectedText);
-// 	console.log('ID da lista:', selectedValue);
-// });
-
-
 (function ($) {
 	function alphaformLoadIntegrationFields(prefix, options = {}) {
 		const model = elementor.getPanelView()?.getCurrentPageView()?.model;
@@ -286,28 +253,3 @@ elementor.hooks.addAction('panel/open_editor/widget', function (panel, model) {
 	});
 
 })(jQuery);
-
-
-// jQuery(document).ready(function ($) {
-// 	elementor.hooks.addAction('panel/open_editor/widget', function (panel, model, view) {
-// 		var selectControl = panel.$el.find('[data-setting="mailchimp_list_id_custom"]');
-// 		// console.log(selectControl)
-// 		selectControl.on('change', function () {
-// 			var selectedValue = $(this).val();
-// 			// console.log('Selected value:', selectedValue);
-// 			// Execute sua lógica personalizada aqui
-// 		});
-// 	});
-// });
-// jQuery(document).ready(function ($) {
-// 	elementor.hooks.addAction('panel/open_editor/widget', function (panel, model, view) {
-
-// 		var firstSelectControl = panel.$el.find('[data-setting="mailchimp_list_id"]');
-// 		var secondSelectControl = panel.$el.find('[data-setting="mailchimp_list_id_custom"]');
-
-// 		firstSelectControl.on('change', function () {
-// 			var selectedValue = $(this).val();
-// 			secondSelectControl.val(selectedValue);
-// 		});
-// 	});
-// });

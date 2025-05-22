@@ -15,7 +15,6 @@ function alpha_form_handle_integration()
         wp_send_json_error(['message' => 'Dados inválidos.']);
     }
 
-    // 🔍 Se o source_type for default, buscar credenciais no banco
     if (!empty($data['source_type']) && $data['source_type'] === 'default') {
         global $wpdb;
         $table = $wpdb->prefix . 'alpha_form_nested_integrations';
@@ -28,12 +27,11 @@ function alpha_form_handle_integration()
         if ($row && !empty($row['data'])) {
             $credentials = json_decode($row['data'], true);
             if (is_array($credentials)) {
-                $data = array_merge($data, $credentials); // sobrescreve os campos certos
+                $data = array_merge($data, $credentials);
             }
         }
     }
 
-    // 📂 Caminho do arquivo da integração
     $path = __DIR__ . '/' . $integration . '.php';
 
     if (!file_exists($path)) {

@@ -564,5 +564,6 @@ class Alpha_Complete extends Widget_Base
 
 			echo '</span></button>';
 		}
+		echo '</div>'; // <-- ESTA LINHA FALTAVA
 	}
 }

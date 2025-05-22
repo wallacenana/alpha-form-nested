@@ -7,6 +7,7 @@ register_uninstall_hook(ALPHA_FORM_PATH . 'alpha-form-nested.php', 'alpha_form_u
 require_once ALPHA_FORM_PATH . 'ajax/handler-core.php';
 require_once ALPHA_FORM_PATH . 'ajax/handler-integrations.php';
 require_once ALPHA_FORM_PATH . 'ajax/alpha_form_save_progress.php';
+require_once ALPHA_FORM_PATH . 'ajax/end-point.php';
 require_once ALPHA_FORM_PATH . 'modules/widgets/actions/handle-actions.php';
 require_once ALPHA_FORM_PATH . 'modules/widgets/actions/handle-submit.php';
 
@@ -20,6 +21,28 @@ function alpha_form_uninstall()
 {
     require_once ALPHA_FORM_PATH . 'includes/db-uninstall.php';
     alpha_form_drop_response_table();
+}
+
+add_action('admin_enqueue_scripts', 'alpha_form_nested_load_admin_assets');
+function alpha_form_nested_load_admin_assets($hook)
+{
+    // Só carrega se for a página do dashboard
+    if (strpos($hook, 'alpha-form-') === false) return;
+
+    // Scripts
+    wp_enqueue_script('alpha-dashboard-js', ALPHA_FORM_URL . 'assets/js/alpha-dashboard.js', ['jquery'], '1.0', true);
+    wp_localize_script('alpha-dashboard-js', 'alphaFormVars', [
+        'ajaxurl' => admin_url('admin-ajax.php'),
+        'nonce'   => wp_create_nonce('alpha_form_nonce'),
+        'pluginUrl' => ALPHA_FORM_PATH,
+    ]);
+
+    wp_enqueue_script('chart-js', ALPHA_FORM_URL . 'assets/js/vendor/chart.js', [], '4.4.0', true);
+    wp_enqueue_script('select2-js', ALPHA_FORM_URL . 'assets/js/vendor/select2.min.js', ['jquery'], '4.0.13', true);
+
+    // Estilos
+    wp_enqueue_style('alpha-dashboard-css', ALPHA_FORM_URL . 'assets/css/alpha-dashboard.css', [], '1.0');
+    wp_enqueue_style('select2-css', ALPHA_FORM_URL . 'assets/css/select2.min.css', [], '4.0.13');
 }
 
 // Editor (painel lateral do Elementor)
@@ -64,6 +87,7 @@ add_action('elementor/editor/after_enqueue_scripts', function () {
     wp_localize_script('alpha-form-editor', 'alphaFormVars', [
         'ajaxurl' => admin_url('admin-ajax.php'),
         'nonce'   => wp_create_nonce('alpha_form_nonce'),
+        'pluginUrl' => ALPHA_FORM_PATH,
     ]);
 });
 
@@ -86,6 +110,7 @@ add_action('wp_enqueue_scripts', function () {
     wp_localize_script('alpha-form-front', 'alphaFormVars', [
         'ajaxurl' => admin_url('admin-ajax.php'),
         'nonce'   => wp_create_nonce('alpha_form_nonce'),
+        'pluginUrl' => ALPHA_FORM_PATH,
     ]);
 });
 
@@ -162,16 +187,16 @@ add_action('admin_menu', function () {
     add_submenu_page(
         'alpha-form-dashboard',
         'Respostas',
-        'Respostas',
+        null,
         'manage_options',
         'alpha-form-responses',
         'alpha_form_render_responses_page'
     );
 
     add_submenu_page(
+        'alpha-form-dashboard',
+        'Visualizar Resposta',
         null,
-        'Visualizar Resposta',
-        'Visualizar Resposta',
         'manage_options',
         'alpha-form-view-response',
         'alpha_form_render_view_response_page'
@@ -233,6 +258,7 @@ function alpha_form_enqueue_ajax_script()
     wp_localize_script('alpha-form-ajax', 'alphaFormVars', [
         'ajaxurl' => admin_url('admin-ajax.php'),
         'nonce'   => wp_create_nonce('alpha_form_nonce'),
+        'pluginUrl' => ALPHA_FORM_URL,
     ]);
 }
 add_action('admin_enqueue_scripts', 'alpha_form_enqueue_ajax_script');

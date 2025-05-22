@@ -32,6 +32,17 @@ document.addEventListener('DOMContentLoaded', () => {
 	updateShortcodeText();
 });
 
+function getDeviceType() {
+	const ua = navigator.userAgent;
+	if (/tablet|ipad|playbook|silk/i.test(ua)) return 'tablet';
+	if (/mobile|android|touch|webos|hpwos/i.test(ua)) return 'mobile';
+	return 'desktop';
+}
+
+function getBrowserInfo() {
+	return navigator.userAgent;
+}
+
 function initShortcodeTextBindings(scope = document.body) {
 	const treeWalker = document.createTreeWalker(scope, NodeFilter.SHOW_TEXT, {
 		acceptNode: (node) => {
@@ -470,6 +481,9 @@ function saveAlphaStepToDB(formId, fieldKey, value, status = {}, stepIndex = 0, 
 		status.startForm = 1;
 	}
 
+	const el = document.querySelector(`form[data-alpha-widget-id='${formId}']`);
+	const formName = el ? el.getAttribute('data-form-name') : '';
+
 	saveAlphaStep(formId, fieldKey, value, stepIndex, JSON.parse(tempoJson || '{}'));
 
 	// Atualiza status
@@ -538,6 +552,9 @@ function saveAlphaStepToDB(formId, fieldKey, value, status = {}, stepIndex = 0, 
 				session_id: sessionId,
 				field_key: fieldKey,
 				last_quest: stepIndex,
+				device_type: getDeviceType(),
+				browser_info: getBrowserInfo(),
+				formName: formName,
 				value: typeof value === 'object' ? JSON.stringify(value) : value,
 				status: JSON.stringify({
 					pageView: storage[formId].pageView,
@@ -1051,6 +1068,27 @@ async function initAlphaFormIntegrations() {
 	}
 }
 
+function getAlphaFormData(form) {
+	const inputs = form.querySelectorAll('input, select, textarea');
+	const data = {};
+
+	inputs.forEach(input => {
+		const key = input.name || input.id || input.dataset.customId;
+		if (!key || input.type === 'hidden') return;
+
+		if (input.type === 'checkbox') {
+			if (!data[key]) data[key] = [];
+			if (input.checked) data[key].push(input.value);
+		} else if (input.type === 'radio') {
+			if (input.checked) data[key] = input.value;
+		} else {
+			data[key] = input.value;
+		}
+	});
+
+	return data;
+}
+
 async function handleAlphaFormSubmit(form) {
 	toggleAlphaOverlay(true);
 
@@ -1074,7 +1112,8 @@ async function handleAlphaFormSubmit(form) {
 	for (const [name, config] of Object.entries(integrations)) {
 		if (!config || Object.keys(config).length === 0) continue;
 
-		// Mapeia os campos se houver 'fields' definidos
+		const allData = getAlphaFormData(form);
+
 		if (config.fields && typeof config.fields === 'object') {
 			const mappedFields = {};
 			for (const [finalKey, inputId] of Object.entries(config.fields)) {
@@ -1083,12 +1122,14 @@ async function handleAlphaFormSubmit(form) {
 					mappedFields[finalKey] = input.value;
 				}
 			}
-			// Substitui os campos mapeados
 			config.data = mappedFields;
 			delete config.fields;
+		} else if (name === 'webhook') {
+			config.payload = allData;
+		} else if (name === 'email') {
+			config.data = allData;
 		}
 
-		// Envia para o PHP central
 		const response = await fetch(alphaFormVars.ajaxurl, {
 			method: 'POST',
 			headers: { 'Content-Type': 'application/x-www-form-urlencoded' },

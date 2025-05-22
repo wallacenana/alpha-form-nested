@@ -2,8 +2,6 @@
 // Webhook
 function alpha_integration_webhook($form_id, $data)
 {
-    error_log('[WEBHOOK] Dados recebidos: ' . print_r($data, true));
-
     if (empty($data['url']) || !filter_var($data['url'], FILTER_VALIDATE_URL)) {
         error_log('[WEBHOOK] URL ausente ou inválida.');
         return false;

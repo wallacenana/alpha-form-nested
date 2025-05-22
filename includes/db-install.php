@@ -17,6 +17,7 @@ function alpha_form_create_response_table()
         id BIGINT AUTO_INCREMENT PRIMARY KEY,
         post_id BIGINT,
         form_id VARCHAR(32),
+        form_name VARCHAR(32),
         session_id VARCHAR(64),
         ip_address VARCHAR(45),
         city VARCHAR(100),
@@ -28,12 +29,12 @@ function alpha_form_create_response_table()
         last_quest VARCHAR(100),
         tempo_json TEXT,
         respostas_json LONGTEXT,
+        device_type VARCHAR(20),
+        browser_info VARCHAR(255),
         created_at DATETIME,
         updated_at DATETIME,
         UNIQUE KEY unique_session (session_id, form_id)
-    )
-$charset_collate;
-    ";
+    ) $charset_collate;";
 
     $sql2 = "
         CREATE TABLE $integrations_table (

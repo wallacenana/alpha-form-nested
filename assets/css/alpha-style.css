@@ -40,6 +40,7 @@ label.alpha-letter-active::before {
     font-size: 16px;
     gap: 15px;
     border-radius: 4px;
+    box-sizing: border-box;
 }
 
 
@@ -191,4 +192,27 @@ label.alpha-letter-active::before {
 .alpha-form-overlay-gif {
     max-width: 100px;
     max-height: 100px;
+}
+
+.alpha-inputs-options {
+    display: grid;
+    gap: 12px;
+    width: 100%;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+}
+
+.alpha-options-columns-1 .alpha-inputs-options {
+    grid-template-columns: repeat(1, minmax(0, 1fr));
+}
+
+.alpha-options-columns-2 .alpha-inputs-options {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.alpha-options-columns-3 .alpha-inputs-options {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.alpha-options-columns-4 .alpha-inputs-options {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
 }

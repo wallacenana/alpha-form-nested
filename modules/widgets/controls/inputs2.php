@@ -1138,19 +1138,25 @@ class Alpha_Inputs extends Widget_Base
 			]
 		);
 
-		$this->add_control('options_columns', [
-			'label' => esc_html__('Itens por linha', 'alpha-form'),
-			'type' => Controls_Manager::SELECT,
-			'default' => '2',
+		$this->add_control('options_direction', [
+			'label' => esc_html__('Direção', 'alpha-form'),
+			'type' => Controls_Manager::CHOOSE,
 			'options' => [
-				'1' => '1 por linha',
-				'2' => '2 por linha',
-				'3' => '3 por linha',
-				'4' => '4 por linha',
+				'row' => [
+					'title' => esc_html__('Horizontal', 'alpha-form'),
+					'icon' => 'eicon-arrow-right',
+				],
+				'column' => [
+					'title' => esc_html__('Vertical', 'alpha-form'),
+					'icon' => 'eicon-arrow-down',
+				],
 			],
-			'prefix_class' => 'alpha-options-columns-',
+			'default' => 'column',
+			'toggle' => false,
+			'selectors' => [
+				'{{WRAPPER}} .alpha-inputs-options' => 'width: 100%; display: flex; flex-wrap: wrap; flex-direction: {{VALUE}};'
+			],
 		]);
-
 
 		$this->add_responsive_control('options_gap', [
 			'label' => esc_html__('Espaçamento entre opções', 'alpha-form'),
@@ -1182,38 +1188,6 @@ class Alpha_Inputs extends Widget_Base
 							'weight' => 400,
 						],
 					],
-				],
-			]
-		);
-
-		$this->add_responsive_control(
-			'option_image_size',
-			[
-				'label' => __('Tamanho da imagem', 'alpha-form'),
-				'type' => Controls_Manager::SLIDER,
-				'size_units' => ['px', '%', 'em'],
-				'separator' => 'before',
-				'range' => [
-					'px' => [
-						'min' => 10,
-						'max' => 500,
-					],
-					'%' => [
-						'min' => 1,
-						'max' => 100,
-					],
-					'em' => [
-						'min' => 0.5,
-						'max' => 10,
-						'step' => 0.1,
-					],
-				],
-				'default' => [
-					'size' => 64,
-					'unit' => 'px',
-				],
-				'selectors' => [
-					'{{WRAPPER}} .alpha-option-icon' => 'max-width: {{SIZE}}{{UNIT}};',
 				],
 			]
 		);
@@ -1355,7 +1329,6 @@ class Alpha_Inputs extends Widget_Base
 				'selector' => '{{WRAPPER}} .alpha-option:hover',
 			]
 		);
-
 		$this->end_controls_tab();
 		$this->start_controls_tab(
 			'tab_option_checkec',

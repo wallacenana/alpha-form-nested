@@ -122,7 +122,7 @@ class Alpha_Form_Minimal extends Widget_Nested_Base
         $this->add_control(
             'form_name_alpha',
             [
-                'label' => __('Nome do Formulário', 'alpha-form'),
+                'label' => esc_html__('Nome do Formulário', 'alpha-form'),
                 'type' => Controls_Manager::TEXT,
                 'placeholder' => 'Alpha Form',
                 'default' => 'Alpha Form',
@@ -282,7 +282,7 @@ class Alpha_Form_Minimal extends Widget_Nested_Base
         $this->start_controls_section(
             'section_form_view_alpha',
             [
-                'label' => __('Vizualizações nos formulários', 'alpha-form-premium'),
+                'label' => esc_html__('Vizualizações nos formulários', 'alpha-form-premium'),
                 'tab' => Controls_Manager::TAB_CONTENT,
             ]
         );
@@ -291,10 +291,10 @@ class Alpha_Form_Minimal extends Widget_Nested_Base
         $this->add_control(
             'enable_geolocation_alpha',
             [
-                'label' => __('Ativar geolocalização', 'alpha-form-premium'),
+                'label' => esc_html__('Ativar geolocalização', 'alpha-form-premium'),
                 'type' => Controls_Manager::SWITCHER,
-                'label_on' => __('Sim', 'alpha-form-premium'),
-                'label_off' => __('Não', 'alpha-form-premium'),
+                'label_on' => esc_html__('Sim', 'alpha-form-premium'),
+                'label_off' => esc_html__('Não', 'alpha-form-premium'),
                 'return_value' => 'yes',
                 'default' => 'yes',
                 'description' => 'Pega dados de geolocalização (não é uma informação totalmente precisa, mas dá uma região próxima)',
@@ -305,10 +305,10 @@ class Alpha_Form_Minimal extends Widget_Nested_Base
         $this->add_control(
             'enable_msg_to_exit_alpha',
             [
-                'label' => __('Ativar Mensagem ao sair', 'alpha-form-premium'),
+                'label' => esc_html__('Ativar Mensagem ao sair', 'alpha-form-premium'),
                 'type' => Controls_Manager::SWITCHER,
-                'label_on' => __('Sim', 'alpha-form-premium'),
-                'label_off' => __('Não', 'alpha-form-premium'),
+                'label_on' => esc_html__('Sim', 'alpha-form-premium'),
+                'label_off' => esc_html__('Não', 'alpha-form-premium'),
                 'return_value' => 'yes',
                 'default' => 'yes',
                 'description' => 'Quando o usuário tentar sair da página que iniciou o preenchimento, exibe uma mensagem de confirmação de saída',
@@ -319,10 +319,10 @@ class Alpha_Form_Minimal extends Widget_Nested_Base
         $this->add_control(
             'enable_retornar_dados_alpha',
             [
-                'label' => __('Retornar dados ao sair', 'alpha-form-premium'),
+                'label' => esc_html__('Retornar dados ao sair', 'alpha-form-premium'),
                 'type' => Controls_Manager::SWITCHER,
-                'label_on' => __('Sim', 'alpha-form-premium'),
-                'label_off' => __('Não', 'alpha-form-premium'),
+                'label_on' => esc_html__('Sim', 'alpha-form-premium'),
+                'label_off' => esc_html__('Não', 'alpha-form-premium'),
                 'return_value' => 'yes',
                 'default' => 'yes',
                 'description' => 'Quando o usuário retornar a página, continuara o preenchimento de onde parou',
@@ -332,10 +332,10 @@ class Alpha_Form_Minimal extends Widget_Nested_Base
         $this->add_control(
             'show_required_mark_alpha',
             [
-                'label' => __('Marcar obrigatórios', 'alpha-form'),
+                'label' => esc_html__('Marcar obrigatórios', 'alpha-form'),
                 'type' => Controls_Manager::SWITCHER,
-                'label_on' => __('Sim', 'alpha-form'),
-                'label_off' => __('Não', 'alpha-form'),
+                'label_on' => esc_html__('Sim', 'alpha-form'),
+                'label_off' => esc_html__('Não', 'alpha-form'),
                 'return_value' => 'yes',
                 'default' => 'yes',
                 'description' => 'Insere um asterisco nas perguntas obrigatórias',
@@ -378,7 +378,7 @@ class Alpha_Form_Minimal extends Widget_Nested_Base
             'overlay_loader_image',
             [
                 'label' => esc_html__('GIF de carregamento', 'alpha-form'),
-                'type' => \Elementor\Controls_Manager::MEDIA,
+                'type' => Controls_Manager::MEDIA,
                 'default' => [
                     'url' => \Elementor\Utils::get_placeholder_image_src(),
                 ],
@@ -396,7 +396,7 @@ class Alpha_Form_Minimal extends Widget_Nested_Base
         $this->start_controls_section(
             'section_post_submit_alpha',
             [
-                'label' => __('Ações após envio', 'alpha-form'),
+                'label' => esc_html__('Ações após envio', 'alpha-form'),
                 'tab' => Controls_Manager::TAB_CONTENT,
             ]
         );
@@ -404,7 +404,7 @@ class Alpha_Form_Minimal extends Widget_Nested_Base
         $this->add_control(
             'post_submit_actions_alpha',
             [
-                'label' => __('Ações após envio', 'alpha-form'),
+                'label' => esc_html__('Ações após envio', 'alpha-form'),
                 'type' => Controls_Manager::SELECT2,
                 'multiple' => true,
                 'label_block' => true,
@@ -419,6 +419,7 @@ class Alpha_Form_Minimal extends Widget_Nested_Base
                     'clicksend'       => 'ClickSend',
                     'convertkit'      => 'ConvertKit',
                     'mailerlite'      => 'MailerLite',
+                    'email'           => 'Enviar email',
                 ],
 
                 'default' => ['collect'],
@@ -432,7 +433,7 @@ class Alpha_Form_Minimal extends Widget_Nested_Base
         $this->start_controls_section(
             'section_redirect_alpha',
             [
-                'label' => __('[Ação] Redirecionamento', 'alpha-form'),
+                'label' => esc_html__('[Ação] Redirecionamento', 'alpha-form'),
                 'condition' => [
                     'post_submit_actions_alpha' => 'redirect',
                 ],
@@ -443,7 +444,7 @@ class Alpha_Form_Minimal extends Widget_Nested_Base
         $this->add_control(
             'redirect_url_alpha',
             [
-                'label' => __('URL de redirecionamento', 'alpha-form'),
+                'label' => esc_html__('URL de redirecionamento', 'alpha-form'),
                 'type' => Controls_Manager::TEXT,
                 'placeholder' => 'https://seusite.com/obrigado',
                 'description' => 'Você pode usar shortcodes como [field-nome] na URL.',
@@ -457,7 +458,7 @@ class Alpha_Form_Minimal extends Widget_Nested_Base
         $this->start_controls_section(
             'section_webhook_alpha',
             [
-                'label' => __('[Ação] Webhook', 'alpha-form'),
+                'label' => esc_html__('[Ação] Webhook', 'alpha-form'),
                 'condition' => [
                     'post_submit_actions_alpha' => 'webhook',
                 ],
@@ -468,7 +469,7 @@ class Alpha_Form_Minimal extends Widget_Nested_Base
         $this->add_control(
             'webhook_url',
             [
-                'label' => __('URL do Webhook', 'alpha-form'),
+                'label' => esc_html__('URL do Webhook', 'alpha-form'),
                 'type' => Controls_Manager::TEXT,
                 'placeholder' => 'https://api.exemplo.com/webhook',
                 'ai' => [
@@ -480,11 +481,53 @@ class Alpha_Form_Minimal extends Widget_Nested_Base
 
         $this->end_controls_section();
 
+
+        $this->start_controls_section(
+            'section_email_alpha',
+            [
+                'label' => __('[Ação] Enviar por Email', 'alpha-form'),
+                'condition' => [
+                    'post_submit_actions_alpha' => 'email',
+                ],
+            ]
+        );
+
+        // Tipo de envio
+        $this->add_control('email_to', [
+            'label' => __('Destino', 'alpha-form'),
+            'type' => Controls_Manager::SELECT,
+            'default' => 'default',
+            'options' => [
+                'default' => 'Email do administrador',
+                'custom'  => 'Personalizado',
+            ],
+        ]);
+
+        // Campo para emails personalizados
+        $this->add_control('custom_emails', [
+            'label' => __('Emails', 'alpha-form'),
+            'type' => Controls_Manager::TEXT,
+            'placeholder' => 'exemplo@email.com, outro@email.com',
+            'description' => 'Separe múltiplos emails com vírgula',
+            'condition' => [
+                'email_to' => 'custom',
+            ],
+        ]);
+
+        // Assunto do email
+        $this->add_control('email_subject', [
+            'label' => __('Assunto', 'alpha-form'),
+            'type' => Controls_Manager::TEXT,
+            'default' => 'Nova submissão recebida',
+        ]);
+        $this->end_controls_section();
+
+
         // sessão mailchimp
         $this->start_controls_section(
             'section_mailchimp',
             [
-                'label' => __('[Ação] Mailchimp', 'alpha-form'),
+                'label' => esc_html__('[Ação] Mailchimp', 'alpha-form'),
                 'condition' => [
                     'post_submit_actions_alpha' => 'mailchimp',
                 ],
@@ -492,10 +535,10 @@ class Alpha_Form_Minimal extends Widget_Nested_Base
         );
 
         $this->add_control('mailchimp_load_lists', [
-            'label' => __('Receber dados', 'alpha-form-premium'),
+            'label' => esc_html__('Receber dados', 'alpha-form-premium'),
             'type' => Controls_Manager::BUTTON,
             'button_type' => 'success',
-            'text' => __('Receber', 'alpha-form-premium'),
+            'text' => esc_html__('Receber', 'alpha-form-premium'),
             'event' => 'alphaform:editor:load_data_mailchimp',
             'description' => 'Clique para popular os campos abaixo',
         ]);
@@ -566,7 +609,7 @@ class Alpha_Form_Minimal extends Widget_Nested_Base
         $this->start_controls_section(
             'section_active',
             [
-                'label' => __('[Ação] ActiveCampaign', 'alpha-form'),
+                'label' => esc_html__('[Ação] ActiveCampaign', 'alpha-form'),
                 'condition' => [
                     'post_submit_actions_alpha' => 'active-campaign',
                 ],
@@ -574,10 +617,10 @@ class Alpha_Form_Minimal extends Widget_Nested_Base
         );
 
         $this->add_control('active-campaign_load_lists', [
-            'label' => __('Receber dados', 'alpha-form-premium'),
+            'label' => esc_html__('Receber dados', 'alpha-form-premium'),
             'type' => Controls_Manager::BUTTON,
             'button_type' => 'success',
-            'text' => __('Receber', 'alpha-form-premium'),
+            'text' => esc_html__('Receber', 'alpha-form-premium'),
             'event' => 'alphaform:editor:load_data_active-campaign',
             'description' => 'Clique para popular os campos abaixo',
         ]);
@@ -647,7 +690,7 @@ class Alpha_Form_Minimal extends Widget_Nested_Base
         $this->start_controls_section(
             'section_getresponse',
             [
-                'label' => __('[Ação] GetResponse', 'alpha-form'),
+                'label' => esc_html__('[Ação] GetResponse', 'alpha-form'),
                 'condition' => [
                     'post_submit_actions_alpha' => 'getresponse',
                 ],
@@ -655,10 +698,10 @@ class Alpha_Form_Minimal extends Widget_Nested_Base
         );
 
         $this->add_control('getresponse_load_lists', [
-            'label' => __('Receber dados', 'alpha-form-premium'),
+            'label' => esc_html__('Receber dados', 'alpha-form-premium'),
             'type' => Controls_Manager::BUTTON,
             'button_type' => 'success',
-            'text' => __('Receber', 'alpha-form-premium'),
+            'text' => esc_html__('Receber', 'alpha-form-premium'),
             'event' => 'alphaform:editor:load_data_getresponse',
             'description' => 'Clique para popular os campos abaixo',
         ]);
@@ -714,7 +757,7 @@ class Alpha_Form_Minimal extends Widget_Nested_Base
         $this->start_controls_section(
             'section_convertkit',
             [
-                'label' => __('[Ação] Convertkit', 'alpha-form'),
+                'label' => esc_html__('[Ação] Convertkit', 'alpha-form'),
                 'condition' => [
                     'post_submit_actions_alpha' => 'convertkit',
                 ],
@@ -722,10 +765,10 @@ class Alpha_Form_Minimal extends Widget_Nested_Base
         );
 
         $this->add_control('convertkit_load_lists', [
-            'label' => __('Receber dados', 'alpha-form-premium'),
+            'label' => esc_html__('Receber dados', 'alpha-form-premium'),
             'type' => Controls_Manager::BUTTON,
             'button_type' => 'success',
-            'text' => __('Receber', 'alpha-form-premium'),
+            'text' => esc_html__('Receber', 'alpha-form-premium'),
             'event' => 'alphaform:editor:load_data_convertkit',
             'description' => 'Clique para popular os campos abaixo',
         ]);
@@ -781,7 +824,7 @@ class Alpha_Form_Minimal extends Widget_Nested_Base
         $this->start_controls_section(
             'section_mailerlite',
             [
-                'label' => __('[Ação] MailerLite', 'alpha-form'),
+                'label' => esc_html__('[Ação] MailerLite', 'alpha-form'),
                 'condition' => [
                     'post_submit_actions_alpha' => 'mailerlite',
                 ],
@@ -789,10 +832,10 @@ class Alpha_Form_Minimal extends Widget_Nested_Base
         );
 
         $this->add_control('mailerlite_load_lists', [
-            'label' => __('Receber dados', 'alpha-form-premium'),
+            'label' => esc_html__('Receber dados', 'alpha-form-premium'),
             'type' => Controls_Manager::BUTTON,
             'button_type' => 'success',
-            'text' => __('Receber', 'alpha-form-premium'),
+            'text' => esc_html__('Receber', 'alpha-form-premium'),
             'event' => 'alphaform:editor:load_data_mailerlite',
             'description' => 'Clique para popular os campos abaixo',
         ]);
@@ -848,7 +891,7 @@ class Alpha_Form_Minimal extends Widget_Nested_Base
         $this->start_controls_section(
             'section_drip',
             [
-                'label' => __('[Ação] Drip', 'alpha-form'),
+                'label' => esc_html__('[Ação] Drip', 'alpha-form'),
                 'condition' => [
                     'post_submit_actions_alpha' => 'drip',
                 ],
@@ -856,10 +899,10 @@ class Alpha_Form_Minimal extends Widget_Nested_Base
         );
 
         $this->add_control('drip_load_lists', [
-            'label' => __('Receber dados', 'alpha-form-premium'),
+            'label' => esc_html__('Receber dados', 'alpha-form-premium'),
             'type' => Controls_Manager::BUTTON,
             'button_type' => 'success',
-            'text' => __('Receber', 'alpha-form-premium'),
+            'text' => esc_html__('Receber', 'alpha-form-premium'),
             'event' => 'alphaform:editor:load_data_drip',
             'description' => 'Clique para popular os campos abaixo',
         ]);
@@ -915,7 +958,7 @@ class Alpha_Form_Minimal extends Widget_Nested_Base
         $this->start_controls_section(
             'section_clicksend',
             [
-                'label' => __('[Ação] ClickSend', 'alpha-form'),
+                'label' => esc_html__('[Ação] ClickSend', 'alpha-form'),
                 'condition' => [
                     'post_submit_actions_alpha' => 'clicksend',
                 ],
@@ -923,10 +966,10 @@ class Alpha_Form_Minimal extends Widget_Nested_Base
         );
 
         $this->add_control('clicksend_load_lists', [
-            'label' => __('Receber dados', 'alpha-form-premium'),
+            'label' => esc_html__('Receber dados', 'alpha-form-premium'),
             'type' => Controls_Manager::BUTTON,
             'button_type' => 'success',
-            'text' => __('Receber', 'alpha-form-premium'),
+            'text' => esc_html__('Receber', 'alpha-form-premium'),
             'event' => 'alphaform:editor:load_data_clicksend',
             'description' => 'Clique para popular os campos abaixo',
         ]);
@@ -1142,7 +1185,7 @@ class Alpha_Form_Minimal extends Widget_Nested_Base
             'overlay_image_size',
             [
                 'label' => esc_html__('Tamanho do GIF', 'alpha-form'),
-                'type' => \Elementor\Controls_Manager::SLIDER,
+                'type' => Controls_Manager::SLIDER,
                 'size_units' => ['px'],
                 'range' => [
                     'px' => [
@@ -1317,13 +1360,62 @@ class Alpha_Form_Minimal extends Widget_Nested_Base
         $enable_msg_to_exit = $settings['enable_msg_to_exit_alpha'] ? 'data-exit-block' : '';
         $enable_retornar_dados = $settings['enable_retornar_dados_alpha'] ? 'data-return' : '';
         $show_required_mark = 'data-show-required=' . $settings["show_required_mark_alpha"] . '' ?? '';
-        $form_name = $settings['form_name_alpha'] ?? 'Alpha Form';
         $id_int = substr($this->get_id_int(), 0, 3);
         $items_title_html = '';
         $this->add_render_attribute('alpha-form', 'class', 'alpha-f-n');
         $this->add_render_attribute('alpha-form', 'aria-label', 'Alpha Form. Open links with Enter or Space, close with Escape, and navigate with Arrow Keys');
         $default_state = $settings['default_state_alpha'] ?? 'expanded';
         $form_id = $this->get_id();
+        $form_name = $settings['form_name_alpha'] ?? $form_id;
+
+        echo '<form class="alpha-form" ' . esc_attr($enable_geolocation) . ' ' . esc_attr($enable_msg_to_exit) . ' ' . esc_attr($enable_retornar_dados) . ' data-alpha-widget-id="' . esc_attr($form_id) . '" data-form-name="' . esc_attr($form_name) . '" ' . esc_attr($show_required_mark) . '>';
+        foreach ($items as $index => $item) {
+            $form_count = $index + 1;
+            $item_setting_key = $this->get_repeater_setting_key('item_title', 'items', $index);
+            $item_summary_key = $this->get_repeater_setting_key('item_summary', 'items', $index);
+            $item_classes = ['alpha-f-n-item'];
+            $item_id = empty($item['element_css_id_alpha']) ? 'alpha-f-n-item-' . $id_int . $index : $item['element_css_id_alpha'];
+            $is_open = 'expanded' === $default_state && 0 === $index ? 'open' : '';
+            $aria_expanded = 'expanded' === $default_state && 0 === $index;
+            $step_class  = 'alpha-form-step' . ($index === 0 ? ' active' : '');
+
+            $this->add_render_attribute($item_setting_key, [
+                'id' => $item_id,
+                'class' => $item_classes,
+            ]);
+
+            $this->add_render_attribute($item_summary_key, [
+                'class' => ['alpha-f-n-item-title'],
+                'data-form-index' => $form_count,
+                'tabindex' => 0 === $index ? 0 : -1,
+                'aria-expanded' => $aria_expanded ? 'true' : 'false',
+                'aria-controls' => $item_id,
+            ]);
+
+            $title_render_attributes = $this->get_render_attribute_string($item_setting_key);
+            $title_render_attributes = $title_render_attributes . ' ' . $is_open;
+
+            // items content.
+            ob_start();
+            $this->print_child($index, $item_id);
+            $item_content = ob_get_clean();
+
+            ob_start();
+?>
+            <div class="alpha-form-field <?php echo esc_attr($step_class) ?>">
+                <?php echo $item_content; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped 
+                ?>
+            </div>
+        <?php
+            $items_title_html .= ob_get_clean();
+        }
+
+        ?>
+        <div <?php $this->print_render_attribute_string('alpha-form'); ?>>
+            <?php echo $items_title_html; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped 
+            ?>
+        </div>
+        <?php
 
         $fields_mc  = ["email_address", "FNAME", "LNAME", "PHONE", "BIRTHDAY", "ADDRESS", "COMPANY"];
         $fields_ac  = ["email", "first_name", "last_name", "phone"];
@@ -1388,56 +1480,22 @@ class Alpha_Form_Minimal extends Widget_Nested_Base
                 'list_id' => $this->alpha_get_integration_id($settings, 'clicksend'),
                 'fields'  => $this->alpha_get_mapped_fields($settings, 'cs', $fields_cs),
             ],
+            'webhook' => [
+                'url'      => $settings['webhook_url'],
+            ]
         ];
-
-        echo '<form class="alpha-form" ' . esc_attr($enable_geolocation) . ' ' . esc_attr($enable_msg_to_exit) . ' ' . esc_attr($enable_retornar_dados) . ' data-alpha-widget-id="' . esc_attr($form_id) . '" data-form-name="' . esc_attr($form_name) . '" ' . esc_attr($show_required_mark) . '>';
-        foreach ($items as $index => $item) {
-            $form_count = $index + 1;
-            $item_setting_key = $this->get_repeater_setting_key('item_title', 'items', $index);
-            $item_summary_key = $this->get_repeater_setting_key('item_summary', 'items', $index);
-            $item_classes = ['alpha-f-n-item'];
-            $item_id = empty($item['element_css_id_alpha']) ? 'alpha-f-n-item-' . $id_int . $index : $item['element_css_id_alpha'];
-            $is_open = 'expanded' === $default_state && 0 === $index ? 'open' : '';
-            $aria_expanded = 'expanded' === $default_state && 0 === $index;
-            $step_class  = 'alpha-form-step' . ($index === 0 ? ' active' : '');
-
-            $this->add_render_attribute($item_setting_key, [
-                'id' => $item_id,
-                'class' => $item_classes,
-            ]);
-
-            $this->add_render_attribute($item_summary_key, [
-                'class' => ['alpha-f-n-item-title'],
-                'data-form-index' => $form_count,
-                'tabindex' => 0 === $index ? 0 : -1,
-                'aria-expanded' => $aria_expanded ? 'true' : 'false',
-                'aria-controls' => $item_id,
-            ]);
-
-            $title_render_attributes = $this->get_render_attribute_string($item_setting_key);
-            $title_render_attributes = $title_render_attributes . ' ' . $is_open;
-
-            // items content.
-            ob_start();
-            $this->print_child($index, $item_id);
-            $item_content = ob_get_clean();
-
-            ob_start();
-?>
-            <div class="alpha-form-field <?php echo esc_attr($step_class) ?>">
-                <?php echo $item_content; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped 
-                ?>
-            </div>
-        <?php
-            $items_title_html .= ob_get_clean();
+        $email = [];
+        if (in_array('email', $settings['post_submit_actions_alpha'] ?? [])) {
+            $email = [
+                'email' => [
+                    'to'      => $settings['email_to'] === 'manual' ? $settings['custom_emails'] : get_option('admin_email'),
+                    'subject' => $settings['email_subject'] ?? 'Nova resposta de formulário',
+                ]
+            ];
         }
 
-        ?>
-        <div <?php $this->print_render_attribute_string('alpha-form'); ?>>
-            <?php echo $items_title_html; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped 
-            ?>
-        </div>
-        <?php
+        // Mescla
+        $actions_data = array_merge($actions_data, $email);
 
         $actions_data = array_filter($actions_data, function ($v) {
             return !empty(array_filter((array) $v));
