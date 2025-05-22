@@ -8,7 +8,7 @@ function alpha_handle_validate_integration()
 {
     check_ajax_referer('alpha_form_nonce', 'nonce');
 
-    $type = sanitize_text_field($_POST['integration'] ?? '');
+    $type = isset($_POST['integration']) ? sanitize_text_field(wp_unslash($_POST['integration'])) : '';
     define('ALPHA_INTEGRATION_MODE', 'validate');
 
     $path = ALPHA_FORM_PATH . 'ajax/integration/' . $type . '.php';
@@ -24,7 +24,7 @@ function alpha_handle_save_integration()
 {
     check_ajax_referer('alpha_form_nonce', 'nonce');
 
-    $type = sanitize_text_field($_POST['integration'] ?? '');
+    $type = isset($_POST['integration']) ? sanitize_text_field(wp_unslash($_POST['integration'])) : '';
     define('ALPHA_INTEGRATION_MODE', 'save');
 
     switch ($type) {

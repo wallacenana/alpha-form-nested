@@ -8,8 +8,13 @@ function alpha_action_mailerlite($mode)
     }
 
     global $wpdb;
-    $table = $wpdb->prefix . 'alpha_form_nested_integrations';
-    $row = $wpdb->get_row("SELECT * FROM $table WHERE name = 'mailerlite' LIMIT 1");
+    $table = esc_sql($wpdb->prefix . 'alpha_form_nested_integrations');
+
+    // phpcs:disable WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+    $row = $wpdb->get_row(
+        $wpdb->prepare("SELECT * FROM {$table} WHERE name = %s LIMIT 1", 'mailerlite')
+    );
+    // phpcs:enable WordPress.DB.PreparedSQL.InterpolatedNotPrepared
 
     if (!$row || !$row->status) {
         wp_send_json_error(['message' => 'MailerLite não está integrado.']);
@@ -48,10 +53,7 @@ function alpha_action_mailerlite($mode)
 
 function alpha_integration_mailerlite($form_id, $data)
 {
-    error_log('[MAILERLITE] Dados recebidos: ' . print_r($data, true));
-
     if (empty($data['api_key']) || empty($data['group_id']) || empty($data['data']['email'])) {
-        error_log('[MAILERLITE] Campos obrigatórios ausentes.');
         return false;
     }
 
@@ -70,7 +72,6 @@ function alpha_integration_mailerlite($form_id, $data)
     ]);
 
     if (is_wp_error($response)) {
-        error_log('[MAILERLITE] Erro: ' . $response->get_error_message());
         return false;
     }
 

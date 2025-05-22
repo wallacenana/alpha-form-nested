@@ -4,20 +4,17 @@ function alpha_action_active_campaign($mode)
 {
     if ($mode === 'fetch_lists') {
         global $wpdb;
-        $table = $wpdb->prefix . 'alpha_form_nested_integrations';
-        $row = $wpdb->get_row("SELECT * FROM $table WHERE name = 'active-campaign' LIMIT 1");
+        $table = esc_sql($wpdb->prefix . 'alpha_form_nested_integrations');
 
-        if (!$row || !$row->status) {
-            wp_send_json_error(['message' => 'ActiveCampaign não está integrado.']);
-        }
+        // phpcs:disable WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+        $row = $wpdb->get_row(
+            $wpdb->prepare("SELECT * FROM {$table} WHERE name = %s LIMIT 1", 'active-campaign')
+        );
+        // phpcs:enable WordPress.DB.PreparedSQL.InterpolatedNotPrepared
 
         $data = json_decode($row->data ?? '{}', true);
         $key = $data['api_key'] ?? '';
         $url = rtrim($data['api_url'] ?? '', '/');
-
-        if (!$key || !$url) {
-            wp_send_json_error(['message' => 'Credenciais inválidas.']);
-        }
 
         $endpoint = "{$url}/api/3/lists";
         $response = wp_remote_get($endpoint, [
@@ -25,10 +22,6 @@ function alpha_action_active_campaign($mode)
                 'Api-Token' => $key
             ]
         ]);
-
-        if (is_wp_error($response)) {
-            wp_send_json_error(['message' => 'Erro ao conectar à API.']);
-        }
 
         $body = json_decode(wp_remote_retrieve_body($response), true);
         $lists = [];
@@ -45,7 +38,6 @@ function alpha_action_active_campaign($mode)
 function alpha_integration_active_campaign($form_id, $data)
 {
     if (empty($data['api_key']) || empty($data['api_url']) || empty($data['list_id']) || empty($data['data'])) {
-        error_log('[ACTIVE CAMPAIGN] Dados incompletos');
         return false;
     }
 
@@ -71,15 +63,11 @@ function alpha_integration_active_campaign($form_id, $data)
     ]);
 
     if (is_wp_error($response)) {
-        error_log('[ACTIVE CAMPAIGN] Erro: ' . $response->get_error_message());
         return false;
     }
 
     $code = wp_remote_retrieve_response_code($response);
     $body = wp_remote_retrieve_body($response);
-
-    error_log('[ACTIVE CAMPAIGN] Status: ' . $code);
-    error_log('[ACTIVE CAMPAIGN] Body: ' . $body);
 
     return $code === 201 || $code === 200;
 }

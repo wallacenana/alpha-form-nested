@@ -2,9 +2,27 @@
 if (!defined('ABSPATH')) exit;
 
 global $wpdb;
-$table = $wpdb->prefix . 'alpha_form_nested_integrations';
 
-$integrations = $wpdb->get_results("SELECT name, data, status FROM $table", OBJECT_K);
+$table = esc_sql($wpdb->prefix . 'alpha_form_nested_integrations');
+$sql = "SELECT name, data, status FROM $table";
+
+$cache_key = 'alpha_form_integrations_all';
+$integrations = wp_cache_get($cache_key);
+
+if (false === $integrations) {
+    global $wpdb;
+    $table = esc_sql($wpdb->prefix . 'alpha_form_nested_integrations');
+    $sql = "SELECT name, data, status FROM $table";
+
+    // phpcs:disable WordPress.DB.PreparedSQL.NotPrepared, WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching	
+    $integrations = $wpdb->get_results($sql, OBJECT_K);
+    // phpcs:enable WordPress.DB.PreparedSQL.NotPrepared, WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching	
+
+    if ($integrations) {
+        wp_cache_set($cache_key, $integrations, '', 300); // 5 minutos
+    }
+}
+
 
 // Configurações base de cada integração
 $services = [
@@ -136,10 +154,10 @@ $services = [
             $status_msg = $status ? '✅ Ativa' : '❌ Inativa';
         ?>
 
-            <h2><?php esc_html($config['title']) ?> </h2>
+            <h2><?php echo esc_html($config['title']) ?> </h2>
             <?php if (!empty($config['help'])): ?>
                 <span>
-                    <a href="<?php esc_url($config['help']) ?>" target="_blank" style="text-decoration: none;">
+                    <a href="<?php echo esc_url($config['help']) ?>" target="_blank" style="text-decoration: none;">
                         🔗 Ajuda
                     </a>
                 </span>
@@ -152,15 +170,15 @@ $services = [
                         $id = $name . '_' . $field;
                     ?>
                         <tr>
-                            <th scope="row"><?php esc_html($field_config['label']) ?></th>
+                            <th scope="row"><?php echo esc_html($field_config['label']) ?></th>
                             <td>
                                 <input
-                                    type="<?php esc_attr($type) ?>"
-                                    id="<?php esc_attr($id) ?>"
+                                    type="<?php echo esc_attr($type) ?>"
+                                    id="<?php echo esc_attr($id) ?>"
                                     data-name="<?php esc_attr($name) ?>"
-                                    name="<?php esc_attr($field) ?>"
-                                    value="<?php esc_html($value) ?>"
-                                    placeholder="<?php esc_attr($field_config['placeholder']) ?>" style="min-width: 350px;" />
+                                    name="<?php echo esc_attr($field) ?>"
+                                    value="<?php echo esc_html($value) ?>"
+                                    placeholder="<?php echo esc_attr($field_config['placeholder']) ?>" style="min-width: 350px;" />
 
                             </td>
                         </tr>
@@ -170,12 +188,12 @@ $services = [
                         <th scope="row">Status</th>
                         <td>
                             <button type="button"
-                                id="validate_<?php esc_attr($name) ?>_btn"
+                                id="<?php echo 'validate_' . esc_attr($name) . '_btn'; ?>"
                                 class="button validate-integration"
-                                data-name="<?php esc_attr($name) ?>">
+                                data-name="<?php echo esc_attr($name) ?>">
                                 Validar Conexão
                             </button>
-                            <span id="<?php esc_attr($name) ?>_status_msg"><?php esc_html($status_msg) ?></span>
+                            <span id="<?php echo esc_attr($name) ?>_status_msg"><?php echo esc_html($status_msg) ?></span>
                         </td>
                     </tr>
                 </table>

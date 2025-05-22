@@ -1,5 +1,4 @@
 <?php
-<?php
 
 function alpha_action_clicksend($mode)
 {
@@ -8,8 +7,13 @@ function alpha_action_clicksend($mode)
     }
 
     global $wpdb;
-    $table = $wpdb->prefix . 'alpha_form_nested_integrations';
-    $row = $wpdb->get_row("SELECT * FROM $table WHERE name = 'clicksend' LIMIT 1");
+    $table = esc_sql($wpdb->prefix . 'alpha_form_nested_integrations');
+
+    // phpcs:disable WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+    $row = $wpdb->get_row(
+        $wpdb->prepare("SELECT * FROM {$table} WHERE name = %s LIMIT 1", 'clicksend')
+    );
+    // phpcs:enable WordPress.DB.PreparedSQL.InterpolatedNotPrepared
 
     if (!$row || !$row->status) {
         wp_send_json_error(['message' => 'ClickSend não está integrado.']);
@@ -48,10 +52,7 @@ function alpha_action_clicksend($mode)
 
 function alpha_integration_clicksend($form_id, $data)
 {
-    error_log('[CLICKSEND] Dados recebidos: ' . print_r($data, true));
-
     if (empty($data['username']) || empty($data['api_key']) || empty($data['list_id']) || empty($data['data']['email'])) {
-        error_log('[CLICKSEND] Dados obrigatórios ausentes.');
         return false;
     }
 
@@ -70,7 +71,6 @@ function alpha_integration_clicksend($form_id, $data)
     ]);
 
     if (is_wp_error($response)) {
-        error_log('[CLICKSEND] Erro: ' . $response->get_error_message());
         return false;
     }
 

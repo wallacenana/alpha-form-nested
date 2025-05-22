@@ -6,10 +6,15 @@ function alpha_form_handle_integration()
 {
     check_ajax_referer('alpha_form_nonce', 'nonce');
 
-    $integration = sanitize_text_field($_POST['integration']);
-    $form_id     = sanitize_text_field($_POST['form_id']);
-    $data_raw    = stripslashes($_POST['data'] ?? '');
-    $data        = json_decode($data_raw, true);
+    $integration = isset($_POST['integration']) ? sanitize_text_field(wp_unslash($_POST['integration'])) : '';
+    $form_id     = isset($_POST['form_id'])     ? sanitize_text_field(wp_unslash($_POST['form_id']))     : '';
+    // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- JSON será decodificado e tratado após
+    $data_raw = isset($_POST['data']) ? stripslashes(wp_unslash($_POST['data'])) : '';
+
+    // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- json_decode usado, campos serão tratados individualmente
+    $data_raw = isset($_POST['data']) ? stripslashes(wp_unslash($_POST['data'])) : '';
+    $data     = json_decode($data_raw, true);
+
 
     if (!$integration || !is_array($data)) {
         wp_send_json_error(['message' => 'Dados inválidos.']);
@@ -17,12 +22,15 @@ function alpha_form_handle_integration()
 
     if (!empty($data['source_type']) && $data['source_type'] === 'default') {
         global $wpdb;
-        $table = $wpdb->prefix . 'alpha_form_nested_integrations';
+        $table = esc_sql($wpdb->prefix . 'alpha_form_nested_integrations');
 
+        // phpcs:disable WordPress.DB.PreparedSQL.InterpolatedNotPrepared
         $row = $wpdb->get_row(
-            $wpdb->prepare("SELECT data FROM $table WHERE name = %s AND status = 1", $integration),
+            $wpdb->prepare("SELECT data FROM {$table} WHERE name = %s AND status = 1", $integration),
             ARRAY_A
         );
+        // phpcs:enable WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+
 
         if ($row && !empty($row['data'])) {
             $credentials = json_decode($row['data'], true);

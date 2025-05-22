@@ -5,12 +5,12 @@ function alpha_form_handle_license()
 {
     check_ajax_referer('alpha_form_nonce', 'nonce');
 
-    $license = sanitize_text_field($_POST['license'] ?? '');
+    $license = isset($_POST['license']) ? sanitize_text_field(wp_unslash($_POST['license'])) : '';
     if (!$license) {
         wp_send_json_error(['message' => 'Licença vazia.']);
     }
 
-    $domain = site_url(); // ✅ domínio real do WordPress
+    $domain = site_url();
     $validate_url = "https://psplits.com/wp-json/alphaform/v2/validate?license={$license}&domain=" . urlencode($domain);
 
     $response = wp_remote_get($validate_url);
@@ -31,13 +31,16 @@ function alpha_form_handle_license()
     ];
 
     global $wpdb;
-    $table = $wpdb->prefix . 'alpha_form_nested_integrations';
+    $table = esc_sql($wpdb->prefix . 'alpha_form_nested_integrations');
 
     $payload = json_encode($data);
-    $exists = $wpdb->get_var($wpdb->prepare(
-        "SELECT id FROM $table WHERE name = %s",
-        'valid_key'
-    ));
+    // phpcs:disable WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.PreparedSQL.NotPrepared	
+    $exists = $wpdb->get_var(
+        $wpdb->prepare(
+            "SELECT id FROM {$table} WHERE name = %s",
+            'valid_key'
+        )
+    );
 
     if ($exists) {
         $wpdb->update($table, [
@@ -51,6 +54,7 @@ function alpha_form_handle_license()
             'status' => ($data['status'] === 'valid') ? 1 : 0
         ]);
     }
+    // phpcs:enable WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.PreparedSQL.NotPrepared	
 
     wp_send_json_success(['message' => 'Licença ativada com sucesso.']);
 }

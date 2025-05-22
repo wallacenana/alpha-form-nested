@@ -6,28 +6,31 @@ function alpha_form_get_widget_totals_nested()
 {
     global $wpdb;
 
-    $table = $wpdb->prefix . 'alpha_form_nested_responses';
+    $table = esc_sql($wpdb->prefix . 'alpha_form_nested_responses');
     $cache_key = 'alpha_form_widget_totals_nested';
     $cache_group = 'alpha_form';
 
     $results = wp_cache_get($cache_key, $cache_group);
 
+    // phpcs:disable WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.DirectDatabaseQuery.DirectQuery
     if (false === $results) {
         $results = $wpdb->get_results("
-            SELECT 
-                form_id, 
-                MAX(form_name) AS form_name, 
-                MAX(post_id) AS post_id,
-                COUNT(*) AS total
-            FROM $table
-            WHERE form_id IS NOT NULL AND form_id != ''
-            GROUP BY form_id
-        ", ARRAY_A);
+        SELECT 
+            form_id, 
+            MAX(form_name) AS form_name, 
+            MAX(post_id) AS post_id,
+            COUNT(*) AS total
+        FROM {$table}
+        WHERE form_id IS NOT NULL AND form_id != ''
+        GROUP BY form_id
+    ", ARRAY_A);
 
         if (!empty($results)) {
             wp_cache_set($cache_key, $results, $cache_group, 300);
         }
     }
+    // phpcs:enable WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.DirectDatabaseQuery.DirectQuery
+
 
     return $results;
 }

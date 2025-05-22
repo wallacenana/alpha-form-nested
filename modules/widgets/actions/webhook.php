@@ -3,7 +3,6 @@
 function alpha_integration_webhook($form_id, $data)
 {
     if (empty($data['url']) || !filter_var($data['url'], FILTER_VALIDATE_URL)) {
-        error_log('[WEBHOOK] URL ausente ou inválida.');
         return false;
     }
 
@@ -16,7 +15,6 @@ function alpha_integration_webhook($form_id, $data)
     ]);
 
     if (is_wp_error($response)) {
-        error_log('[WEBHOOK] Erro na requisição: ' . $response->get_error_message());
         return false;
     }
 

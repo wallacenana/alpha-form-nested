@@ -5,7 +5,7 @@ function alphaform_handle_load_lists()
 {
     check_ajax_referer('alpha_form_nonce');
 
-    $prefix = sanitize_text_field($_POST['prefix'] ?? '');
+    $prefix = isset($_POST['prefix']) ? sanitize_text_field(wp_unslash($_POST['prefix'])) : '';
 
     if (!$prefix) {
         wp_send_json_error(['message' => 'Prefixo não informado.']);
@@ -25,8 +25,12 @@ function alphaform_fetch_lists_by_prefix($prefix)
 {
     global $wpdb;
 
-    $table = $wpdb->prefix . 'alpha_form_nested_integrations';
-    $row = $wpdb->get_row($wpdb->prepare("SELECT * FROM $table WHERE name = %s LIMIT 1", $prefix));
+    $table = esc_sql($wpdb->prefix . 'alpha_form_nested_integrations');
+    // phpcs:disable WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+    $row = $wpdb->get_row(
+        $wpdb->prepare("SELECT * FROM {$table} WHERE name = %s LIMIT 1", $prefix)
+    );
+    // phpcs:enable WordPress.DB.PreparedSQL.InterpolatedNotPrepared
 
     if (!$row || !$row->status) return false;
 

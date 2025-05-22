@@ -11,9 +11,14 @@ function glkf9_trigger()
 function glkf9_is_valid()
 {
     global $wpdb;
-    $table = $wpdb->prefix . 'alpha_form_nested_integrations';
+    $table = esc_sql($wpdb->prefix . 'alpha_form_nested_integrations');
 
-    $row = $wpdb->get_row("SELECT * FROM $table WHERE name = 'valid_key' LIMIT 1");
+    // phpcs:disable WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+    $row = $wpdb->get_row(
+        $wpdb->prepare("SELECT * FROM {$table} WHERE name = %s LIMIT 1", 'valid_key')
+    );
+    // phpcs:enable WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+
     if (!$row || intval($row->status) !== 1) {
         return false;
     }

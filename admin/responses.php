@@ -23,47 +23,58 @@ $form_id = isset($_GET['form_id']) ? sanitize_text_field(wp_unslash($_GET['form_
 $cache_key_total = 'alpha_nested_total_' . ($form_id ?: 'all');
 $total = wp_cache_get($cache_key_total, 'alpha_form');
 
-// phpcs:disable WordPress.DB.PreparedSQL.NotPrepared
+// phpcs:disable WordPress.DB.PreparedSQL.NotPrepared, WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching	
 if (false === $total) {
     if ($form_id) {
-        $sql_total = $wpdb->prepare("SELECT COUNT(*) FROM {$wpdb->prefix}alpha_form_nested_responses WHERE form_id = %s", $form_id);
+        $sql_total = $wpdb->prepare(
+            "SELECT COUNT(*) FROM {$wpdb->prefix}alpha_form_nested_responses WHERE form_id = %s",
+            $form_id
+        );
     } else {
         $sql_total = "SELECT COUNT(*) FROM {$wpdb->prefix}alpha_form_nested_responses";
     }
+
     $total = $wpdb->get_var($sql_total);
     wp_cache_set($cache_key_total, $total, 'alpha_form', 600);
 }
+// phpcs:enable WordPress.DB.PreparedSQL.NotPrepared, WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching	
+
 
 // Resultados paginados
 $cache_key_results = 'alpha_nested_results_' . ($form_id ?: 'all') . "_page_$current_page";
 $results = wp_cache_get($cache_key_results, 'alpha_form');
 
+// phpcs:disable WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching	
 if (false === $results) {
     if ($form_id) {
-        $sql_results = $wpdb->prepare(
-            "SELECT id, form_id, form_name, session_id, post_id, created_at
-             FROM {$wpdb->prefix}alpha_form_nested_responses
-             WHERE form_id = %s
-             ORDER BY created_at DESC
-             LIMIT %d OFFSET %d",
-            $form_id, $per_page, $offset
+        $results = $wpdb->get_results(
+            $wpdb->prepare(
+                "SELECT id, form_id, form_name, session_id, post_id, created_at
+                 FROM {$wpdb->prefix}alpha_form_nested_responses
+                 WHERE form_id = %s
+                 ORDER BY created_at DESC
+                 LIMIT %d OFFSET %d",
+                $form_id,
+                $per_page,
+                $offset
+            )
         );
-
     } else {
-        $sql_results = $wpdb->prepare(
-            "SELECT id, form_id, form_name, session_id, post_id, created_at
-             FROM {$wpdb->prefix}alpha_form_nested_responses
-             ORDER BY created_at DESC
-             LIMIT %d OFFSET %d",
-            $per_page, $offset
+        $results = $wpdb->get_results(
+            $wpdb->prepare(
+                "SELECT id, form_id, form_name, session_id, post_id, created_at
+                 FROM {$wpdb->prefix}alpha_form_nested_responses
+                 ORDER BY created_at DESC
+                 LIMIT %d OFFSET %d",
+                $per_page,
+                $offset
+            )
         );
-
     }
 
-    $results = $wpdb->get_results($sql_results);
     wp_cache_set($cache_key_results, $results, 'alpha_form', 300);
 }
-// phpcs:enable WordPress.DB.PreparedSQL.NotPrepared
+// phpcs:enable WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching	
 ?>
 
 <div class="wrap alpha-form-wrap">

@@ -3,8 +3,13 @@ function alpha_action_mailchimp($mode)
 {
     if ($mode === 'fetch_lists') {
         global $wpdb;
-        $table = $wpdb->prefix . 'alpha_form_nested_integrations';
-        $row = $wpdb->get_row("SELECT * FROM $table WHERE name = 'mailchimp' LIMIT 1");
+    $table = esc_sql($wpdb->prefix . 'alpha_form_nested_integrations');
+
+    // phpcs:disable WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+    $row = $wpdb->get_row(
+        $wpdb->prepare("SELECT * FROM {$table} WHERE name = %s LIMIT 1", 'mailchimp')
+    );
+    // phpcs:enable WordPress.DB.PreparedSQL.InterpolatedNotPrepared
 
         if (!$row || !$row->status) {
             wp_send_json_error(['message' => 'Mailchimp não está integrado.']);
@@ -43,10 +48,7 @@ function alpha_action_mailchimp($mode)
 
 function alpha_integration_mailchimp($form_id, $data)
 {
-    $log = ['form_id' => $form_id, 'data' => $data];
-
     if (empty($data['list_id']) || empty($data['data'])) {
-        error_log('[MAILCHIMP] Dados insuficientes: ' . print_r($log, true));
         return false;
     }
 
@@ -74,7 +76,6 @@ function alpha_integration_mailchimp($form_id, $data)
 
     // Validação final
     if (!$api_key || !$server) {
-        error_log('[MAILCHIMP] API ou Server faltando');
         return false;
     }
 
@@ -95,17 +96,14 @@ function alpha_integration_mailchimp($form_id, $data)
     ]);
 
     if (is_wp_error($response)) {
-        error_log('[MAILCHIMP] Erro na requisição: ' . $response->get_error_message());
         return false;
     }
 
     $body = json_decode(wp_remote_retrieve_body($response), true);
 
     if (!empty($body['status']) && in_array($body['status'], ['subscribed', 'pending'])) {
-        error_log('[MAILCHIMP] Inscrito com sucesso: ' . $body['email_address']);
         return true;
     } else {
-        error_log('[MAILCHIMP] Erro no retorno: ' . print_r($body, true));
         return false;
     }
 }

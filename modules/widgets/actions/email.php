@@ -2,8 +2,6 @@
 
 function alpha_integration_email($form_id, $data)
 {
-    error_log('[EMAIL] Dados recebidos: ' . print_r($data, true));
-
     $subject = sanitize_text_field($data['email_subject'] ?? 'Nova submissão recebida');
 
     // Destino
@@ -14,14 +12,12 @@ function alpha_integration_email($form_id, $data)
     }
 
     if (!$to) {
-        error_log('[EMAIL] Nenhum destinatário definido.');
         return false;
     }
 
     // Dados enviados (campos do form)
     $campos = $data['data'] ?? [];
     if (!is_array($campos) || empty($campos)) {
-        error_log('[EMAIL] Nenhum dado para enviar.');
         return false;
     }
 
@@ -39,10 +35,8 @@ function alpha_integration_email($form_id, $data)
     $enviado = wp_mail($to, $subject, $mensagem, $headers);
 
     if ($enviado) {
-        error_log('[EMAIL] Email enviado com sucesso para: ' . $to);
         return true;
     } else {
-        error_log('[EMAIL] Falha ao enviar email para: ' . $to);
         return false;
     }
 }

@@ -7,41 +7,30 @@ function alphaform_get_form_widget_count_handle()
     check_ajax_referer('alpha_form_nonce', 'nonce');
 
     global $wpdb;
-    $table = $wpdb->prefix . 'alpha_form_nested_responses';
+    $table = esc_sql($wpdb->prefix . 'alpha_form_nested_responses');
 
     $response = [];
 
+    $integrations_table = esc_sql($wpdb->prefix . 'alpha_form_integrations');
+
+    // phpcs:disable WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.DirectDatabaseQuery.DirectQuery	
+
     // Total de formulários únicos (form_id)
-    $response['total_forms'] = (int) $wpdb->get_var("
-        SELECT COUNT(DISTINCT form_id)
-        FROM $table
-        WHERE form_id IS NOT NULL AND form_id != ''
-    ");
+    $response['total_forms'] = (int) $wpdb->get_var("SELECT COUNT(DISTINCT form_id) FROM {$table} WHERE form_id IS NOT NULL AND form_id != ''"); // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
 
     // Total de respostas
-    $response['total_responses'] = (int) $wpdb->get_var("
-        SELECT COUNT(*)
-        FROM $table
-    ");
+    $response['total_responses'] = (int) $wpdb->get_var("SELECT COUNT(*) FROM {$table}"); // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
 
     // Último envio
-    $response['last_submit'] = $wpdb->get_var("
-        SELECT MAX(created_at)
-        FROM $table
-    ");
+    $response['last_submit'] = $wpdb->get_var("SELECT MAX(created_at) FROM {$table}"); // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
 
-    // Integrações configuradas (exemplo: vindo de outra tabela)
-    $integrations_table = $wpdb->prefix . 'alpha_form_integrations';
-
-    if ($wpdb->get_var("SHOW TABLES LIKE '$integrations_table'") === $integrations_table) {
-        $response['total_integrations'] = (int) $wpdb->get_var("
-            SELECT COUNT(*)
-            FROM $integrations_table
-            WHERE status = 1
-        ");
+    // Integrações configuradas
+    if ($wpdb->get_var("SHOW TABLES LIKE '{$integrations_table}'") === $integrations_table) { // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+        $response['total_integrations'] = (int) $wpdb->get_var("SELECT COUNT(*) FROM {$integrations_table} WHERE status = 1"); // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
     } else {
         $response['total_integrations'] = 0;
     }
+    // phpcs:enable WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.DirectDatabaseQuery.DirectQuery	
 
     wp_send_json_success($response);
 }
@@ -52,12 +41,12 @@ function alphaform_get_dashboard_stats()
 {
     check_ajax_referer('alpha_form_nonce', 'nonce');
 
-    $form_ids = isset($_GET['widget_ids']) ? array_map('sanitize_text_field', $_GET['widget_ids']) : [];
-    $inicio = sanitize_text_field($_GET['inicio'] ?? '');
-    $fim = sanitize_text_field($_GET['fim'] ?? '');
+    $form_ids = isset($_GET['widget_ids']) ? array_map('sanitize_text_field', wp_unslash($_GET['widget_ids'])) : [];
+    $inicio = isset($_GET['inicio']) ? sanitize_text_field(wp_unslash($_GET['inicio'])) : '';
+    $fim    = isset($_GET['fim'])    ? sanitize_text_field(wp_unslash($_GET['fim']))    : '';
 
-    if (!$inicio) $inicio = date('Y-m-d', strtotime('-15 days'));
-    if (!$fim) $fim = date('Y-m-d');
+    if (!$inicio) $inicio = gmdate('Y-m-d', strtotime('-15 days'));
+    if (!$fim)    $fim    = gmdate('Y-m-d');
 
     // Dias do período
     $labels = [];
@@ -215,8 +204,8 @@ function alphaform_dashboard_query($args = [])
     $args = wp_parse_args($args, $defaults);
 
     $form_ids = array_filter($args['form_ids'] ?? [], 'strlen');
-    $fim = $args['fim'] ?: date('Y-m-d');
-    $inicio = $args['inicio'] ?: date('Y-m-d', strtotime('-15 days'));
+    $fim = $args['fim'] ?: gmdate('Y-m-d');
+    $inicio = $args['inicio'] ?: gmdate('Y-m-d', strtotime('-15 days'));
 
     $table = $wpdb->prefix . 'alpha_form_nested_responses';
     $where_sql = "1=1";
@@ -253,11 +242,11 @@ function alphaform_dashboard_query($args = [])
         $order
         $limit
     ";
-
-    return $wpdb->get_results($wpdb->prepare($sql, ...$params));
+    // phpcs:disable WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.PreparedSQL.NotPrepared	
+    $sql = $wpdb->prepare($sql, ...$params);
+    return $wpdb->get_results($sql);
+    // phpcs:enable WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.DirectDatabaseQuery.DirectQuery	,WordPress.DB.PreparedSQL.NotPrepared	
 }
-
-
 
 add_action('wp_ajax_alphaform_get_forms_list', 'alphaform_get_forms_list');
 
@@ -269,6 +258,7 @@ function alphaform_get_forms_list()
     $table = $wpdb->prefix . 'alpha_form_nested_responses';
 
     // Subquery: traz o último registro por form_id
+    // phpcs:disable WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.PreparedSQL.NotPrepared	
     $results = $wpdb->get_results("
         SELECT r.form_id, r.form_name
         FROM $table r
@@ -282,6 +272,7 @@ function alphaform_get_forms_list()
         ORDER BY r.created_at DESC
         LIMIT 100
     ");
+    // phpcs:enable WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.PreparedSQL.NotPrepared		
 
     $data = [];
 

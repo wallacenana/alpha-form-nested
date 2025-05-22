@@ -1,9 +1,23 @@
 <?php
 global $wpdb;
-$table = $wpdb->prefix . 'alpha_form_nested_integrations';
-$row = $wpdb->get_row("SELECT * FROM $table WHERE name = 'valid_key' LIMIT 1");
+$table = esc_sql($wpdb->prefix . 'alpha_form_nested_integrations');
+$cache_key = 'alpha_form_valid_key';
+$data = wp_cache_get($cache_key);
 
-$data = json_decode($row->data ?? '{}', true);
+// phpcs:disable WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching	
+if (false === $data) {
+    global $wpdb;
+    $table = $wpdb->prefix . 'alpha_form_integrations';
+    $data = $wpdb->get_row(
+        $wpdb->prepare("SELECT * FROM {$table} WHERE name = %s LIMIT 1", 'valid_key')
+    );
+    if ($data) {
+        wp_cache_set($cache_key, $data);
+    }
+}
+// phpcs:enable WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching	
+
+
 $license = esc_attr($data['chave'] ?? '');
 $status  = intval($row->status ?? 0);
 $expires = esc_html($data['expires'] ?? '');

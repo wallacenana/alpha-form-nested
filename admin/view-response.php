@@ -19,15 +19,20 @@ $cache_key = 'alpha_nested_response_' . $response_id;
 
 $response = wp_cache_get($cache_key, 'alpha_form');
 
+// phpcs:disable WordPress.DB.PreparedSQL.NotPrepared, WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
 if (false === $response) {
-    $response = $wpdb->get_row(
-        $wpdb->prepare("SELECT * FROM $table WHERE id = %d", $response_id)
+    $sql = $wpdb->prepare(
+        "SELECT * FROM {$wpdb->prefix}alpha_form_nested_responses WHERE id = %d",
+        $response_id
     );
+    $response = $wpdb->get_row($sql);
 
     if ($response) {
         wp_cache_set($cache_key, $response, 'alpha_form', 600);
     }
 }
+// phpcs:enable WordPress.DB.PreparedSQL.NotPrepared, WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
+
 
 if (!$response) {
     echo '<div class="notice notice-error"><p>Resposta não encontrada.</p></div>';
@@ -62,7 +67,7 @@ $labels = []; // ou mantém vazio por enquanto
             </tr>
             <tr>
                 <th>Data de Envio</th>
-                <td><?php echo esc_html(date('d/m/Y H:i', strtotime($response->created_at))); ?></td>
+                <td><?php echo esc_html(gmdate('d/m/Y H:i', strtotime($response->created_at))); ?></td>
             </tr>
             <tr>
                 <th>Status</th>

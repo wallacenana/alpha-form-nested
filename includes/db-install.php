@@ -13,7 +13,7 @@ function alpha_form_create_response_table()
 
 
     $sql1 = "
-        CREATE TABLE wp_alpha_form_nested_responses (
+        CREATE TABLE $responses_table (
         id BIGINT AUTO_INCREMENT PRIMARY KEY,
         post_id BIGINT,
         form_id VARCHAR(32),
