@@ -24,12 +24,12 @@ function alpha_form_handle_integration()
         global $wpdb;
         $table = esc_sql($wpdb->prefix . 'alpha_form_nested_integrations');
 
-        // phpcs:disable WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+        // phpcs:disable WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.DirectDatabaseQuery.DirectQuery	
         $row = $wpdb->get_row(
             $wpdb->prepare("SELECT data FROM {$table} WHERE name = %s AND status = 1", $integration),
             ARRAY_A
         );
-        // phpcs:enable WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+        // phpcs:enable WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.DirectDatabaseQuery.DirectQuery	
 
 
         if ($row && !empty($row['data'])) {

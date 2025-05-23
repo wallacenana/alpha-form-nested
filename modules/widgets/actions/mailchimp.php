@@ -3,13 +3,13 @@ function alpha_action_mailchimp($mode)
 {
     if ($mode === 'fetch_lists') {
         global $wpdb;
-    $table = esc_sql($wpdb->prefix . 'alpha_form_nested_integrations');
+        $table = esc_sql($wpdb->prefix . 'alpha_form_nested_integrations');
 
-    // phpcs:disable WordPress.DB.PreparedSQL.InterpolatedNotPrepared
-    $row = $wpdb->get_row(
-        $wpdb->prepare("SELECT * FROM {$table} WHERE name = %s LIMIT 1", 'mailchimp')
-    );
-    // phpcs:enable WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+        // phpcs:disable WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.DirectDatabaseQuery.DirectQuery	
+        $row = $wpdb->get_row(
+            $wpdb->prepare("SELECT * FROM {$table} WHERE name = %s LIMIT 1", 'mailchimp')
+        );
+        // phpcs:enable WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.DirectDatabaseQuery.DirectQuery	
 
         if (!$row || !$row->status) {
             wp_send_json_error(['message' => 'Mailchimp não está integrado.']);
@@ -56,7 +56,7 @@ function alpha_integration_mailchimp($form_id, $data)
     $api_key = $data['source_type'] === 'custom' ? $data['api_key'] : '';
     $server  = $data['source_type'] === 'custom' ? $data['server'] : '';
 
-    // Se default, busca no banco
+    // phpcs:disable WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.DirectDatabaseQuery.DirectQuery	
     if ($data['source_type'] === 'default') {
         global $wpdb;
         $row = $wpdb->get_row(
@@ -73,6 +73,7 @@ function alpha_integration_mailchimp($form_id, $data)
             $server  = $config['server_prefix'] ?? '';
         }
     }
+    // phpcs:enable WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.DirectDatabaseQuery.DirectQuery	
 
     // Validação final
     if (!$api_key || !$server) {

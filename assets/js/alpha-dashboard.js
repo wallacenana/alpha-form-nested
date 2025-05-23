@@ -85,12 +85,6 @@ document.addEventListener('DOMContentLoaded', function () {
         }
 
         const stats = json.data;
-        console.log(json.data)
-        const totalDispositivos = [
-            stats.devices.desktop,
-            stats.devices.tablet,
-            stats.devices.mobile
-        ].map(n => parseInt(n) || 0).reduce((acc, curr) => acc + curr, 0);
 
         const startForms = parseInt(stats.start_forms) || 0;
         const totalConcluido = parseInt(stats.totalconcluido) || 0;

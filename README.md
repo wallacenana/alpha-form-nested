@@ -1,13 +1,13 @@
 === Alpha Form Nested ===
 
 Contributors: wallacenana
-Tags: quizz, formulários, forms, elementor, crm, webhook
+Tags: quizz, formulários, forms, elementor, webhook
 Requires at least: 5.8
 Tested up to: 6.8
 Requires PHP: 7.4
-Stable tag: 1.0
-License: Proprietary
-License URI: https://alphaform.com.br/licenca
+Stable tag: 2.0.0
+License: GPLv2 or later
+License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
 Formulários avançados e inteligentes com controle total visual, integrações nativas e métricas em tempo real.
 

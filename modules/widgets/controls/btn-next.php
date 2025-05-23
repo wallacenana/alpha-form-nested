@@ -88,23 +88,23 @@ class Alpha_Next extends Widget_Base
 			],
 		]);
 
-		$this->add_control('icon_position', [
+		$this->add_control('icon_position_next', [
 			'label' => esc_html__('Posição do Ícone', 'alpha-form-nested'),
 			'type' => Controls_Manager::CHOOSE,
 			'options' => [
 				'before' => [
 					'title' => esc_html__('Antes', 'alpha-form-nested'),
-					'icon_next' => 'eicon-arrow-left',
+					'icon' => 'eicon-arrow-left',
 				],
 				'after' => [
 					'title' => esc_html__('Depois', 'alpha-form-nested'),
-					'icon_next' => 'eicon-arrow-right',
+					'icon' => 'eicon-arrow-right',
 				],
 			],
 			'default' => 'after',
 			'toggle' => false,
 			'condition' => [
-				'icon[value]!' => '',
+				'icon_next[value]!' => '',
 			],
 		]);
 
@@ -265,20 +265,13 @@ class Alpha_Next extends Widget_Base
 		$settings = $this->get_settings_for_display();
 		$form_target = $settings['form_target'] ?? '';
 
-		$this->add_render_attribute('button', [
-			'class' => 'alpha-form-next',
-			'type'  => 'button',
-			'data-alpha' => 'next',
-			'data-a-f-target' => esc_attr($form_target),
-		]);
-
-		echo '<button ' . esc_attr($this->get_render_attribute_string('button')) . '>';
+		echo '<button class="alpha-form-next" type="button" data-alpha="next" data-a-f-target=' . esc_attr($form_target) . '>';
 
 		// Abre o wrapper do conteúdo do botão
 		echo '<span class="alpha-form-button-inner">';
 
 		// Ícone antes do texto
-		if (!empty($settings['icon_next']['value']) && $settings['icon_position'] === 'before') {
+		if (!empty($settings['icon_next']['value']) && $settings['icon_position_next'] === 'before') {
 			echo '<span class="alpha-form-button-icon before">';
 			Icons_Manager::render_icon($settings['icon_next'], ['aria-hidden' => 'true']);
 			echo '</span>';
@@ -290,7 +283,7 @@ class Alpha_Next extends Widget_Base
 		}
 
 		// Ícone depois do texto
-		if (!empty($settings['icon_next']['value']) && $settings['icon_position'] === 'after') {
+		if (!empty($settings['icon_next']['value']) && $settings['icon_position_next'] === 'after') {
 			echo '<span class="alpha-form-button-icon after">';
 			Icons_Manager::render_icon($settings['icon_next'], ['aria-hidden' => 'true']);
 			echo '</span>';

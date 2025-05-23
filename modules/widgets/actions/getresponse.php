@@ -9,11 +9,11 @@ function alpha_action_getresponse($mode)
     global $wpdb;
     $table = esc_sql($wpdb->prefix . 'alpha_form_nested_integrations');
 
-    // phpcs:disable WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+    // phpcs:disable WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.DirectDatabaseQuery.DirectQuery	
     $row = $wpdb->get_row(
         $wpdb->prepare("SELECT * FROM {$table} WHERE name = %s LIMIT 1", 'getresponse')
     );
-    // phpcs:enable WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+    // phpcs:enable WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.DirectDatabaseQuery.DirectQuery	
 
     if (!$row || !$row->status) {
         wp_send_json_error(['message' => 'GetResponse não está integrado.']);
@@ -53,11 +53,38 @@ function alpha_action_getresponse($mode)
 
 function alpha_integration_getresponse($form_id, $data)
 {
-    if (empty($data['api_key']) || empty($data['campaign_id']) || empty($data['data']['email'])) {
+    // Verifica se os dados mínimos estão presentes
+    if (empty($data['campaign_id']) || empty($data['data']['email'])) {
         return false;
     }
 
-    $url = 'https://api.getresponse.com/v3/contacts';
+    // Decide de onde vem a API Key
+    $api_key = $data['source_type'] === 'custom' ? $data['api_key'] : '';
+    // phpcs:disable WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.DirectDatabaseQuery.DirectQuery	
+
+    if ($data['source_type'] === 'default') {
+        global $wpdb;
+        $row = $wpdb->get_row(
+            $wpdb->prepare(
+                "SELECT data FROM {$wpdb->prefix}alpha_form_nested_integrations WHERE name = %s AND status = 1",
+                'getresponse'
+            ),
+            ARRAY_A
+        );
+
+        if ($row && !empty($row['data'])) {
+            $config = json_decode($row['data'], true);
+            $api_key = $config['api_key'] ?? '';
+        }
+    }
+    // phpcs:enable WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.DirectDatabaseQuery.DirectQuery	
+
+    // Validação final
+    if (empty($api_key)) {
+        return false;
+    }
+
+    // Monta o corpo da requisição
     $body = [
         'email'        => $data['data']['email'],
         'campaign'     => ['campaignId' => $data['campaign_id']],
@@ -73,17 +100,20 @@ function alpha_integration_getresponse($form_id, $data)
         }
     }
 
-    $response = wp_remote_post($url, [
+    // Envia a requisição
+    $response = wp_remote_post('https://api.getresponse.com/v3/contacts', [
         'headers' => [
-            'X-Auth-Token' => 'api-key ' . $data['api_key'],
+            'X-Auth-Token' => 'api-key ' . $api_key,
             'Content-Type' => 'application/json'
         ],
-        'body' => json_encode($body)
+        'body' => json_encode($body),
+        'timeout' => 10
     ]);
 
     if (is_wp_error($response)) {
         return false;
     }
 
-    return true;
+    $code = wp_remote_retrieve_response_code($response);
+    return ($code >= 200 && $code < 300);
 }

@@ -125,14 +125,16 @@ add_action('elementor/elements/categories_registered', function ($elements_manag
 });
 
 add_action('elementor/frontend/before_enqueue_scripts', function () {
+    $path = ALPHA_FORM_PATH . 'assets/js/chart.js';
     wp_enqueue_script(
         'alpha-form-chart',
         ALPHA_FORM_URL . 'assets/js/chart.js',
         [],
-        null,
+        file_exists($path) ? filemtime($path) : time(), // fallback em dev
         true
     );
 });
+
 
 
 add_action('admin_menu', function () {

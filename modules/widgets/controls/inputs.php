@@ -149,6 +149,18 @@ class Alpha_Inputs extends Widget_Base
 		);
 
 		$repeater->add_control(
+			'use_image_icon',
+			[
+				'label'        => __('Usar imagem', 'alpha-form-nested'),
+				'type'         => Controls_Manager::SWITCHER,
+				'label_on'     => __('Sim', 'alpha-form-nested'),
+				'label_off'    => __('Não', 'alpha-form-nested'),
+				'return_value' => 'yes',
+				'default'      => '',
+			]
+		);
+
+		$repeater->add_control(
 			'icon_library',
 			[
 				'label'   => __('Ícone', 'alpha-form-nested'),
@@ -203,7 +215,24 @@ class Alpha_Inputs extends Widget_Base
 					'poker-face'      => '😐 Poker Face',
 					'stupid-b'        => '🤪 Tonto/Doido',
 				],
-				'default' => 'happy-2'
+				'default' => 'happy-2',
+				'condition' => [
+					'use_image_icon!' => 'yes',
+				],
+			]
+		);
+
+		$repeater->add_control(
+			'image_icon',
+			[
+				'label'     => __('Imagem', 'alpha-form-nested'),
+				'type'      => \Elementor\Controls_Manager::MEDIA,
+				'default'   => [
+					'url' => \Elementor\Utils::get_placeholder_image_src(),
+				],
+				'condition' => [
+					'use_image_icon' => 'yes',
+				],
 			]
 		);
 
@@ -268,7 +297,7 @@ class Alpha_Inputs extends Widget_Base
 
 
 		$this->add_control(
-			'next_button_text',
+			'next_button_text_input',
 			[
 				'label' => __('Texto do botão', 'alpha-form-nested'),
 				'type' => Controls_Manager::TEXT,
@@ -295,7 +324,7 @@ class Alpha_Inputs extends Widget_Base
 			]
 		);
 
-		$this->add_control('icon', [
+		$this->add_control('icon_input', [
 			'label' => esc_html__('Ícone', 'alpha-form-nested'),
 			'type' => Controls_Manager::ICONS,
 			'skin' => 'inline',
@@ -321,12 +350,7 @@ class Alpha_Inputs extends Widget_Base
 			'default' => 'after',
 			'toggle' => false,
 			'condition' => [
-				'icon[value]!' => '',
-			],
-			'condition' => [
-				'field_type!' => 'acceptance',
-				'checkbox',
-				'select'
+				'icon_input[value]!' => '',
 			],
 		]);
 
@@ -1151,6 +1175,23 @@ class Alpha_Inputs extends Widget_Base
 			'prefix_class' => 'alpha-options-columns-',
 		]);
 
+		$this->add_control('direction', [
+			'label' => esc_html__('Direção do conteúdo', 'alpha-form-nested'),
+			'type' => Controls_Manager::CHOOSE,
+			'options' => [
+				'column' => [
+					'title' => esc_html__('Horizontal', 'alpha-form-nested'),
+					'icon' => 'eicon-arrow-down',
+				],
+				'row' => [
+					'title' => esc_html__('Vertical', 'alpha-form-nested'),
+					'icon' => 'eicon-arrow-right',
+				],
+			],
+			'default' => 'row',
+			'toggle' => false,
+			'prefix_class' => 'alpha-option-',
+		]);
 
 		$this->add_responsive_control('options_gap', [
 			'label' => esc_html__('Espaçamento entre opções', 'alpha-form-nested'),
@@ -1214,6 +1255,25 @@ class Alpha_Inputs extends Widget_Base
 				],
 				'selectors' => [
 					'{{WRAPPER}} .alpha-option-icon' => 'max-width: {{SIZE}}{{UNIT}};',
+				],
+			]
+		);
+		$this->add_group_control(
+			Group_Control_Border::get_type(),
+			[
+				'name' => 'option_image_border',
+				'selector' => '{{WRAPPER}} .alpha-option-icon',
+			]
+		);
+
+		$this->add_control(
+			'option_image_radius',
+			[
+				'label' => __('Borda arredondada', 'alpha-form-nested'),
+				'type' => Controls_Manager::DIMENSIONS,
+				'size_units' => ['px', '%'],
+				'selectors' => [
+					'{{WRAPPER}} .alpha-option-icon' => 'border-radius: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};',
 				],
 			]
 		);
@@ -1852,14 +1912,14 @@ class Alpha_Inputs extends Widget_Base
 		$settings = $this->get_settings_for_display();
 
 		$type = $settings['field_type'] ?? '';
-		$pattern = $settings['field_pattern'] ? 'pattern="' . esc_attr($settings['field_pattern']) . '"' : '';
+		$pattern = $settings['field_pattern'] ? 'pattern="' . $settings['field_pattern'] . '"' : '';
 		$aux_text = $settings['aux_text'] ?? '';
 		$label = $settings['field_label_n'] ?? '';
 		$name = !empty($settings['field_name']) ? $settings['field_name'] : 'field_' . $type . '_' . substr($this->get_id(), 0, 6);
 		$value = $settings['field_value_n'] ?? '';
 		$description = $settings['field_descricao'] ?? '';
 		$placeholder = $settings['field_placeholder'] ?? '';
-		$next_button_text = $settings['next_button_text'] ?? '';
+		$next_button_text_input = $settings['next_button_text_input'] ?? '';
 		$show_hint = $settings['key-hint'] ?? 'no';
 		$required = !empty($settings['required']) ? 'required' : '';
 		$special_masks = ['cpf', 'cnpj', 'cep', 'currency', 'cel'];
@@ -1867,12 +1927,6 @@ class Alpha_Inputs extends Widget_Base
 		$class = 'alpha-input-field';
 		$id = $this->get_id();
 
-		$this->add_render_attribute('button', [
-			'class' => 'alpha-form-next form',
-			'type'  => 'button',
-			'data-alpha' => 'next',
-			'style' => $type === 'radio' ? 'display: none' : '',
-		]);
 		$allowed_html = array(
 			'a' => array(
 				'href' => true,
@@ -1946,13 +2000,14 @@ class Alpha_Inputs extends Widget_Base
 						$value = trim($choice['value']) ? trim($choice['value']) : sanitize_title($label);
 						$next  = trim($choice['target'] ?? '');
 
-						$attrs = 'value="' . esc_attr($value) . '"';
-						if ($next) {
-							$attrs .= ' data-next="' . esc_attr($next) . '"';
-						}
-
-						echo '<option ' . esc_attr($attrs) . '>' . esc_html($label) . '</option>';
+						printf(
+							'<option value="%s"%s>%s</option>',
+							esc_attr($value),
+							$next ? ' data-next="' . esc_attr($next) . '"' : '',
+							esc_html($label)
+						);
 					}
+
 
 					echo '</select>';
 				} else {
@@ -1961,29 +2016,45 @@ class Alpha_Inputs extends Widget_Base
 						$value = trim($choice['value']) ? trim($choice['value']) : sanitize_title($label);
 						$next  = trim($choice['target'] ?? '');
 						$icon  = trim($choice['icon_library'] ?? '');
-						$input_id = esc_attr($id . '_' . $index);
-
-						$attrs = 'type="' . esc_attr($input_type) . '" name="' . esc_attr($name) . '" id="' . esc_attr($input_id) . '" value="' . esc_attr($value) . '" ' . $required;
-						if ($next) {
-							$attrs .= ' data-next="' . esc_attr($next) . '"';
-						}
-
-						$label_attrs = '';
+						$input_id = $id . '_' . $index;
 						$letter = chr(65 + $index);
-						if ($show_hint) {
-							$label_attrs .= ' data-letter="' . $letter . '"';
-							$label_attrs .= ' data-icon="✓"';
-						}
-						echo '<label for="' . esc_attr($input_id) . '" class="alpha-option" ' . esc_attr($label_attrs) . '>';
 
-						if ($icon) {
+						// Início do label
+						echo '<label for="' . esc_attr($input_id) . '" class="alpha-option"';
+
+						if ($show_hint) {
+							echo ' data-letter="' . esc_attr($letter) . '"';
+							echo ' data-icon="✓"';
+						}
+
+						echo '>';
+
+						// Ícone, se existir
+						// phpcs:disable PluginCheck.CodeAnalysis.ImageFunctions.NonEnqueuedImage	
+						if (!empty($choice['use_image_icon']) && $choice['use_image_icon'] === 'yes' && !empty($choice['image_icon']['url'])) {
+							echo '<img src="' . esc_url($choice['image_icon']['url']) . '" class="alpha-option-icon">';
+						} else if ($icon) {
 							$icon_url = strpos($icon, 'http') === 0 ? $icon : ALPHA_FORM_URL . 'assets/elements/icones/' . $icon . '.svg';
 							echo '<img src="' . esc_url($icon_url) . '" class="alpha-option-icon" />';
 						}
+						// phpcs:enable PluginCheck.CodeAnalysis.ImageFunctions.NonEnqueuedImage	
 						echo esc_html($label);
-						echo '<input ' . esc_attr($attrs) . '> ';
+
+						// Input
+						echo '<input type="' . esc_attr($input_type) . '"';
+						echo ' name="' . esc_attr($name) . '"';
+						echo ' id="' . esc_attr($input_id) . '"';
+						echo ' value="' . esc_attr($value) . '"';
+						echo ' ' . esc_attr($required);
+						if ($next) {
+							echo ' data-next="' . esc_attr($next) . '"';
+						}
+						echo '> ';
+
+						// Fecha label
 						echo '</label>';
 					}
+
 					echo '</div>';
 				}
 
@@ -2002,11 +2073,7 @@ class Alpha_Inputs extends Widget_Base
 				break;
 
 			default:
-				echo '<input  class="' . esc_attr($class) . '" type="' . esc_attr($type) . '" 
-				name="' . esc_attr($name) . '" id="' . esc_attr($id) . '" 
-				placeholder="' . esc_attr($placeholder) . '" 
-				value="' .  esc_attr($value) . '" ' . esc_attr($pattern) . ' 
-				' . esc_attr($required) . esc_attr($mask) . ' autofocus />';
+				echo '<input  class="' . esc_attr($class) . '" type="' . esc_attr($type) . '" name="' . esc_attr($name) . '" id="' . esc_attr($id) . '" placeholder="' . esc_attr($placeholder) . '" value="' .  esc_attr($value) . '" ' . esc_attr($pattern) . ' ' . esc_attr($required) . esc_attr($mask) . ' autofocus />';
 				break;
 		}
 
@@ -2059,35 +2126,36 @@ class Alpha_Inputs extends Widget_Base
 		}
 
 		if (
-			!empty($settings['next_button_text']) ||
-			!empty($settings['icon']['value']) ||
+			!empty($settings['next_button_text_input']) ||
+			!empty($settings['icon_input']['value']) ||
 			!empty($settings['aux_text'])
 		) {
 
+			$style = $type === 'radio' ? 'display:none' : '';
 			// Botão
 			echo '<div class="alpha-aux">';
-			if (!in_array($type, ['hidden'], true) && $next_button_text) {
-				echo '<button ' . esc_attr($this->get_render_attribute_string('button')) . '>';
+			if (!in_array($type, ['hidden'], true) && $next_button_text_input) {
+				echo wp_kses_post('<button class="alpha-form-next form" type="button" data-alpha="next" style="' . esc_html($style) . '">');
 
 				// Abre o wrapper do conteúdo do botão
 				echo '<span class="alpha-form-button-inner" data-alpha="next">';
 
 				// Ícone antes do texto
-				if (!empty($settings['icon']['value']) && $settings['btn_icon_position'] === 'before') {
+				if (!empty($settings['icon_input']['value']) && $settings['btn_icon_position'] === 'before') {
 					echo '<span class="alpha-form-button-icon before" data-alpha="next">';
-					Icons_Manager::render_icon($settings['icon'], ['aria-hidden' => 'true']);
+					Icons_Manager::render_icon($settings['icon_input'], ['aria-hidden' => 'true']);
 					echo '</span>';
 				}
 
 				// Texto do botão
-				if (!empty($settings['next_button_text'])) {
-					echo '<span class="alpha-form-button-text" data-alpha="next">' . esc_html($settings['next_button_text']) . '</span>';
+				if (!empty($settings['next_button_text_input'])) {
+					echo '<span class="alpha-form-button-text" data-alpha="next">' . esc_html($settings['next_button_text_input']) . '</span>';
 				}
 
 				// Ícone depois do texto
-				if (!empty($settings['icon']['value']) && $settings['btn_icon_position'] === 'after') {
+				if (!empty($settings['icon_input']['value']) && $settings['btn_icon_position'] === 'after') {
 					echo '<span class="alpha-form-button-icon after" data-alpha="next">';
-					Icons_Manager::render_icon($settings['icon'], ['aria-hidden' => 'true']);
+					Icons_Manager::render_icon($settings['icon_input'], ['aria-hidden' => 'true']);
 					echo '</span>';
 				}
 

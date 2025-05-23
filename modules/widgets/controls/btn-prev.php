@@ -265,14 +265,7 @@ class Alpha_Prev extends Widget_Base
 		$settings = $this->get_settings_for_display();
 		$form_target = $settings['form_target'] ?? '';
 
-		$this->add_render_attribute('button', [
-			'class' => 'alpha-form-prev',
-			'type'  => 'button',
-			'data-alpha' => 'prev',
-			'data-a-f-target' => esc_attr($form_target),
-		]);
-
-		echo '<button ' . esc_attr($this->get_render_attribute_string('button')) . '>';
+		echo '<button class="alpha-form-prev" type="button" data-alpha="prev" data-a-f-target=' . esc_attr($form_target) . '>';
 
 		// Abre o wrapper do conteúdo do botão
 		echo '<span class="alpha-form-button-inner">';

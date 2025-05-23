@@ -400,6 +400,7 @@ class Alpha_Elements extends Widget_Base
         $colorx = esc_js($settings['x_grid_color'] ?? '#cccccc');
         $colory = esc_js($settings['y_grid_color'] ?? '#cccccc');
 
+        // phpcs:ignore WordPress.WP.EnqueuedResources.NonEnqueuedScript	
         echo '<script src="' . esc_attr(ALPHA_FORM_URL) . 'assets/js/chart.js"></script>';
         echo '<div class="alpha-form-chart-wrapper">';
         echo '<canvas id="chart_' . esc_attr($widget_id) . '"></canvas>';

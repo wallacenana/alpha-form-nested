@@ -83,6 +83,24 @@ class Alpha_Form_Minimal extends Widget_Nested_Base
             $this->item_content_container(1),
             $this->item_content_container(2),
             $this->item_content_container(3),
+            $this->item_content_container(5),
+            $this->item_content_container(6),
+            $this->item_content_container(7),
+            $this->item_content_container(8),
+            $this->item_content_container(9),
+            $this->item_content_container(10),
+            $this->item_content_container(11),
+            $this->item_content_container(12),
+            $this->item_content_container(13),
+            $this->item_content_container(14),
+            $this->item_content_container(15),
+            $this->item_content_container(16),
+            $this->item_content_container(17),
+            $this->item_content_container(18),
+            $this->item_content_container(19),
+            $this->item_content_container(20),
+            $this->item_content_container(21),
+            $this->item_content_container(22),
         ];
     }
 
@@ -1108,32 +1126,6 @@ class Alpha_Form_Minimal extends Widget_Nested_Base
             ]
         );
 
-        $this->add_group_control(
-            Group_Control_Background::get_type(),
-            [
-                'name' => 'content_background_alpha',
-                'types' => ['classic', 'gradient'],
-                'exclude' => ['image'],
-                'selector' => $low_specificity_form_item_selector,
-            ]
-        );
-
-        $this->add_group_control(
-            Group_Control_Border::get_type(),
-            [
-                'name' => 'content_border_alpha_alpha',
-                'selector' => $low_specificity_form_item_selector,
-                'fields_options' => [
-                    'color' => [
-                        'label' => esc_html__('Border Color', 'alpha-form-nested'),
-                    ],
-                    'width' => [
-                        'label' => esc_html__('Border Width', 'alpha-form-nested'),
-                    ],
-                ],
-            ]
-        );
-
         $this->add_responsive_control(
             'content_border_radius_alpha',
             [
@@ -1236,21 +1228,6 @@ class Alpha_Form_Minimal extends Widget_Nested_Base
             'form_' . $state . '_border_and_background_alpha',
             [
                 'label' => $translated_tab_text,
-            ]
-        );
-
-        $this->add_group_control(
-            Group_Control_Background::get_type(),
-            [
-                'name' => 'form_background_' . $state,
-                'types' => ['classic', 'gradient'],
-                'exclude' => ['image'],
-                'fields_options' => [
-                    'color' => [
-                        'label' => esc_html__('Color', 'alpha-form-nested'),
-                    ],
-                ],
-                'selector' => $selector,
             ]
         );
 
@@ -1573,6 +1550,7 @@ class Alpha_Form_Minimal extends Widget_Nested_Base
         <?php
     }
 
+    // phpcs:disable PluginCheck.CodeAnalysis.ImageFunctions.NonEnqueuedImage
     protected function content_template()
     {
         ?>
@@ -1601,8 +1579,7 @@ class Alpha_Form_Minimal extends Widget_Nested_Base
                         itemId='alpha-f-n-item-' + itemUid;
                         }
 
-                        const itemWrapperAttributes={ 'id' : itemId, 'class' : [ 'alpha-f-n-item' , 'e-normal' ],
-                        };
+                        const itemWrapperAttributes={ 'id' : itemId, 'class' : [ 'alpha-f-n-item' , 'e-normal' ] };
 
                         if ( defaultState==='expanded' && index===0) {
                         itemWrapperAttributes['open']=true;
@@ -1610,10 +1587,10 @@ class Alpha_Form_Minimal extends Widget_Nested_Base
 
                         view.addRenderAttribute( itemWrapperKey, itemWrapperAttributes );
 
-                        view.addRenderAttribute( itemTitleKey, { 'class' : ['alpha-f-n-item-title'], 'data-form-index' : itemCount, 'tabindex' : 0===index ? 0 : -1, 'aria-expanded' : ariaExpanded, 'aria-controls' : itemId,
+                        view.addRenderAttribute( itemTitleKey, { 'class' : ['alpha-f-n-item-title'], 'data-form-index' : itemCount, 'tabindex' : 0===index ? 0 : -1, 'aria-expanded' : ariaExpanded, 'aria-controls' : itemId
                         });
 
-                        view.addRenderAttribute( itemTitleTextKey, { 'class' : ['alpha-f-n-item-title-text'], 'data-binding-type' : 'repeater-item' , 'data-binding-repeater-name' : 'items' , 'data-binding-setting' : ['item_title'], 'data-binding-index' : itemCount, 'data-binding-dynamic' : 'true' , 'data-binding-dynamic-css-id' : 'element_css_id' , 'data-binding-single-item-html-wrapper-tag' : 'div' ,
+                        view.addRenderAttribute( itemTitleTextKey, { 'class' : ['alpha-f-n-item-title-text'], 'data-binding-type' : 'repeater-item' , 'data-binding-repeater-name' : 'items' , 'data-binding-setting' : ['item_title'], 'data-binding-index' : itemCount, 'data-binding-dynamic' : 'true' , 'data-binding-dynamic-css-id' : 'element_css_id' , 'data-binding-single-item-html-wrapper-tag' : 'div'
                         });
                         #>
 
@@ -1633,23 +1610,25 @@ class Alpha_Form_Minimal extends Widget_Nested_Base
                             </summary>
                         </div>
 
-
                         <# } ); #>
                             <# } #>
+
                                 <# if ( settings.show_overlay==='yes' && settings.show_editor==='yes' && settings.overlay_loader_image && settings.overlay_loader_image.url ) { #>
                                     <div class="alpha-form-overlay">
                                         <img src="{{ settings.overlay_loader_image.url }}" alt="Carregando..." class="alpha-form-overlay-gif" />
                                     </div>
                                     <# } #>
-
             </div>
     <?php
     }
+    // phpcs:enable PluginCheck.CodeAnalysis.ImageFunctions.NonEnqueuedImage
+
 
     private function get_options($integrationName)
     {
         global $wpdb;
 
+        // phpcs:disable WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.DirectDatabaseQuery.DirectQuery	
         $row = $wpdb->get_row(
             $wpdb->prepare(
                 "SELECT data FROM {$wpdb->prefix}alpha_form_nested_integrations WHERE name = %s AND status = 1",
@@ -1657,7 +1636,7 @@ class Alpha_Form_Minimal extends Widget_Nested_Base
             ),
             ARRAY_A
         );
-
+        // phpcs:enable WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.DirectDatabaseQuery.DirectQuery	
         if (!$row || empty($row['data'])) return [];
 
         $settings = json_decode($row['data'], true);

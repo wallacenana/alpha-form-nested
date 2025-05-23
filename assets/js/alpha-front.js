@@ -29,7 +29,6 @@ document.addEventListener('DOMContentLoaded', () => {
 	initShortcodeTextBindings();
 	initAlphaEnterNavigation();
 
-	updateShortcodeText();
 });
 
 function getDeviceType() {
@@ -80,16 +79,37 @@ function initShortcodeTextBindings(scope = document.body) {
 
 function updateShortcodeText(scope = document.body) {
 	const inputs = scope.querySelectorAll('input, select, textarea');
+	const seenKeys = new Set();
+
+	// Carrega do localStorage, se existir
+	let localData = {};
+	try {
+		const stored = localStorage.getItem('alpha-form-data-response');
+		if (stored) {
+			localData = JSON.parse(stored);
+		}
+	} catch (e) {
+		console.warn('Erro ao ler o localStorage:', e);
+	}
 
 	inputs.forEach(input => {
 		const key = input.name || input.id;
-		if (!key) return;
+		if (!key || seenKeys.has(key)) return;
 
-		const value = input.value.trim();
+		seenKeys.add(key);
+		let value = input.value?.trim();
+
+		// Se o input estiver vazio, tenta do localStorage
+		if (!value && localData) {
+			const formId = document.querySelector('.alpha-form')?.dataset?.alphaWidgetId;
+			const fromStorage = localData?.[formId]?.responses?.[key];
+			if (fromStorage) value = fromStorage;
+		}
+
 		const spans = scope.querySelectorAll(`.alpha-shortcode[data-key="${key}"]`);
 
 		spans.forEach(span => {
-			span.textContent = value || span.dataset.default;
+			span.textContent = value !== '' && value !== undefined ? value : (span.dataset.default || '');
 		});
 	});
 }

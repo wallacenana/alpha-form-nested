@@ -216,3 +216,21 @@ label.alpha-letter-active::before {
 .alpha-options-columns-4 .alpha-inputs-options {
     grid-template-columns: repeat(4, minmax(0, 1fr));
 }
+
+.widget-alpha-form-n button {
+    line-height: normal;
+}
+
+.alpha-option-column .alpha-option {
+    display: flex;
+    flex-direction: column;
+}
+
+.alpha-option-column .alpha-option input {
+    display: none;
+}
+
+.alpha-option-row .alpha-option {
+    display: flex;
+    flex-direction: row;
+}

@@ -26,11 +26,11 @@ function alphaform_fetch_lists_by_prefix($prefix)
     global $wpdb;
 
     $table = esc_sql($wpdb->prefix . 'alpha_form_nested_integrations');
-    // phpcs:disable WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+    // phpcs:disable WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.DirectDatabaseQuery.DirectQuery	
     $row = $wpdb->get_row(
         $wpdb->prepare("SELECT * FROM {$table} WHERE name = %s LIMIT 1", $prefix)
     );
-    // phpcs:enable WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+    // phpcs:enable WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.DirectDatabaseQuery.DirectQuery	
 
     if (!$row || !$row->status) return false;
 
