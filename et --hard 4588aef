@@ -1,0 +1,20 @@
+[33m45f2abf[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mmaster[m[33m, [m[1;31morigin/master[m[33m, [m[1;31morigin/alpha-form-v2[m[33m)[m HEAD@{0}: checkout: moving from master to master
+[33m45f2abf[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mmaster[m[33m, [m[1;31morigin/master[m[33m, [m[1;31morigin/alpha-form-v2[m[33m)[m HEAD@{1}: checkout: moving from alpha-form-v2 to master
+[33m8e899ad[m[33m ([m[1;33mtag: [m[1;33mv2.0.0[m[33m, [m[1;32malpha-form-v2[m[33m)[m HEAD@{2}: checkout: moving from master to alpha-form-v2
+[33m45f2abf[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mmaster[m[33m, [m[1;31morigin/master[m[33m, [m[1;31morigin/alpha-form-v2[m[33m)[m HEAD@{3}: checkout: moving from master to master
+[33m45f2abf[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mmaster[m[33m, [m[1;31morigin/master[m[33m, [m[1;31morigin/alpha-form-v2[m[33m)[m HEAD@{4}: checkout: moving from alpha-form-v2 to master
+[33m8e899ad[m[33m ([m[1;33mtag: [m[1;33mv2.0.0[m[33m, [m[1;32malpha-form-v2[m[33m)[m HEAD@{5}: commit: Alpha Form V2 - versão inicial com sistema de integrações, envio e controle por session
+[33m45f2abf[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mmaster[m[33m, [m[1;31morigin/master[m[33m, [m[1;31morigin/alpha-form-v2[m[33m)[m HEAD@{6}: Branch: renamed refs/heads/master to refs/heads/alpha-form-v2
+[33m45f2abf[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mmaster[m[33m, [m[1;31morigin/master[m[33m, [m[1;31morigin/alpha-form-v2[m[33m)[m HEAD@{8}: commit: Correções plugin check parcialmente feitas
+[33m20ca272[m HEAD@{9}: commit: Correções plugin check parcialmente feitas
+[33mce68fd6[m HEAD@{10}: commit: Correções plugin check parcialmente feitas
+[33m4588aef[m HEAD@{11}: commit: Plugin estavel e pronto para venda
+[33mc6e4653[m HEAD@{12}: commit: Actions criadas
+[33mb5cea6e[m HEAD@{13}: commit: iniciando envio para as integrações e redirect
+[33m16b8ec5[m HEAD@{14}: commit: implementação de save e restore no ultimo field
+[33md64994c[m HEAD@{15}: commit: versão estavel após função de salvar
+[33m08e3ac2[m HEAD@{16}: commit: versão estavel
+[33m8fd62c0[m HEAD@{17}: commit: iniciando salvamento
+[33mf534343[m HEAD@{18}: commit: finalizando todos os inputs
+[33m7f0dc04[m HEAD@{19}: commit: Base accordion, formulário, botão next e prev concluido, etapafinal dos inputs
+[33m5687392[m HEAD@{20}: commit (initial): inicialização alpha form nested v2

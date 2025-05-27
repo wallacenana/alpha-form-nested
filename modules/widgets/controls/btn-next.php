@@ -195,6 +195,38 @@ class Alpha_Next extends Widget_Base
 			'selector' => '{{WRAPPER}} .alpha-form-next',
 		]);
 
+		$this->add_control('btn_width-next', [
+			'label' => __('Largura automática', 'alpha-form'),
+			'type' => Controls_Manager::SWITCHER,
+			'label_on' => __('Sim', 'alpha-form'),
+			'label_off' => __('Não', 'alpha-form'),
+			'return_value' => 'yes',
+			'default' => 'yes',
+		]);
+
+		$this->add_responsive_control('btn_widthnext', [
+			'label' => __('Largura do botão', 'alpha-form'),
+			'type' => Controls_Manager::SLIDER,
+			'size_units' => ['px', '%', 'em', 'rem', 'vw'],
+			'range' => [
+				'px' => ['min' => 10, 'max' => 1000],
+				'%'  => ['min' => 5, 'max' => 100],
+				'em' => ['min' => 1, 'max' => 50],
+				'rem' => ['min' => 1, 'max' => 50],
+				'vw' => ['min' => 5, 'max' => 100],
+			],
+			'default' => [
+				'size' => 180,
+				'unit' => 'px',
+			],
+			'selectors' => [
+				'{{WRAPPER}} .alpha-form-next' => 'width: {{SIZE}}{{UNIT}};',
+			],
+			'condition' => [
+				'btn_width-next!' => 'yes',
+			],
+		]);
+
 		$this->add_responsive_control('padding', [
 			'label' => esc_html__('Padding', 'alpha-form-nested'),
 			'type' => Controls_Manager::DIMENSIONS,

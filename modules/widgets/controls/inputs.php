@@ -785,6 +785,39 @@ class Alpha_Inputs extends Widget_Base
 			]
 		);
 
+		$this->add_control('btn_width_input_auto', [
+			'label' => __('Largura automática', 'alpha-form'),
+			'type' => Controls_Manager::SWITCHER,
+			'label_on' => __('Sim', 'alpha-form'),
+			'label_off' => __('Não', 'alpha-form'),
+			'return_value' => 'yes',
+			'default' => 'yes',
+		]);
+
+		$this->add_responsive_control('btn_width_input', [
+			'label' => __('Largura do botão', 'alpha-form'),
+			'type' => Controls_Manager::SLIDER,
+			'size_units' => ['px', '%', 'em', 'rem', 'vw'],
+			'range' => [
+				'px' => ['min' => 10, 'max' => 1000],
+				'%'  => ['min' => 5, 'max' => 100],
+				'em' => ['min' => 1, 'max' => 50],
+				'rem' => ['min' => 1, 'max' => 50],
+				'vw' => ['min' => 5, 'max' => 100],
+			],
+			'default' => [
+				'size' => 180,
+				'unit' => 'px',
+			],
+			'selectors' => [
+				'{{WRAPPER}} .alpha-form-next.form' => 'width: {{SIZE}}{{UNIT}};',
+			],
+			'condition' => [
+				'btn_width_input_auto!' => 'yes',
+			],
+		]);
+
+
 		// Aba ativo
 		$this->start_controls_tabs('tabs_button_styles');
 
@@ -1162,9 +1195,9 @@ class Alpha_Inputs extends Widget_Base
 			]
 		);
 
-		$this->add_control('options_columns', [
-			'label' => esc_html__('Itens por linha', 'alpha-form-nested'),
-			'type' => Controls_Manager::SELECT,
+		$this->add_responsive_control('options_columns', [
+			'label'   => esc_html__('Itens por linha', 'alpha-form-nested'),
+			'type'    => Controls_Manager::SELECT,
 			'default' => '2',
 			'options' => [
 				'1' => '1 por linha',
@@ -1172,10 +1205,13 @@ class Alpha_Inputs extends Widget_Base
 				'3' => '3 por linha',
 				'4' => '4 por linha',
 			],
-			'prefix_class' => 'alpha-options-columns-',
+			'selectors' => [
+				'{{WRAPPER}} .alpha-inputs-options' => 'display: grid; grid-template-columns: repeat({{VALUE}}, 1fr); gap: 12px;',
+			],
 		]);
 
-		$this->add_control('direction', [
+
+		$this->add_responsive_control('direction', [
 			'label' => esc_html__('Direção do conteúdo', 'alpha-form-nested'),
 			'type' => Controls_Manager::CHOOSE,
 			'options' => [

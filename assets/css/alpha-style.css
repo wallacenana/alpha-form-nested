@@ -5,11 +5,16 @@
 .alpha-aux {
     display: flex;
     gap: 15px;
+    width: 100%;
 }
 
 .alpha-aux-dir-row .alpha-aux {
     flex-direction: row;
     align-items: center;
+}
+
+.alpha-form-button-inner {
+    justify-content: center;
 }
 
 .alpha-aux-dir-column .alpha-aux {

@@ -195,6 +195,38 @@ class Alpha_Prev extends Widget_Base
 			'selector' => '{{WRAPPER}} .alpha-form-prev',
 		]);
 
+		$this->add_control('btn_width-prev', [
+			'label' => __('Largura automática', 'alpha-form'),
+			'type' => Controls_Manager::SWITCHER,
+			'label_on' => __('Sim', 'alpha-form'),
+			'label_off' => __('Não', 'alpha-form'),
+			'return_value' => 'yes',
+			'default' => 'yes',
+		]);
+
+		$this->add_responsive_control('btn_width_prev', [
+			'label' => __('Largura do botão', 'alpha-form'),
+			'type' => Controls_Manager::SLIDER,
+			'size_units' => ['px', '%', 'em', 'rem', 'vw'],
+			'range' => [
+				'px' => ['min' => 10, 'max' => 1000],
+				'%'  => ['min' => 5, 'max' => 100],
+				'em' => ['min' => 1, 'max' => 50],
+				'rem' => ['min' => 1, 'max' => 50],
+				'vw' => ['min' => 5, 'max' => 100],
+			],
+			'default' => [
+				'size' => 180,
+				'unit' => 'px',
+			],
+			'selectors' => [
+				'{{WRAPPER}} .alpha-form-prev' => 'width: {{SIZE}}{{UNIT}};',
+			],
+			'condition' => [
+				'btn_width-prev!' => 'yes',
+			],
+		]);
+
 		$this->add_responsive_control('padding', [
 			'label' => esc_html__('Padding', 'alpha-form-nested'),
 			'type' => Controls_Manager::DIMENSIONS,
